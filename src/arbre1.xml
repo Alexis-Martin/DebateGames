@@ -1,0 +1,33 @@
+<game>
+  <tree view="general">
+    <vertex>q</vertex>
+    <vertex>a1</vertex>
+    <vertex>a2</vertex>
+    <vertex>a3</vertex>
+
+    <edge source="a1" target="q"/>
+    <edge source="a2" target="q"/>
+    <edge source="a3" target="q"/>
+  </tree>
+
+  <tree view="joueur 1">
+    <vertex>q</vertex>
+    <vertex>a1</vertex>
+
+    <edge source="a1" target="q"/>
+  </tree>
+
+  <tree view="joueur 2">
+    <vertex>q</vertex>
+    <vertex>a2</vertex>
+
+    <edge source="a2" target="q"/>
+  </tree>
+
+  <tree view="joueur 3">
+    <vertex>q</vertex>
+    <vertex>a3</vertex>
+
+    <edge source="a3" target="q"/>
+  </tree>
+</game>

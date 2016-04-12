@@ -8,6 +8,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{mathtools}
 \usepackage{amsthm}
+\usepackage{color}
 
 \title{Compte rendu de la semaine}
 \author{Alexis Martin}
@@ -172,6 +173,64 @@
     En choisissant cette solution on offre un régime particulier à la question. Ce qui peut poser des problèmes lors de l'analyse de notre système.
 \end{solution}
 
+\color{blue}
+  \begin{problem}
+    Un autre problème un peu similaire au précédent. D'après la définition de Leite et Martins un argument qui n'a pas de vote a un poids à 0 (i.e. $\tau_\varepsilon (a) = 0$) et un vote qui n'a que des votes négatif a également un poids à 0.
+
+    Le problème dans l'initialisation (entre autre) est que "disliker" un argument (ne pas le trouver recevable du tout) ou ne pas avoir d'avis reviens au même, ce fait ce propage à tous les fils de ces arguments.
+
+    Cela peut paraitre incohérent.
+
+    \paragraph{exemple}
+      % \TODO tikz exemple
+
+  \end{problem}
+
+  \begin{solution}
+    Supposer que chaque agent a une vision personnelle non discrète (un agent peut donc donné une valeur dans l'intervalle $[0,1]$ à chaque arguments).
+
+    On peut alors considérer que les agents sont des représentants d'un groupe.
+
+    \paragraph{Remarques}
+      \begin{enumerate}
+        \item Dans ce cas on utilise toujours la fonction de Leite et Martins pour le jeu et on peut considèrer qu'un argument sans votes positifs n'a pas de raison d'exister dans le débat.
+
+        \item Dans le cadre du jeu les premiers votes seront "inutiles" dans le sens où il faudra obligatoirement commencer par voter sur un argument qui attaque la question, et tous les arguments qui attaque la question auront le même effet.
+
+        Cela peut poser des problèmes sur le protocole One-Shot.
+      \end{enumerate}
+  \end{solution}
+
+  \begin{solution}
+    Modifier la valeur par defaut dans la définition de $\tau$ en $0.5$.
+
+    \paragraph{Remarques}
+      \begin{enumerate}
+        \item Les propriétés de monotonie sont bien respectées.
+        \item On considère équivalent un argument avec 1 vote négatif et 1000 votes négatifs.
+        \item Cela résoud aussi le problème 1.
+        \item Applique t-on cette nouvelle définition également dans le jeu?
+      \end{enumerate}
+  \end{solution}
+
+  \begin{solution}
+    Dans le jeu on peut supposer 2 votes initiaux, 1 positif et 1 négatif. Cela permet de partir d'une valeur $0.5$ pour chaque argument.
+
+    \paragraph{Remarques}
+      \begin{enumerate}
+        \item On fait la même chose dans l'initialisation?
+      \end{enumerate}
+  \end{solution}
+
+  \begin{solution}
+    Changer la formule de $\tau$ pour une autre fonction qui respecte la monotonie et qui tienne compte de la taille du sample.
+
+    \paragraph{Remarques}
+      \begin{enumerate}
+        \item Quelle formule? Intuitivement on devrait ce dire que beaucoup de votes négatif donne une valeur égale à 0 et beaucoup de votes positif donne 1. Aucun vote ou un nombre équilibré devrait être $0.5$.
+      \end{enumerate}
+  \end{solution}
+\color{black}
 \section{Où j'en suis}
 \begin{itemize}
   \item Cette fin de semaine j'ai commencé à chercher des exemples simples d'arbres sur lesquels les agents ont la même valeur pour la question mais des poids différents sur les arguments.

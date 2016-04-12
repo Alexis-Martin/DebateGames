@@ -1,0 +1,184 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+\title{Compte rendu de la semaine}
+\author{Alexis Martin}
+
+\newtheoremstyle{not}
+{\topsep}
+{\topsep}
+{}
+{}
+{\bfseries}
+{.}
+{\newline}
+{}
+
+\newtheoremstyle{defi}
+{\topsep}
+{\topsep}
+{\itshape}
+{}
+{\bfseries}
+{.}
+{\newline}
+{}
+
+\newtheoremstyle{prob}
+{\topsep}
+{\topsep}
+{}
+{}
+{\bfseries}
+{.}
+{\newline}
+{}
+
+\theoremstyle{defi}
+\newtheorem{definition}{Définition}
+\theoremstyle{not}
+\newtheorem{notation}{Notation}
+\theoremstyle{prob}
+\newtheorem{problem}{Problème}
+\newtheorem{solution}{Solution}
+
+\begin{document}
+\maketitle
+
+\section{Rappel définitions}
+  \subsection{Notations}
+    \begin{notation}[Graphe d'Argumentation]
+
+      $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ avec :
+      \begin{itemize}
+        \item $\mathcal{A}$ : L'ensemble des arguments.
+        \item $\mathcal{R} \subseteq \mathcal{A} \times \mathcal{A}$ : Une relation binaire entre arguments tels que : $(a,b) \in \mathcal{R}$ si $a$ "attaque" $b$.
+        \item $V: \mathcal{A} \rightarrow \mathbb{N} \times \mathbb{N} :$ La fonction qui associe, à chaque argument, le nombre de "like" et de "dislike", $V(a) = (v^+, v^-)$ signifie que $a$ à $v^+$ "like" et $v^-$ "dislike".
+      \end{itemize}
+    \end{notation}
+
+    \begin{notation}
+      On note $Att(a)$ l'ensemble des arguments directs qui attaquent $a$ :
+
+      $Att(a) = \{b\ |\ (b, a)\in \mathcal{R}\}$
+    \end{notation}
+
+  \subsection{Définitions}
+    On peut ensuite définir une sémantique d'argumentation.
+    \begin{definition}[Simple Product Semantics]
+      $\mathcal{S}_\varepsilon = \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ est la sémantique tel que :
+      \begin{enumerate}
+        \item $x_1 \curlywedge x_2 = x_1 \cdot x_2$
+        \item $x_1 \curlyvee x_2 = x_1 + x_2 - x_1 \cdot x_2$
+        \item $\neg x_1 = 1 - x_1$
+        \item $\varepsilon \geq 0$
+        \item $\tau_\varepsilon(a) = \left\{
+          \begin{array}{lll}
+            0 & \mbox{si } & v^+ = v^- = 0\\
+            \frac{v^+}{v^+ + v^- + \varepsilon} & \mbox{sinon} & \\
+          \end{array}\right.$ pour tout $a \in \mathcal{A}$
+      \end{enumerate}
+
+    \end{definition}
+
+\begin{definition}[modèle social]
+  Soit $F= \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation et $\mathcal{S}_\varepsilon = \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ une sémantique "produit simple".
+  La fonction $LM : \mathcal{A} \rightarrow [0, 1]$ est un $\mathcal{S}$-Model pour $F$ si :
+
+  $LM(a) = \tau_\varepsilon(a) \curlywedge \neg$ {\Large $\curlyvee$} $\{LM(a_i)\ |\ a_i \in Att(a)\}$
+\end{definition}
+
+\section{Les modèles}
+  Soit $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation et $N$ agents (=joueurs). Chaque agent connait tout le graphe $F$, ils connaissent donc tous les arguments et la question.
+
+  \paragraph{Initialisation}
+  \begin{enumerate}
+    \item Chaque agent choisi (secrètement) les arguments qu'il trouve recevables, les arguments recevables auront 1 "like" et 0 "dislike", les autres 0 "like" et 1 "dislike".
+
+    \item En tenant compte de ces poids il calcule la valeur qu'il associe à la question. Cette valeur n'est pas connu des autres agents.
+  \end{enumerate}
+
+  \paragraph{Le jeu\\}
+
+    Les agents se regroupent autour d'une table où une représentation du débat s'y trouve. Cette représentation est dépourvu de poids ("like" ou "dislike") et la valeur de la question dans cette représentation est affiché et connu de tous.
+
+  \paragraph{objectif\\}
+
+  L'objectif pour chacun des joueurs va être de faire tendre la valeur de la question de cette représentation vers sa valeur calculée lors de la phase d'initialisation.
+
+  \paragraph{Règles}(trois variantes possibles)
+    \begin{description}
+      \item[Variante 1] Chaque agent peut voter qu'une fois (k fois) par argument.
+
+      \item[Variante 3] Les agents peuvent changer d'avis sur le vote qu'ils ont attribué à un argument et retirer leur vote ou l'inverser.
+
+      \item[Variante 3] Les agents peuvent re-voter pour un argument à la condition qu'un autre joueur à voter l'inverse sur cet argument entre temps. De plus les agents sont obligés de voter sincèrement (ils ne pourront donner un "like" qu'aux arguments qu'ils ont trouvé recevable durant la phase d'initialisation et un "dislike" que aux autres).
+    \end{description}
+
+    \paragraph{Dynamique\\}
+      On considère dans ces modèles une dynamique de meilleure réponse. Round Robin.
+
+    \paragraph{Les questions qu'on se pose}
+    \begin{itemize}
+      \item Il y a t-il convergence?
+      \item Si tous les agents ont la même valeur à la fin de l'initialisation, il y a t-il convergence? Il existe alors un équilibre mais peut-on toujours l'atteindre? (Ce n'est pas la même question? Si on peut toujours atteindre l'équilibre alors ça converge, et si ça converge alors il y a un équilibre? Non?)
+      \item Quel est le prix de l'anarchie dans le cas de la variante 1?
+      \item Peut-on trouver une stratégie pour les agents?
+    \end{itemize}
+
+
+
+\section{Problèmes liés aux modèles}
+\begin{problem}
+  Dans notre cas, on considère que la question (notons la $q$) ne reçoit aucun vote (ce qui est plutôt intuitif). Mais si on prend cette définition pour la sémantique alors $LM(q) = 0$ quelques soit les attaquants car $\tau_\varepsilon(q) = 0$.
+\end{problem}
+
+\begin{solution}[préférée]
+  On change la définition de $\tau_\varepsilon$, elle devient :
+
+  $$\tau_\varepsilon(a) = \frac{1 + v^+}{1 + v^+ + v^- + \varepsilon} \mbox{ pour tout } a \in \mathcal{A}$$
+
+  \paragraph{remarques}
+    \begin{enumerate}
+      \item Avec cette définition, on change la valeur initiale de tous les arguments.(i.e. Un argument sans vote positif aura quand même une valeur positive, alors qu'avec la définition originale un argument n'ayant pas de vote positif aura une valeur égale à 0).
+
+      \item Dans notre phase d'initialisation il est donc différent de considérer que les joueurs votent négativement sur les arguments avec lesquels ils ne sont pas d'accord et de considérer que les joueurs ont seulement la partie du graphe avec laquelle ils sont d'accord.
+    \end{enumerate}
+\end{solution}
+
+\begin{solution}
+  On considère que chaque joueur a donné un "like" à la question. On a donc $v^+(q) = \#agents$.
+
+  \paragraph{remarques}
+    \begin{enumerate}
+      \item Cette solution comporte le problème que plus le nombre de joueur est grand plus la valeur pour la question sera grande pour tout le monde. Cela implique qu'il n'y aura que très peu de différence sur les valeurs de chacun des joueurs.
+
+      \item On peut aussi se poser la question suivante : autorise-t-on les joueurs à voter sur la question lors du déroulement du jeu? Si non, initialise-t-on la question avec $\#agents$ votes positifs?
+    \end{enumerate}
+\end{solution}
+
+\begin{solution}
+  On peut également traiter la question à part. Dire par exemple que $\tau_\varepsilon(q) = 1$ ou que $\tau_\varepsilon(q) = \frac{1}{1 + \varepsilon}$.
+
+  \paragraph{remarques}
+    En choisissant cette solution on offre un régime particulier à la question. Ce qui peut poser des problèmes lors de l'analyse de notre système.
+\end{solution}
+
+\section{Où j'en suis}
+\begin{itemize}
+  \item Cette fin de semaine j'ai commencé à chercher des exemples simples d'arbres sur lesquels les agents ont la même valeur pour la question mais des poids différents sur les arguments.
+
+  \item Les calculs que cela nécessite sont beaucoup trop long, j'ai donc changé de cap et codé l'algorithme. J'ai pour le moment codé la phase d'initialisation. Ce qui va donc me permettre dès lundi de trouver des modèles ayant la caractéristique ci-dessus.
+
+  \item Dès lundi je vais également ouvrir un dépot GitHub pour poser mes fichiers sources. Je dois encore trouver un nom à ce nouveau dépot... Si vous avez un compte GitHub je vous ajoute comme collaborateurs.
+\end{itemize}
+
+\end{document}

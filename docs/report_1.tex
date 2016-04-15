@@ -44,16 +44,29 @@
 {}
 
 \theoremstyle{defi}
-\newtheorem{definition}{Définition}
+\newtheorem{definition}{Définition}[section]
 \theoremstyle{not}
-\newtheorem{notation}{Notation}
+\newtheorem{notation}{Notation}[section]
 \theoremstyle{prob}
-\newtheorem{problem}{Problème}
-\newtheorem{solution}{Solution}
+\newtheorem{problem}{Problème}[section]
+\newtheorem{solution}{Solution}[problem]
 
 \begin{document}
 \maketitle
 
+\section{Légende}
+\color{black}
+Ce qui est ancien et qui reste.
+
+\color{blue}
+Ce qui est a été ajouté cette semaine.
+
+\color{red}
+Ce qui est ammené à disparaitre dans les semaines suivantes.
+
+P.S.: Le fichier Tex est sur Git, on aura donc toujours la possibilité de retrouver ce qui a été éffacé.
+
+\color{black}
 \section{Rappel définitions}
   \subsection{Notations}
     \begin{notation}[Graphe d'Argumentation]
@@ -68,24 +81,58 @@
 
     \begin{notation}
       On note $Att(a)$ l'ensemble des arguments directs qui attaquent $a$ :
-
       $Att(a) = \{b\ |\ (b, a)\in \mathcal{R}\}$
     \end{notation}
 
+
   \subsection{Définitions}
+  \label{ref:def_tau}
+  \color{blue}
+      \begin{definition}
+        Soit $\tau_\varepsilon$ la fonction défini par :
+        $$\begin{array}{rclc}
+          \tau_\varepsilon :  & \mathbb{N} \times \mathbb{N} & \longrightarrow & [0, 1] \\
+          & (v^+,v^-) & \longmapsto & \frac{1}{2} \cdot \left(1 + sgn(v^+ - v^-) \cdot \left(1 - e^{\frac{-|v^+ - v^-|}{\varepsilon}}\right)\right)\\
+        \end{array}$$
+
+        où $sgn(x) = \left\{
+        \begin{array}{ll}
+          -1  & \mbox{si } x < 0 \\
+          1 & \mbox{sinon} \\
+        \end{array}
+        \right.$ et $\varepsilon = \frac{\#joueurs}{ln(0.04)}$
+      \end{definition}
+
+      \paragraph{remarques/variantes}
+        \begin{enumerate}
+          \item On peut noter que cette fonction est la fonction de répartition de la première loi de Laplace.
+          \item Avec cette définition on n'obtient pas une valeur de 1 (resp. $0$) sur l'argument $a$ si tous les agents "like" (resp. "dislikes"). On peut donc raffiner cette fonction et forcer ces cas limites :
+          $$\begin{array}{rclc}
+            \tau_\varepsilon :  & \mathbb{N} \times \mathbb{N} & \longrightarrow & [0, 1] \\
+            & (\#joueurs, 0) & \longmapsto & 1 \\
+            & (0, \#joueurs) & \longmapsto & 0 \\
+            & (v^+,v^-) & \longmapsto & \frac{1}{2} \cdot \left(1 + sgn(v^+ - v^-) \cdot \left(1 - e^{\frac{-|v^+ - v^-|}{\varepsilon}}\right)\right)\\
+          \end{array}$$
+        \end{enumerate}
+
+  \color{black}
     On peut ensuite définir une sémantique d'argumentation.
-    \begin{definition}[Simple Product Semantics]
+    \begin{definition}[\textcolor{red}{Simple} \textcolor{blue}{Laplace} Product Semantics]
       $\mathcal{S}_\varepsilon = \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ est la sémantique tel que :
       \begin{enumerate}
         \item $x_1 \curlywedge x_2 = x_1 \cdot x_2$
         \item $x_1 \curlyvee x_2 = x_1 + x_2 - x_1 \cdot x_2$
         \item $\neg x_1 = 1 - x_1$
+\color{red}
         \item $\varepsilon \geq 0$
         \item $\tau_\varepsilon(a) = \left\{
           \begin{array}{lll}
             0 & \mbox{si } & v^+ = v^- = 0\\
             \frac{v^+}{v^+ + v^- + \varepsilon} & \mbox{sinon} & \\
           \end{array}\right.$ pour tout $a \in \mathcal{A}$
+\color{blue}
+        \item $\tau_\varepsilon$ la fonction défini précédement.
+\color{black}
       \end{enumerate}
 
     \end{definition}
@@ -102,26 +149,44 @@
 
   \paragraph{Initialisation}
   \begin{enumerate}
+\color{blue}
+    \item Chaque agent analyse le débat, il "like" les arguments qu'il trouve recevables et "dislike" ceux qu'il juge inconsistant.
+    Les arguments recevables auront donc 1 "like" et 0 "dislike", ceux inconsistant auront 0 "like" et 1 "dislike" et les autres 0 "like" et "dislike".
+\color{red}
     \item Chaque agent choisi (secrètement) les arguments qu'il trouve recevables, les arguments recevables auront 1 "like" et 0 "dislike", les autres 0 "like" et 1 "dislike".
-
+\color{black}
     \item En tenant compte de ces poids il calcule la valeur qu'il associe à la question. Cette valeur n'est pas connu des autres agents.
   \end{enumerate}
 
-  \paragraph{Le jeu\\}
+  \paragraph{Le jeu}\textcolor{blue}{(deux variantes possibles)}
 
-    Les agents se regroupent autour d'une table où une représentation du débat s'y trouve. Cette représentation est dépourvu de poids ("like" ou "dislike") et la valeur de la question dans cette représentation est affiché et connu de tous.
+\color{blue}
+    \begin{description}
+      \item[Variante 1] Les agents se regroupent autour d'une table où seul la question est exposée. Ils reconstruisent le débat en ajoutant les arguments les uns après les autres. Pour ce faire lorsqu'un agent vote ("like" ou "dislike") sur un argument non présent, l'argument s'ajoute à la représentation avec le vote.
 
-  \paragraph{objectif\\}
+\color{black}
+      \item[Variante 2] Les agents se regroupent autour d'une table où une représentation du débat s'y trouve. Cette représentation est dépourvu de poids ("like" ou "dislike") et la valeur de la question dans cette représentation est affiché et connu de tous.
+    \end{description}
+\color{black}
+  \paragraph{objectif\\}\textcolor{blue}{(deux objectis différents possibles)}
+  \begin{description}
+    \item[Objectif 1] L'objectif pour chacun des joueurs va être de faire tendre la valeur de la question de cette représentation vers sa valeur calculée lors de la phase d'initialisation.
+\color{blue}
+    \item[Objectif 2] L'intervalle $[0, 1]$ est divisé en cluster. Un joueur appartient à un cluster si sa valeur appartient au cluster.
 
-  L'objectif pour chacun des joueurs va être de faire tendre la valeur de la question de cette représentation vers sa valeur calculée lors de la phase d'initialisation.
+    L'objectif de chaque joueur est que la valeur finale du débat appartienne à son cluster. Les joueurs peuvent alors former des alliances.
+\color{black}
+  \end{description}
 
-  \paragraph{Règles}(trois variantes possibles)
+
+  \paragraph{Règles}(\textcolor{red}{trois} \textcolor{blue}{deux} variantes possibles)
     \begin{description}
       \item[Variante 1] Chaque agent peut voter qu'une fois (k fois) par argument.
 
-      \item[Variante 3] Les agents peuvent changer d'avis sur le vote qu'ils ont attribué à un argument et retirer leur vote ou l'inverser.
-
+      \item[Variante 2] Les agents peuvent changer d'avis sur le vote qu'ils ont attribué à un argument et donc retirer leur vote ou l'inverser.
+\color{red}
       \item[Variante 3] Les agents peuvent re-voter pour un argument à la condition qu'un autre joueur à voter l'inverse sur cet argument entre temps. De plus les agents sont obligés de voter sincèrement (ils ne pourront donner un "like" qu'aux arguments qu'ils ont trouvé recevable durant la phase d'initialisation et un "dislike" que aux autres).
+\color{black}
     \end{description}
 
     \paragraph{Dynamique\\}
@@ -131,7 +196,7 @@
     \begin{itemize}
       \item Il y a t-il convergence?
       \item Si tous les agents ont la même valeur à la fin de l'initialisation, il y a t-il convergence? Il existe alors un équilibre mais peut-on toujours l'atteindre? (Ce n'est pas la même question? Si on peut toujours atteindre l'équilibre alors ça converge, et si ça converge alors il y a un équilibre? Non?)
-      \item Quel est le prix de l'anarchie dans le cas de la variante 1?
+      \item Quel est le prix de l'anarchie dans le cas de la règle 1?
       \item Peut-on trouver une stratégie pour les agents?
     \end{itemize}
 
@@ -142,7 +207,13 @@
   Dans notre cas, on considère que la question (notons la $q$) ne reçoit aucun vote (ce qui est plutôt intuitif). Mais si on prend cette définition pour la sémantique alors $LM(q) = 0$ quelques soit les attaquants car $\tau_\varepsilon(q) = 0$.
 \end{problem}
 
-\begin{solution}[préférée]
+\color{blue}
+  \begin{solution}
+    On a changé la définition de $\tau$ cf. définition \ref{ref:def_tau} page \pageref{ref:def_tau}
+  \end{solution}
+
+\color{red}
+\begin{solution}
   On change la définition de $\tau_\varepsilon$, elle devient :
 
   $$\tau_\varepsilon(a) = \frac{1 + v^+}{1 + v^+ + v^- + \varepsilon} \mbox{ pour tout } a \in \mathcal{A}$$
@@ -181,11 +252,14 @@
 
     Cela peut paraitre incohérent.
 
-    \paragraph{exemple}
-      % \TODO tikz exemple
 
   \end{problem}
 
+  \begin{solution}
+    La nouvelle définition de $\tau$ (cf. définition \ref{ref:def_tau} page \pageref{ref:def_tau}) corrige également cette incohérence.
+  \end{solution}
+
+\color{red}
   \begin{solution}
     Supposer que chaque agent a une vision personnelle non discrète (un agent peut donc donné une valeur dans l'intervalle $[0,1]$ à chaque arguments).
 
@@ -232,6 +306,7 @@
   \end{solution}
 \color{black}
 \section{Où j'en suis}
+\color{red}
 \begin{itemize}
   \item Cette fin de semaine j'ai commencé à chercher des exemples simples d'arbres sur lesquels les agents ont la même valeur pour la question mais des poids différents sur les arguments.
 

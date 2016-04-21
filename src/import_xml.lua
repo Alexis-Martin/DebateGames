@@ -1,5 +1,5 @@
 local xml  = require "xml"
-local data = xml.loadpath("arbre1.xml")
+local data = xml.loadpath("arbre3.xml")
 
 local game = {
   graphs = {},

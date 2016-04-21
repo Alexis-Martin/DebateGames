@@ -4,13 +4,18 @@ local function SAA(players, graph, precision)
   -- initialisation
   local tho = {}
   for k, v in pairs(graph.vertices) do
-    local sgn
-    if v.likes - v.dislikes < 0 then sgn = -1 else sgn = 1 end
-
-    local eps     = players / math.log(0.04)
-    local int_exp = - math.abs(v.likes - v.dislikes) / eps
-    tho[k]        = 0.5 * (1 + sgn * (1 - math.exp(int_exp)))
-    v.LM          = tho[k]
+    local eps     = -players / math.log(0.04)
+    local int_exp = (v.likes - v.dislikes) / eps
+    if v.likes == 0 and v.dislikes == players then
+      tho[k] = 0
+    elseif v.dislikes == 0 and v.likes == players then
+      tho[k] = 1
+    elseif v.likes - v.dislikes < 0 then
+      tho[k] = 0.5 * math.exp(int_exp)
+    else
+      tho[k] = 1 - 0.5 * math.exp(-int_exp)
+    end
+    v.LM = tho[k]
   end
 
   local function iter()
@@ -53,5 +58,9 @@ end
 
 -- game.print_table(game)
 for k, v in pairs(game.graphs) do
-  print (k, "q", v.vertices.q.LM)
+  for k1, v1 in pairs(v.vertices) do
+    print (k, k1, v1.LM)
+  end
 end
+
+return game

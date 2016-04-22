@@ -1,14 +1,17 @@
 local xml  = require "xml"
-local data = xml.loadpath("arbre3.xml")
+local data = xml.loadpath("LM2_example.xml")
 
 local game = {
   graphs = {},
-  players = data.players
+  players = tonumber(data.players)
 }
 
 -- transform general graph and players graphs
 for _, g in pairs(data) do
   if type(g) == "table" then
+    if g.view ~= "general" then
+      g.view = tonumber(g.view)
+    end
     game.graphs[g.view] = {
       type      = g.xml,
       view      = g.view,
@@ -19,8 +22,8 @@ for _, g in pairs(data) do
           attack    = {},
           attackers = {},
           content   = str_content or nil,
-          likes     = n_likes or 0,
-          dislikes  = n_dislikes or 0
+          likes     = tonumber(n_likes) or 0,
+          dislikes  = tonumber(n_dislikes) or 0
         }
         if type(other_tags) == "table" then
           for k,v in pairs(other_tags) do
@@ -62,15 +65,16 @@ for _, g in pairs(data) do
   end
 end
 
-local function deepcopy(orig)
+game.deepcopy = nil
+game.deepcopy = function (orig)
   local orig_type = type(orig)
   local copy
   if orig_type == 'table' then
     copy = {}
     for orig_key, orig_value in next, orig, nil do
-      copy[deepcopy(orig_key)] = deepcopy(orig_value)
+      copy[game.deepcopy(orig_key)] = game.deepcopy(orig_value)
     end
-    setmetatable(copy, deepcopy(getmetatable(orig)))
+    setmetatable(copy, game.deepcopy(getmetatable(orig)))
   else -- number, string, boolean, etc
     copy = orig
   end
@@ -80,7 +84,7 @@ end
 local function addDistinct(table_1, table_2, apply)
   for k, v in pairs(table_2) do
     if table_1[k] == nil then
-      table_1[k] = deepcopy(v)
+      table_1[k] = game.deepcopy(v)
       if type(apply) == 'function' then
         apply(table_1[k])
       end

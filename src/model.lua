@@ -1,16 +1,17 @@
 local game = require "import_xml"
 
-local function SAA(players, graph, precision)
+function game.SAA(players, graph, precision)
   -- initialisation
   local tho = {}
   for k, v in pairs(graph.vertices) do
     local eps     = -players / math.log(0.04)
     local int_exp = (v.likes - v.dislikes) / eps
-    if v.likes == 0 and v.dislikes == players then
-      tho[k] = 0
-    elseif v.dislikes == 0 and v.likes == players then
-      tho[k] = 1
-    elseif v.likes - v.dislikes < 0 then
+    --
+    -- if v.likes == 0 and v.dislikes == players then
+    --   tho[k] = 0
+    -- elseif v.dislikes == 0 and v.likes == players then
+    --   tho[k] = 1
+    if v.likes - v.dislikes < 0 then
       tho[k] = 0.5 * math.exp(int_exp)
     else
       tho[k] = 1 - 0.5 * math.exp(-int_exp)
@@ -48,11 +49,17 @@ local function SAA(players, graph, precision)
   end
 
   iter()
+  for _,v in pairs(graph.vertices) do
+    if v.tag == "question" then
+      graph.LM = v.LM
+      break
+    end
+  end
 end
 
 do
   for _, g in pairs(game.graphs) do
-    SAA(game.players, g, 0.001)
+    game.SAA(game.players, g, 0.001)
   end
 end
 

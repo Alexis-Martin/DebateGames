@@ -10,19 +10,19 @@
     <edge source="a3" target="q"/>
   </tree>
 
-  <tree view="joueur 1">
+  <tree view="1">
     <vertex name="a1" likes="1"/>
     <vertex name="a2" dislikes="1"/>
     <vertex name="a3" dislikes="1"/>
   </tree>
 
-  <tree view="joueur 2">
+  <tree view="2">
     <vertex name="a1" dislikes="1"/>
     <vertex name="a2" likes="1"/>
     <vertex name="a3" dislikes="1"/>
   </tree>
 
-  <tree view="joueur 3">
+  <tree view="3">
     <vertex name="a1" dislikes="1"/>
     <vertex name="a2" dislikes="1"/>
     <vertex name="a3" likes="1"/>

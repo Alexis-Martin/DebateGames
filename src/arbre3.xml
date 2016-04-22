@@ -1,4 +1,4 @@
-<game players="1">
+<game players="2">
   <tree view="general">
     <vertex tag="question" name="q">q</vertex>
     <vertex name="a1">a1</vertex>
@@ -20,18 +20,18 @@
     <edge source="a8" target="a3"/>
   </tree>
 
-  <tree view="joueur 1">
+  <tree view="1">
     <vertex name="a1" likes="1"/>
     <vertex name="a2" dislikes="1"/>
     <vertex name="a3" likes="1"/>
     <vertex name="a4" dislikes="1"/>
     <vertex name="a5" likes="1"/>
-    <vertex name="a6" likes="1"/>
+    <vertex name="a6" dislikes="0" likes="1"/>
     <vertex name="a7" dislikes="0"/>
     <vertex name="a8" dislikes="0"/>
   </tree>
 
-  <tree view="joueur 2">
+  <tree view="2">
     <vertex name="a1" likes="0"/>
     <vertex name="a2" likes="0"/>
     <vertex name="a3" dislikes="1"/>

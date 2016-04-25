@@ -58,16 +58,20 @@ function game.SAA(players, graph, precision)
 end
 
 do
-  for _, g in pairs(game.graphs) do
-    game.SAA(game.players, g, 0.001)
+  for k, g in pairs(game.graphs) do
+    if k == "general" then
+      game.SAA(game.players, g, 0.001)
+    else
+      game.SAA(1, g, 0.001)
+    end
   end
 end
 
 -- game.print_table(game)
-for k, v in pairs(game.graphs) do
-  for k1, v1 in pairs(v.vertices) do
-    print (k, k1, v1.LM)
-  end
-end
+-- for k, v in pairs(game.graphs) do
+--   for k1, v1 in pairs(v.vertices) do
+--     print (k, k1, v1.LM)
+--   end
+-- end
 
 return game

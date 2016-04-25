@@ -204,7 +204,7 @@ P.S.: Le fichier Tex est sur Git, on aura donc toujours la possibilité de retro
     La nouvelle définition de $\tau$ (cf. définition \ref{ref:def_tau} page \pageref{ref:def_tau}) corrige également cette incohérence.
 \end{solution}
 
-\color{blue}
+
 \section{Tests et Exemples}
 
 \subsection{Le cas des Arbres}
@@ -256,7 +256,7 @@ Sur le débat représenté dans la figure \ref{fig:dif_pref} on remarque que le 
   };
   \end{tikzpicture} \\
 \end{tabular}
-\color{blue}
+
 \caption{De gauche à droite: graphe général, préférences du joueur 1, préférences du joueur 2}
 \label{fig:dif_pref}
 \end{figure}
@@ -309,7 +309,7 @@ Sur l'exemple trivial de la figure \ref{fig:trivial} on atteint également l'éq
   };
   \end{tikzpicture} \\
 \end{tabular}
-\color{blue}
+
 \caption{De gauche à droite: graphe général, préférences du joueur 1, préférences du joueur 2, préférences du joueur 3}
 \label{fig:trivial}
 \end{figure}
@@ -343,7 +343,6 @@ Sur l'exemple de la figure \ref{fig:dif_pref} on atteint l'équilibre, en revanc
 "d\\ (10,40)" -> "e\\ (40,10)";
 };
 \end{tikzpicture}
-\color{blue}
 \caption{Exemple de l'article Social Abstract Argumentation de Leite et Martins}
 \label{fig:LM_example}
 \end{figure}
@@ -377,7 +376,6 @@ Cet exemple est tiré de l'article Extending Social Abstract Argumentation with 
   "d\\ (130,61)" -> "b\\ (70,70)";
   };
 \end{tikzpicture}
-\color{blue}
 \caption{Deuxième exemple de Leite et Martins}
 \label{fig:LM2_example}
 \end{figure}
@@ -396,7 +394,31 @@ En revanche sur cet exemple les changements sont plus importants.
 
 Avec la défintion de Leite et Martins on a : $a \prec c \prec b \prec d \prec e$ alors qu'avec notre définition on a : $c \prec b \prec a \prec e \prec d$
 
+\color{blue}
+\section{Résultats}
+  \subsection{Atteint-on l'équilibre avec la première définition de $\tau$ dans l'exemple de la figure \ref{fig:trivial}?}
 
+    \paragraph{remarque :}Je viens de me rendre compte que j'ai peut être mal interprété le terme équilibre. J'entend par équilibre le fait d'atteindre la valeur exact souhaité par les 3 joueurs (dans le cadre de l'exemple de la figure \ref{fig:trivial}). C'est à dire 0.009604.
+
+    La réponse est non, j'ai refait le calcul exact à la main et on atteint pas 0.009604 avec ce point de départ.
+
+    En revanche cet objectif existe, si on prend :
+    \begin{itemize}
+      \item a1 : $likes = 3, dislikes = 0$
+      \item a2 : $likes = 0, dislikes = 3$
+      \item a3 : $likes = 0, dislikes = 3$
+    \end{itemize}
+    Alors $LM(q) = 0.009604$
+
+    En changeant le nombre de vote au départ, par exemple si on prend :
+    \begin{itemize}
+      \item a1 : $likes = 1, dislikes = 2$
+      \item a2 : $likes = 1, dislikes = 2$
+      \item a3 : $likes = 1, dislikes = 2$
+    \end{itemize}
+
+    on atteint pas non plus l'équilibre, on reste bloqué comme avant à environ $0.00731$.
+\color{black}
 \section{Ce qu'il faut que je fasse}
 
 \begin{itemize}

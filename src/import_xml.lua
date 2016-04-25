@@ -2,24 +2,35 @@ local xml  = require "xml"
 local data = xml.loadpath("arbre1.xml")
 
 local game = {
-  graphs = {}
+  graphs = {},
+  players = tonumber(data.players)
 }
 
 -- transform general graph and players graphs
 for _, g in pairs(data) do
   if type(g) == "table" then
+    if g.view ~= "general" then
+      g.view = tonumber(g.view)
+    end
     game.graphs[g.view] = {
       type      = g.xml,
       view      = g.view,
       vertices  = {},
       edges     = {},
-      addVertex = function (graph, name, n_likes, n_dislikes)
+      addVertex = function (graph, name, str_content, n_likes, n_dislikes, other_tags)
         graph.vertices[name] = {
           attack    = {},
           attackers = {},
-          likes     = n_likes or 0,
-          dislikes  = n_dislikes or 0
+          content   = str_content or nil,
+          likes     = tonumber(n_likes) or 0,
+          dislikes  = tonumber(n_dislikes) or 0
         }
+        if type(other_tags) == "table" then
+          for k,v in pairs(other_tags) do
+            graph.vertices[name][k] = v
+          end
+        end
+
         return graph.vertices[name]
       end,
     }
@@ -28,30 +39,18 @@ for _, g in pairs(data) do
     local n_edge = 1
 
     for _, v in pairs(g) do
-      if type(v) == 'table' and v.xml == 'vertex' and graph.vertices[v[1]] == nil then
-        if graph.view == 'general' or v[1] == 'q' then
-          graph.addVertex(graph, v[1])
-        else
-          graph.addVertex(graph, v[1], 1)
-        end
+      if type(v) == 'table' and v.xml == 'vertex' and graph.vertices[v.name] == nil then
+          graph.addVertex(graph, v.name, v[1], v.likes, v.dislikes, {tag = v.tag})
       end
 
       if type(v) == "table" and v.xml == "edge" then
         graph.edges[n_edge] = { source = v.source, target = v.target }
 
         if graph.vertices[v.source] == nil then
-          if graph.view == 'general' or v.source == 'q' then
-            graph.addVertex(graph, v[1])
-          else
-            graph.addVertex(graph, v[1], 1)
-          end
+          graph.addVertex(graph, v.name, v[1], v.likes, v.dislikes, {tag = v.tag})
         end
         if graph.vertices[v.target] == nil then
-          if graph.view == 'general' or v.target == 'q' then
-            graph.addVertex(graph, v[1])
-          else
-            graph.addVertex(graph, v[1], 1)
-          end
+          graph.addVertex(graph, v.name, v[1], v.likes, v.dislikes, {tag = v.tag})
         end
 
         local att = graph.vertices[v.source]
@@ -66,15 +65,16 @@ for _, g in pairs(data) do
   end
 end
 
-local function deepcopy(orig)
+game.deepcopy = nil
+game.deepcopy = function (orig)
   local orig_type = type(orig)
   local copy
   if orig_type == 'table' then
     copy = {}
     for orig_key, orig_value in next, orig, nil do
-      copy[deepcopy(orig_key)] = deepcopy(orig_value)
+      copy[game.deepcopy(orig_key)] = game.deepcopy(orig_value)
     end
-    setmetatable(copy, deepcopy(getmetatable(orig)))
+    setmetatable(copy, game.deepcopy(getmetatable(orig)))
   else -- number, string, boolean, etc
     copy = orig
   end
@@ -84,7 +84,7 @@ end
 local function addDistinct(table_1, table_2, apply)
   for k, v in pairs(table_2) do
     if table_1[k] == nil then
-      table_1[k] = deepcopy(v)
+      table_1[k] = game.deepcopy(v)
       if type(apply) == 'function' then
         apply(table_1[k])
       end
@@ -102,14 +102,7 @@ for _, graph in pairs(game.graphs) do
         end
       end
       if type(v) == 'table' then
-        local addDislikes = function(vertex)
-          vertex.dislikes = 1
-        end
-        if k == 'vertices' then
-          addDistinct(v, game.graphs.general[k], addDislikes)
-        else
           addDistinct(v, game.graphs.general[k])
-        end
       end
     end
   end

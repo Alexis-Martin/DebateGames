@@ -1,33 +1,30 @@
-<game>
+<game players="3">
   <tree view="general">
-    <vertex>q</vertex>
-    <vertex>a1</vertex>
-    <vertex>a2</vertex>
-    <vertex>a3</vertex>
+    <vertex tag="question" name="q">q</vertex>
+    <vertex name="a1">a1</vertex>
+    <vertex name="a2">a2</vertex>
+    <vertex name="a3">a3</vertex>
 
     <edge source="a1" target="q"/>
     <edge source="a2" target="q"/>
     <edge source="a3" target="q"/>
   </tree>
 
-  <tree view="joueur 1">
-    <vertex>q</vertex>
-    <vertex>a1</vertex>
-
-    <edge source="a1" target="q"/>
+  <tree view="1">
+    <vertex name="a1" likes="1"/>
+    <vertex name="a2" dislikes="1"/>
+    <vertex name="a3" dislikes="1"/>
   </tree>
 
-  <tree view="joueur 2">
-    <vertex>q</vertex>
-    <vertex>a2</vertex>
-
-    <edge source="a2" target="q"/>
+  <tree view="2">
+    <vertex name="a1" dislikes="1"/>
+    <vertex name="a2" likes="1"/>
+    <vertex name="a3" dislikes="1"/>
   </tree>
 
-  <tree view="joueur 3">
-    <vertex>q</vertex>
-    <vertex>a3</vertex>
-
-    <edge source="a3" target="q"/>
+  <tree view="3">
+    <vertex name="a1" dislikes="1"/>
+    <vertex name="a2" dislikes="1"/>
+    <vertex name="a3" likes="1"/>
   </tree>
 </game>

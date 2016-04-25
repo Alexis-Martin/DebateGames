@@ -1,0 +1,17 @@
+<game players="70">
+  <tree view="general">
+    <vertex name="a" likes="20" dislikes="20">a</vertex>
+    <vertex name="b" likes="20" dislikes="20">b</vertex>
+    <vertex name="c" likes="60" dislikes="10">c</vertex>
+    <vertex name="d" likes="10" dislikes="40">d</vertex>
+    <vertex name="e" likes="40" dislikes="10">e</vertex>
+
+    <edge source="a" target="b"/>
+    <edge source="b" target="a"/>
+    <edge source="c" target="b"/>
+    <edge source="e" target="c"/>
+    <edge source="d" target="c"/>
+    <edge source="e" target="d"/>
+    <edge source="d" target="e"/>
+  </tree>
+</game>

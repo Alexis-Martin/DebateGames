@@ -8,6 +8,10 @@
 \usepackage{mathtools}
 \usepackage{amsthm}
 \usepackage{color}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing,graphs}
+\usegdlibrary{layered}
 
 \title{Compte rendu de la semaine}
 \author{Alexis Martin}
@@ -86,7 +90,6 @@ P.S.: Le fichier Tex est sur Git, on aura donc toujours la possibilité de retro
 
   \subsection{Définitions}
   \label{ref:def_tau}
-  \color{blue}
       \begin{definition}
         Soit $\tau_\varepsilon$ la fonction défini par :
         $$\begin{array}{rclc}
@@ -103,6 +106,7 @@ P.S.: Le fichier Tex est sur Git, on aura donc toujours la possibilité de retro
       \end{definition}
 
       \paragraph{remarques/variantes}
+      \label{ref:rem_def_tau}
         \begin{enumerate}
           \item On peut noter que cette fonction est la fonction de répartition de la première loi de Laplace.
           \item Avec cette définition on n'obtient pas une valeur de 1 (resp. $0$) sur l'argument $a$ si tous les agents "like" (resp. "dislikes"). On peut donc raffiner cette fonction et forcer ces cas limites :
@@ -114,24 +118,14 @@ P.S.: Le fichier Tex est sur Git, on aura donc toujours la possibilité de retro
           \end{array}$$
         \end{enumerate}
 
-  \color{black}
     On peut ensuite définir une sémantique d'argumentation.
-    \begin{definition}[\textcolor{red}{Simple} \textcolor{blue}{Laplace} Product Semantics]
+    \begin{definition}[Laplace Product Semantics]
       $\mathcal{S}_\varepsilon = \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ est la sémantique tel que :
       \begin{enumerate}
         \item $x_1 \curlywedge x_2 = x_1 \cdot x_2$
         \item $x_1 \curlyvee x_2 = x_1 + x_2 - x_1 \cdot x_2$
         \item $\neg x_1 = 1 - x_1$
-\color{red}
-        \item $\varepsilon \geq 0$
-        \item $\tau_\varepsilon(a) = \left\{
-          \begin{array}{lll}
-            0 & \mbox{si } & v^+ = v^- = 0\\
-            \frac{v^+}{v^+ + v^- + \varepsilon} & \mbox{sinon} & \\
-          \end{array}\right.$ pour tout $a \in \mathcal{A}$
-\color{blue}
         \item $\tau_\varepsilon$ la fonction défini précédement.
-\color{black}
       \end{enumerate}
 
     \end{definition}
@@ -148,44 +142,32 @@ P.S.: Le fichier Tex est sur Git, on aura donc toujours la possibilité de retro
 
   \paragraph{Initialisation}
   \begin{enumerate}
-\color{blue}
     \item Chaque agent analyse le débat, il "like" les arguments qu'il trouve recevables et "dislike" ceux qu'il juge inconsistant.
     Les arguments recevables auront donc 1 "like" et 0 "dislike", ceux inconsistant auront 0 "like" et 1 "dislike" et les autres 0 "like" et "dislike".
-\color{red}
-    \item Chaque agent choisi (secrètement) les arguments qu'il trouve recevables, les arguments recevables auront 1 "like" et 0 "dislike", les autres 0 "like" et 1 "dislike".
-\color{black}
     \item En tenant compte de ces poids il calcule la valeur qu'il associe à la question. Cette valeur n'est pas connu des autres agents.
   \end{enumerate}
 
-  \paragraph{Le jeu}\textcolor{blue}{(deux variantes possibles)}
-
-\color{blue}
+  \paragraph{Le jeu}(deux variantes possibles)
     \begin{description}
       \item[Variante 1] Les agents se regroupent autour d'une table où seul la question est exposée. Ils reconstruisent le débat en ajoutant les arguments les uns après les autres. Pour ce faire lorsqu'un agent vote ("like" ou "dislike") sur un argument non présent, l'argument s'ajoute à la représentation avec le vote.
 
-\color{black}
       \item[Variante 2] Les agents se regroupent autour d'une table où une représentation du débat s'y trouve. Cette représentation est dépourvu de poids ("like" ou "dislike") et la valeur de la question dans cette représentation est affiché et connu de tous.
     \end{description}
-\color{black}
-  \paragraph{objectif\\}\textcolor{blue}{(deux objectis différents possibles)}
+
+  \paragraph{objectif}(deux objectifs différents possibles)
   \begin{description}
     \item[Objectif 1] L'objectif pour chacun des joueurs va être de faire tendre la valeur de la question de cette représentation vers sa valeur calculée lors de la phase d'initialisation.
-\color{blue}
     \item[Objectif 2] L'intervalle $[0, 1]$ est divisé en cluster. Un joueur appartient à un cluster si sa valeur appartient au cluster.
 
     L'objectif de chaque joueur est que la valeur finale du débat appartienne à son cluster. Les joueurs peuvent alors former des alliances.
-\color{black}
   \end{description}
 
 
-  \paragraph{Règles}(\textcolor{red}{trois} \textcolor{blue}{deux} variantes possibles)
+  \paragraph{Règles}(deux variantes possibles)
     \begin{description}
       \item[Variante 1] Chaque agent peut voter qu'une fois (k fois) par argument.
 
       \item[Variante 2] Les agents peuvent changer d'avis sur le vote qu'ils ont attribué à un argument et donc retirer leur vote ou l'inverser.
-\color{red}
-      \item[Variante 3] Les agents peuvent re-voter pour un argument à la condition qu'un autre joueur à voter l'inverse sur cet argument entre temps. De plus les agents sont obligés de voter sincèrement (ils ne pourront donner un "like" qu'aux arguments qu'ils ont trouvé recevable durant la phase d'initialisation et un "dislike" que aux autres).
-\color{black}
     \end{description}
 
     \paragraph{Dynamique\\}
@@ -206,112 +188,224 @@ P.S.: Le fichier Tex est sur Git, on aura donc toujours la possibilité de retro
   Dans notre cas, on considère que la question (notons la $q$) ne reçoit aucun vote (ce qui est plutôt intuitif). Mais si on prend cette définition pour la sémantique alors $LM(q) = 0$ quelques soit les attaquants car $\tau_\varepsilon(q) = 0$.
 \end{problem}
 
-\color{blue}
-  \begin{solution}
+\begin{solution}
     On a changé la définition de $\tau$ cf. définition \ref{ref:def_tau} page \pageref{ref:def_tau}
-  \end{solution}
-
-\color{red}
-\begin{solution}
-  On change la définition de $\tau_\varepsilon$, elle devient :
-
-  $$\tau_\varepsilon(a) = \frac{1 + v^+}{1 + v^+ + v^- + \varepsilon} \mbox{ pour tout } a \in \mathcal{A}$$
-
-  \paragraph{remarques}
-    \begin{enumerate}
-      \item Avec cette définition, on change la valeur initiale de tous les arguments.(i.e. Un argument sans vote positif aura quand même une valeur positive, alors qu'avec la définition originale un argument n'ayant pas de vote positif aura une valeur égale à 0).
-
-      \item Dans notre phase d'initialisation il est donc différent de considérer que les joueurs votent négativement sur les arguments avec lesquels ils ne sont pas d'accord et de considérer que les joueurs ont seulement la partie du graphe avec laquelle ils sont d'accord.
-    \end{enumerate}
 \end{solution}
 
-\begin{solution}
-  On considère que chaque joueur a donné un "like" à la question. On a donc $v^+(q) = \#agents$.
-
-  \paragraph{remarques}
-    \begin{enumerate}
-      \item Cette solution comporte le problème que plus le nombre de joueur est grand plus la valeur pour la question sera grande pour tout le monde. Cela implique qu'il n'y aura que très peu de différence sur les valeurs de chacun des joueurs.
-
-      \item On peut aussi se poser la question suivante : autorise-t-on les joueurs à voter sur la question lors du déroulement du jeu? Si non, initialise-t-on la question avec $\#agents$ votes positifs?
-    \end{enumerate}
-\end{solution}
-
-\begin{solution}
-  On peut également traiter la question à part. Dire par exemple que $\tau_\varepsilon(q) = 1$ ou que $\tau_\varepsilon(q) = \frac{1}{1 + \varepsilon}$.
-
-  \paragraph{remarques}
-    En choisissant cette solution on offre un régime particulier à la question. Ce qui peut poser des problèmes lors de l'analyse de notre système.
-\end{solution}
-
-\color{blue}
-  \begin{problem}
+\begin{problem}
     Un autre problème un peu similaire au précédent. D'après la définition de Leite et Martins un argument qui n'a pas de vote a un poids à 0 (i.e. $\tau_\varepsilon (a) = 0$) et un vote qui n'a que des votes négatif a également un poids à 0.
 
     Le problème dans l'initialisation (entre autre) est que "disliker" un argument (ne pas le trouver recevable du tout) ou ne pas avoir d'avis reviens au même, ce fait ce propage à tous les fils de ces arguments.
 
     Cela peut paraitre incohérent.
+\end{problem}
 
-
-  \end{problem}
-
-  \begin{solution}
+\begin{solution}
     La nouvelle définition de $\tau$ (cf. définition \ref{ref:def_tau} page \pageref{ref:def_tau}) corrige également cette incohérence.
-  \end{solution}
+\end{solution}
 
-\color{red}
-  \begin{solution}
-    Supposer que chaque agent a une vision personnelle non discrète (un agent peut donc donné une valeur dans l'intervalle $[0,1]$ à chaque arguments).
+\color{blue}
+\section{Tests et Exemples}
 
-    On peut alors considérer que les agents sont des représentants d'un groupe.
+\subsection{Le cas des Arbres}
+\subsubsection{Question: Peut-on trouver des arbres ou les agents n'ont pas les mêmes préférences mais la même valeur à la fin de l'initialisation?\newline}
 
-    \paragraph{Remarques}
-      \begin{enumerate}
-        \item Dans ce cas on utilise toujours la fonction de Leite et Martins pour le jeu et on peut considèrer qu'un argument sans votes positifs n'a pas de raison d'exister dans le débat.
+\paragraph{Si l'on considère la variante de la fonction $\tau$}
 
-        \item Dans le cadre du jeu les premiers votes seront "inutiles" dans le sens où il faudra obligatoirement commencer par voter sur un argument qui attaque la question, et tous les arguments qui attaque la question auront le même effet.
+\subparagraph{rappel} Cette variante défini la fonction $\tau$ en forçant les cas limites (c.f. remarque de la definition \ref{ref:def_tau}) \\
 
-        Cela peut poser des problèmes sur le protocole One-Shot.
-      \end{enumerate}
-  \end{solution}
+Sur le débat représenté dans la figure \ref{fig:dif_pref} on remarque que le joueur 1 et le joueur 2 ont des avis totalement différents sur chacun des arguments. En revanche la valeur de la question est la même. A savoir : $LM_1(q) = LM_2(q) = 0.125$
 
-  \begin{solution}
-    Modifier la valeur par defaut dans la définition de $\tau$ en $0.5$.
+\begin{figure}
+\centering
+\begin{tabular}{ccc}
+  \begin{tikzpicture}[>=stealth]
+  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+  "a1\\ (0,0)" -> "q\\ (0,0)";
+  "a2\\ (0,0)" -> "q\\ (0,0)";
+  "a3\\ (0,0)" -> "a1\\ (0,0)";
+  "a4\\ (0,0)" -> "a1\\ (0,0)";
+  "a5\\ (0,0)" -> "a2\\ (0,0)";
+  "a6\\ (0,0)" -> "a2\\ (0,0)";
+  "a7\\ (0,0)" -> "a3\\ (0,0)";
+  "a8\\ (0,0)" -> "a3\\ (0,0)";
+  };
+  \end{tikzpicture} &
+  \begin{tikzpicture}[>=stealth]
+  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+  "a1\\ (1,0)" -> "q\\ (0,0)";
+  "a2\\ (0,1)" -> "q\\ (0,0)";
+  "a3\\ (1,0)" -> "a1\\ (1,0)";
+  "a4\\ (0,1)" -> "a1\\ (1,0)";
+  "a5\\ (1,0)" -> "a2\\ (0,1)";
+  "a6\\ (1,0)" -> "a2\\ (0,1)";
+  "a7\\ (0,0)" -> "a3\\ (1,0)";
+  "a8\\ (0,0)" -> "a3\\ (1,0)";
+  };
+  \end{tikzpicture} &
+  \begin{tikzpicture}[>=stealth]
+  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+  "a1\\ (0,0)" -> "q\\ (0,0)";
+  "a2\\ (0,0)" -> "q\\ (0,0)";
+  "a3\\ (0,1)" -> "a1\\ (0,0)";
+  "a4\\ (0,1)" -> "a1\\ (0,0)";
+  "a5\\ (0,1)" -> "a2\\ (0,0)";
+  "a6\\ (0,1)" -> "a2\\ (0,0)";
+  "a7\\ (1,0)" -> "a3\\ (0,1)";
+  "a8\\ (1,0)" -> "a3\\ (0,1)";
+  };
+  \end{tikzpicture} \\
+\end{tabular}
+\color{blue}
+\caption{De gauche à droite: graphe général, préférences du joueur 1, préférences du joueur 2}
+\label{fig:dif_pref}
+\end{figure}
 
-    \paragraph{Remarques}
-      \begin{enumerate}
-        \item Les propriétés de monotonie sont bien respectées.
-        \item On considère équivalent un argument avec 1 vote négatif et 1000 votes négatifs.
-        \item Cela résoud aussi le problème 1.
-        \item Applique t-on cette nouvelle définition également dans le jeu?
-      \end{enumerate}
-  \end{solution}
+\paragraph{Si l'on considère la première définition de $\tau$\\}
+Je n'ai pas encore trouvé d'exemple qui possède cette propriété.
+Cela est dû à la définition de $\tau$, un argument "disliker" n'aura pas un poids égale à 0 et un argument "liker" n'aura pas un poids égale à 1.
 
-  \begin{solution}
-    Dans le jeu on peut supposer 2 votes initiaux, 1 positif et 1 négatif. Cela permet de partir d'une valeur $0.5$ pour chaque argument.
 
-    \paragraph{Remarques}
-      \begin{enumerate}
-        \item On fait la même chose dans l'initialisation?
-      \end{enumerate}
-  \end{solution}
+\subsubsection{Règle du jeu : ONESHOT Question: Si tous les agents ont la même valeur à la fin de l'initialisation, peut-on atteindre l'équilibre?}
 
-  \begin{solution}
-    Changer la formule de $\tau$ pour une autre fonction qui respecte la monotonie et qui tienne compte de la taille du sample.
+\paragraph{Si l'on considère la variante de la définition de $\tau$\\}
 
-    \paragraph{Remarques}
-      \begin{enumerate}
-        \item Quelle formule? Intuitivement on devrait ce dire que beaucoup de votes négatif donne une valeur égale à 0 et beaucoup de votes positif donne 1. Aucun vote ou un nombre équilibré devrait être $0.5$.
-      \end{enumerate}
-  \end{solution}
-\color{black}
-\section{Où j'en suis}
-\color{red}
+Sur l'exemple précédent (c.f. figure \ref{fig:dif_pref}) on atteint l'équilibre.
+
+Sur l'exemple trivial de la figure \ref{fig:trivial} on atteint également l'équilibre.
+
+\begin{figure}
+\centering
+\begin{tabular}{cccc}
+  \begin{tikzpicture}[>=stealth]
+  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+  "a1\\ (0,0)" -> "q\\ (0,0)";
+  "a2\\ (0,0)" -> "q\\ (0,0)";
+  "a3\\ (0,0)" -> "q\\ (0,0)";
+  };
+  \end{tikzpicture} &
+
+  \begin{tikzpicture}[>=stealth]
+  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+  "a1\\ (1,0)" -> "q\\ (0,0)";
+  "a2\\ (0,1)" -> "q\\ (0,0)";
+  "a3\\ (0,1)" -> "q\\ (0,0)";
+  };
+  \end{tikzpicture} &
+
+  \begin{tikzpicture}[>=stealth]
+  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+  "a1\\ (0,1)" -> "q\\ (0,0)";
+  "a2\\ (1,0)" -> "q\\ (0,0)";
+  "a3\\ (0,1)" -> "q\\ (0,0)";
+  };
+  \end{tikzpicture} &
+
+  \begin{tikzpicture}[>=stealth]
+  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+  "a1\\ (0,1)" -> "q\\ (0,0)";
+  "a2\\ (0,1)" -> "q\\ (0,0)";
+  "a3\\ (1,0)" -> "q\\ (0,0)";
+  };
+  \end{tikzpicture} \\
+\end{tabular}
+\color{blue}
+\caption{De gauche à droite: graphe général, préférences du joueur 1, préférences du joueur 2, préférences du joueur 3}
+\label{fig:trivial}
+\end{figure}
+
+
+\subparagraph{Remarque\\}
+Sur cet exemple, il est intéressant de noter que $LM_1(q) = LM_2(q) = LM_3(q) = 0$. En effet $LM(q) = 0.5 \cdot (1 - \curlyvee \{LM(a) | a\in Att(q)\})$ et $\curlyvee \{LM(a) | a\in Att(q)\} = 1$
+
+
+\paragraph{Si l'on considère la première définition de $\tau$\\}
+A priori, on n'atteint pas l'équilibre.
+
+Sur l'exemple de la figure \ref{fig:dif_pref} on atteint l'équilibre, en revanche sur la figure \ref{fig:trivial}, il semblerai qu'on ne l'atteigne pas ($LM_1(q) = LM_2(q) = LM_3(q) = 0.009604$ alors que $LM_g(q) = 0.00731$).
+
+\subparagraph{remarque\\} Je me demande si cela n'est pas dû à une précision machine car le système se stabilise dans une position ou un coup est très proche d'être meilleur. Je ferais le détail des calculs la semaine prochaine pour être sur.
+
+\subsubsection{Question: Notre définition de $\tau$ change t'elle radicalement les résultats obtenu sur les exemples de Leite et Martins?}
+
+\paragraph{Le premier exemple\\}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a\\ (20,20)" -> "b\\ (20,20)";
+"b\\ (20,20)" -> "a\\ (20,20)";
+"c\\ (60,10)" -> "b\\ (20,20)";
+"e\\ (40,10)" -> "c\\ (60,10)";
+"d\\ (10,40)" -> "c\\ (60,10)";
+"e\\ (40,10)" -> "d\\ (10,40)";
+"d\\ (10,40)" -> "e\\ (40,10)";
+};
+\end{tikzpicture}
+\color{blue}
+\caption{Exemple de l'article Social Abstract Argumentation de Leite et Martins}
+\label{fig:LM_example}
+\end{figure}
+
+L'exemple de Leite et Martins est représenté figure \ref{fig:LM_example} et le tableau ci-dessous référence les valeurs de chacun des arguments trouvé par Leite et Martins ainsi que les notres.
+
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+             & a    & b    & c    & d     & e \\
+  \hline
+  LM         & 0.37 & 0.25 & 0.19 & 0.05  & 0.76 \\
+  \hline
+  def $\tau$ & 0.36 & 0.28 & 0.13 & 0.018 & 0.86\\
+  \hline
+\end{tabular}
+
+Il n'y a donc pas de différence fondamentale, les arguments sont toujours classé dans le même ordre.
+
+\paragraph{Le deuxième exemple\\}
+Cet exemple est tiré de l'article Extending Social Abstract Argumentation with Votes on Attacks. Il est donné figure \ref{fig:LM2_example}. Les résultats observés sont :
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+  "a\\ (70,70)" -> "b\\ (70,70)";
+  "b\\ (70,70)" -> "a\\ (70,70)";
+  "c\\ (54,66)" -> "a\\ (70,70)";
+  "e\\ (19,1)" -> "a\\ (70,70)";
+  "d\\ (130,61)" -> "c\\ (54,66)";
+  "d\\ (130,61)" -> "b\\ (70,70)";
+  };
+\end{tikzpicture}
+\color{blue}
+\caption{Deuxième exemple de Leite et Martins}
+\label{fig:LM2_example}
+\end{figure}
+
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+             & a    & b     & c     & d    & e \\
+  \hline
+  LM         & 0.02 & 0.16  & 0.14  & 0.68 & 0.95 \\
+  \hline
+  def $\tau$ & 0.16 & 0.066 & 0.063 & 0.84 & 0.63\\
+  \hline
+\end{tabular}
+
+En revanche sur cet exemple les changements sont plus importants.
+
+Avec la défintion de Leite et Martins on a : $a \prec c \prec b \prec d \prec e$ alors qu'avec notre définition on a : $c \prec b \prec a \prec e \prec d$
+
+
+\section{Ce qu'il faut que je fasse}
+
 \begin{itemize}
-  \item Cette fin de semaine j'ai commencé à chercher des exemples simples d'arbres sur lesquels les agents ont la même valeur pour la question mais des poids différents sur les arguments.
-
-  \item Les calculs que cela nécessite sont beaucoup trop long, j'ai donc changé de cap et codé l'algorithme. J'ai pour le moment codé la phase d'initialisation. Ce qui va donc me permettre dès lundi de trouver des modèles ayant la caractéristique ci-dessus.
-
-  \item Dès lundi je vais également ouvrir un dépot GitHub pour poser mes fichiers sources. Je dois encore trouver un nom à ce nouveau dépot... Si vous avez un compte GitHub je vous ajoute comme collaborateurs.
+  \item Codé la règle 2 du jeu, celle qui autorise les agents à changer d'avis.
+  \item Recalculer le déroulement du jeu dans le cadre de la première définition de $\tau$ avec l'exemple de la figure \ref{fig:trivial}
+  \item Si dans l'exemple précédent on atteint l'équilibre, réfléchir à une manière de trouvé ce résultat dans mon programme.
+  \item Si on atteint l'équilibre, chercher d'autres exemples qui pourrait ne pas marcher.
+  \item Si je n'en trouve pas, essayer de montrer qu'on atteint toujours l'équilibre?
+  \item Si on n'atteint pas l'équilibre, regarder le prix de l'anarchie.
 \end{itemize}
 
 \end{document}

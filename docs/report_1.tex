@@ -420,7 +420,7 @@ Avec la défintion de Leite et Martins on a : $a \prec c \prec b \prec d \prec e
     on atteint pas non plus l'équilibre, on reste bloqué comme avant à environ $0.00731$.
 
 \section{Tentative d'analyse de convergence sur des arbres}
-  J'ai codé la deuxième règle de jeu (celle qui autorise les changement d'avis). J'ai regardé un peu le comportement que cette règle avait.
+  J'ai codé la deuxième règle de jeu (celle qui autorise les changements d'avis). J'ai regardé un peu le comportement que cette règle avait.
 
   \subsection{Exemples}
     \paragraph{Si les joueurs ont la même valeur}
@@ -429,9 +429,9 @@ Avec la défintion de Leite et Martins on a : $a \prec c \prec b \prec d \prec e
       Bien sur ce ne sont que des exemples...
 
 
-    \paragraph{Si les joueurs n'ont pas la même croyance}
-      Tous les tests que j'ai fait converge également. Ils peuvent parfois prendre un peu de temps, il peut y avoir beaucoup de changement d'avis mais on converge toujours.
-      (Tous les exemples que j'ai testé jusqu'a présent sont des arbres).
+    \paragraph{Si les joueurs n'ont pas les mêmes croyances}
+      Tous les tests que j'ai fait convergent également. Ils peuvent parfois prendre un peu de temps, il peut y avoir beaucoup de changements d'avis mais on converge toujours.
+      (Tous les exemples que j'ai testés jusqu'à présent sont des arbres).
 
   \subsection{Analyse de la convergence}
     Je me suis donc demandé si la convergence n'est pas assuré sur les arbres.
@@ -439,11 +439,8 @@ Avec la défintion de Leite et Martins on a : $a \prec c \prec b \prec d \prec e
     Commençons par définir formellement le jeu.
     Pour cela on va introduire quelques notations.
     \begin{notation}
-      Soit $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation, on note
-      \begin{itemize}
-        \item $\mathcal{A}(F)$ l'ensemble $\mathcal{A}$ du graphe d'argumentation $F$. De même $\mathcal{R}(F)$ est l'ensemble $\mathcal{R}$ de $F$ et $V(F)$ est la fonction $V$ du graphe $F$.
-        \item De même
-      \end{itemize}
+      Soit $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation, on note $\mathcal{A}(F)$ l'ensemble $\mathcal{A}$ du graphe d'argumentation $F$. De même $\mathcal{R}(F)$ est l'ensemble $\mathcal{R}$ de $F$ et $V(F)$ est la fonction $V$ du graphe $F$.
+
     \end{notation}
     \begin{definition}[Jeu d'argumentation]
       Un jeu d'argumentation est représenté par un tuple $AJ=\langle J, \mathcal{F}, \Delta \rangle$ où
@@ -458,26 +455,26 @@ Avec la défintion de Leite et Martins on a : $a \prec c \prec b \prec d \prec e
 
     Une transition $\delta \in \Delta$ entre 2 configurations $\sigma$ et $\sigma'$ est noté $\sigma \overset{\delta}{\longrightarrow} \sigma'$. Une telle transition est possible si et seulement si $\sigma = (j_k, F)$, $\sigma' = (j_{(k+1)\ mod(n)}, F')$, $\delta = (F, j_k, a_i, x_1, x_2, F')$ et $V(F') = \left\lbrace \begin{array}{ll} V(F)(a) & \forall a \neq a_i \\ V(F)(a) + (x_1, x_2) & sinon \end{array} \right.$
 
-    \paragraph{Remarque} Au plus j'écris et au plus je me rend compte qu'on peut faire beaucoup plus simple.... Je modifierai plus tard.
+    \paragraph{Remarque} Au plus j'écris et au plus je me rend compte qu'on peut faire beaucoup plus simple comme formalisme... Je modifierai plus tard.
 
     \begin{definition}[partie]
       une partie est un ensemble (potentiellement infini) de transition $\sigma_0 \longrightarrow \sigma_1 \longrightarrow \ldots \longrightarrow \sigma_r \ldots$
       tel que
-      $\forall (\sigma_i, \ldots, \sigma_i+n), \exists k \in \{1, \ldots, n-1\}\ et\ \sigma_{i+k}(F) \neq \sigma_{i+k+1}(F)$.
+      $\forall (\sigma_i, \ldots, \sigma_{i+n}), \exists k \in \{1, \ldots, n-1\}\ et\ \sigma_{i+k}(F) \neq \sigma_{i+k+1}(F)$.
 
-      On dit donc que, quelque soit la suite de $n$ coups dans la partie, au moins un des joueurs a fait une action.
+      On dit donc que, quelque soit la suite de $n$ coups dans la partie, au moins un des joueurs a fait une action (vote ou changement d'avis).
   \end{definition}
 
   La question qu'on se pose est donc, existe-t-il une instance avec une partie infini?
 
-  \paragraph{Remarque} Une partie infini implique que $\exists i, j$ tels que $|i - j| > n$ et $\sigma_i = \sigma_j$.
+  \paragraph{Remarque} Une partie infinie implique que $\exists i, j$ tels que $|i - j| > n$ et $\sigma_i = \sigma_j$.\\
 
-  Après avoir posé ces définitions j'ai pris la partie générée par la dynamique meilleure réponse. J'ai supposé qu'elle était infini et j'ai essayé d'arriver à une contradiction afin de pouvoir dire qu'il y a convergence. Mais je ne trouve pas de contradiction, certaines conditions paraissent parfois étranges mais jamais totalement incohérentes.
+  Après avoir posé ces définitions j'ai pris la partie générée par la dynamique meilleure réponse d'une instance quelconque. J'ai supposé qu'elle était infinie et j'ai essayé d'arriver à une contradiction afin de pouvoir dire qu'il y a convergence. Mais je ne trouve pas de contradiction, certaines conditions paraissent parfois étranges mais jamais totalement incohérentes.
 
   \section{Questions}
     Je me pose une question à propos de la définition du prix de l'anarchie.
 
-    On avait dit qu'on allait comparer le résultat du jeu avec la valeur trouvée si chacun des joueurs votent de la même façon que dans la phase d'initialisation.
+    On avait dit qu'on allait comparer le résultat du jeu avec la valeur trouvée si chacun des joueurs votent de la même façon que lors de la phase d'initialisation.
 
     Or j'ai remarqué que ce résultat peut être plus mauvais que l'anarchie et qu'en revanche une configuration totalement différente peut être meilleure. Il faudrait donc logiquement que je me place par rapport à cette meilleure solution pour chercher le prix de l'anarchie? non?
 
@@ -493,7 +490,8 @@ Avec la défintion de Leite et Martins on a : $a \prec c \prec b \prec d \prec e
   \item Si on atteint l'équilibre, chercher d'autres exemples qui pourrait ne pas marcher.
   \item Si je n'en trouve pas, essayer de montrer qu'on atteint toujours l'équilibre?
   \color{black}
-  \item Si on n'atteint pas l'équilibre, regarder le prix de l'anarchie.
+  \item Regarder le prix de l'anarchie.
+  \color{blue}
   \item Continuer la recherche de convergence dans le cadre de la règle avec changement d'avis.
 \end{itemize}
 

@@ -54,55 +54,61 @@
 \newtheorem{problem}{Problème}[section]
 \newtheorem{solution}{Solution}[problem]
 
+%TODO :blabla
+
 \begin{document}
-\maketitle
+  \maketitle
 
-\section{Légende}
-\color{black}
-Ce qui est ancien et qui reste.
+  \section{Légende}
+    \color{black}
+      Ce qui est ancien et qui reste.
 
-\color{blue}
-Ce qui est a été ajouté cette semaine.
+    \color{blue}
+      Ce qui est a été ajouté cette semaine.
 
-\color{red}
-Ce qui est ammené à disparaitre dans les semaines suivantes.
+    \color{red}
+      Ce qui est amené à disparaitre dans les semaines suivantes.
 
-P.S.: Le fichier Tex est sur Git, on aura donc toujours la possibilité de retrouver ce qui a été éffacé.
+      P.S.: Le fichier Tex est sur Git, on aura donc toujours la possibilité de retrouver ce qui a été éffacé.
 
-\color{black}
-\section{Rappel définitions}
-  \subsection{Notations}
-    \begin{notation}[Graphe d'Argumentation]
+  \color{black}
+  \section{Rappel définitions}
+    \subsection{Notations}
+      \begin{notation}[Graphe d'Argumentation]
 
-      $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ avec :
-      \begin{itemize}
-        \item $\mathcal{A}$ : L'ensemble des arguments.
-        \item $\mathcal{R} \subseteq \mathcal{A} \times \mathcal{A}$ : Une relation binaire entre arguments tels que : $(a,b) \in \mathcal{R}$ si $a$ "attaque" $b$.
-        \item $V: \mathcal{A} \rightarrow \mathbb{N} \times \mathbb{N} :$ La fonction qui associe, à chaque argument, le nombre de "like" et de "dislike", $V(a) = (v^+, v^-)$ signifie que $a$ à $v^+$ "like" et $v^-$ "dislike".
-      \end{itemize}
-    \end{notation}
+        $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ avec :
+        \begin{itemize}
+          \item $\mathcal{A}$ : L'ensemble des arguments.
+          \item $\mathcal{R} \subseteq \mathcal{A} \times \mathcal{A}$ : Une relation binaire entre arguments tels que : $(a,b) \in \mathcal{R}$ si $a$ "attaque" $b$.
+          \item $V: \mathcal{A} \rightarrow \mathbb{N} \times \mathbb{N} :$ La fonction qui associe, à chaque argument, le nombre de "like" et de "dislike", $V(a) = (v^+, v^-)$ signifie que $a$ à $v^+$ "like" et $v^-$ "dislike".
+        \end{itemize}
+      \end{notation}
 
-    \begin{notation}
-      On note $Att(a)$ l'ensemble des arguments directs qui attaquent $a$ :
-      $Att(a) = \{b\ |\ (b, a)\in \mathcal{R}\}$
-    \end{notation}
+      \begin{notation}
+        On note $Att(a)$ l'ensemble des arguments directs qui attaquent $a$ :
+        $Att(a) = \{b\ |\ (b, a)\in \mathcal{R}\}$
+      \end{notation}
 
 
-  \subsection{Définitions}
-  \label{ref:def_tau}
+    \subsection{Définitions}
+    \label{ref:def_tau}
       \begin{definition}
         Soit $\tau_\varepsilon$ la fonction défini par :
-        $$\begin{array}{rclc}
-          \tau_\varepsilon :  & \mathbb{N} \times \mathbb{N} & \longrightarrow & [0, 1] \\
-          & (v^+,v^-) & \longmapsto & \frac{1}{2} \cdot \left(1 + sgn(v^+ - v^-) \cdot \left(1 - e^{\frac{-|v^+ - v^-|}{\varepsilon}}\right)\right)\\
-        \end{array}$$
+        $$
+          \begin{array}{rclc}
+            \tau_\varepsilon :  & \mathbb{N} \times \mathbb{N} & \longrightarrow & [0, 1] \\
+            & (v^+,v^-) & \longmapsto & \frac{1}{2} \cdot \left(1 + sgn(v^+ - v^-) \cdot \left(1 - e^{\frac{-|v^+ - v^-|}{\varepsilon}}\right)\right)\\
+          \end{array}
+        $$
 
-        où $sgn(x) = \left\{
-        \begin{array}{ll}
-          -1  & \mbox{si } x < 0 \\
-          1 & \mbox{sinon} \\
-        \end{array}
-        \right.$ et $\varepsilon = - \frac{\#joueurs}{ln(0.04)}$
+        où
+        $sgn(x) = \left\{
+          \begin{array}{ll}
+            -1  & \mbox{si } x < 0 \\
+            1 & \mbox{sinon} \\
+          \end{array}
+        \right.$
+        et $\varepsilon = - \frac{\#joueurs}{ln(0.04)}$
       \end{definition}
 
       \paragraph{remarques/variantes}
@@ -110,297 +116,304 @@ P.S.: Le fichier Tex est sur Git, on aura donc toujours la possibilité de retro
         \begin{enumerate}
           \item On peut noter que cette fonction est la fonction de répartition de la première loi de Laplace.
           \item Avec cette définition on n'obtient pas une valeur de 1 (resp. $0$) sur l'argument $a$ si tous les agents "like" (resp. "dislikes"). On peut donc raffiner cette fonction et forcer ces cas limites :
-          $$\begin{array}{rclc}
-            \tau_\varepsilon :  & \mathbb{N} \times \mathbb{N} & \longrightarrow & [0, 1] \\
-            & (\#joueurs, 0) & \longmapsto & 1 \\
-            & (0, \#joueurs) & \longmapsto & 0 \\
-            & (v^+,v^-) & \longmapsto & \frac{1}{2} \cdot \left(1 + sgn(v^+ - v^-) \cdot \left(1 - e^{\frac{-|v^+ - v^-|}{\varepsilon}}\right)\right)\\
-          \end{array}$$
+            $$
+              \begin{array}{rclc}
+                \tau_\varepsilon :  & \mathbb{N} \times \mathbb{N} & \longrightarrow & [0, 1] \\
+                & (\#joueurs, 0) & \longmapsto & 1 \\
+                & (0, \#joueurs) & \longmapsto & 0 \\
+                & (v^+,v^-) & \longmapsto & \frac{1}{2} \cdot \left(1 + sgn(v^+ - v^-) \cdot \left(1 - e^{\frac{-|v^+ - v^-|}{\varepsilon}}\right)\right)\\
+              \end{array}
+            $$\\
         \end{enumerate}
 
-    On peut ensuite définir une sémantique d'argumentation.
-    \begin{definition}[Laplace Product Semantics]
-      $\mathcal{S}_\varepsilon = \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ est la sémantique tel que :
+      On peut ensuite définir une sémantique d'argumentation.
+      \begin{definition}[Laplace Product Semantics]
+        $\mathcal{S}_\varepsilon = \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ est la sémantique tel que :
+        \begin{enumerate}
+          \item $x_1 \curlywedge x_2 = x_1 \cdot x_2$
+          \item $x_1 \curlyvee x_2 = x_1 + x_2 - x_1 \cdot x_2$
+          \item $\neg x_1 = 1 - x_1$
+          \item $\tau_\varepsilon$ la fonction défini précédement.
+        \end{enumerate}
+
+      \end{definition}
+
+      \begin{definition}[modèle social]
+        Soit $F= \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation et $\mathcal{S}_\varepsilon = \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ une sémantique "produit simple".
+        La fonction $LM : \mathcal{A} \rightarrow [0, 1]$ est un $\mathcal{S}$-Model pour $F$ si :
+
+        $LM(a) = \tau_\varepsilon(a) \curlywedge \neg$ {\Large $\curlyvee$} $\{LM(a_i)\ |\ a_i \in Att(a)\}$
+      \end{definition}
+
+  \section{Les modèles}
+    Soit $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation et $N$ agents (=joueurs). Chaque agent connait tout le graphe $F$, ils connaissent donc tous les arguments et la question.
+
+    \paragraph{Initialisation}
       \begin{enumerate}
-        \item $x_1 \curlywedge x_2 = x_1 \cdot x_2$
-        \item $x_1 \curlyvee x_2 = x_1 + x_2 - x_1 \cdot x_2$
-        \item $\neg x_1 = 1 - x_1$
-        \item $\tau_\varepsilon$ la fonction défini précédement.
+        \item Chaque agent analyse le débat, il "like" les arguments qu'il trouve recevables et "dislike" ceux qu'il juge inconsistant.
+        Les arguments recevables auront donc 1 "like" et 0 "dislike", ceux inconsistant auront 0 "like" et 1 "dislike" et les autres 0 "like" et "dislike".
+        \item En tenant compte de ces poids il calcule la valeur qu'il associe à la question. Cette valeur n'est pas connu des autres agents.
       \end{enumerate}
 
-    \end{definition}
+    \paragraph{Le jeu}(deux variantes possibles)
+      \begin{description}
+        \item[Variante 1] Les agents se regroupent autour d'une table où seul la question est exposée. Ils reconstruisent le débat en ajoutant les arguments les uns après les autres. Pour ce faire lorsqu'un agent vote ("like" ou "dislike") sur un argument non présent, l'argument s'ajoute à la représentation avec le vote.
 
-\begin{definition}[modèle social]
-  Soit $F= \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation et $\mathcal{S}_\varepsilon = \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ une sémantique "produit simple".
-  La fonction $LM : \mathcal{A} \rightarrow [0, 1]$ est un $\mathcal{S}$-Model pour $F$ si :
+        \item[Variante 2] Les agents se regroupent autour d'une table où une représentation du débat s'y trouve. Cette représentation est dépourvu de poids ("like" ou "dislike") et la valeur de la question dans cette représentation est affiché et connu de tous.
+      \end{description}
 
-  $LM(a) = \tau_\varepsilon(a) \curlywedge \neg$ {\Large $\curlyvee$} $\{LM(a_i)\ |\ a_i \in Att(a)\}$
-\end{definition}
+    \paragraph{objectif}(deux objectifs différents possibles)
+      \begin{description}
+        \item[Objectif 1] L'objectif pour chacun des joueurs va être de faire tendre la valeur de la question de cette représentation vers sa valeur calculée lors de la phase d'initialisation.
+        \item[Objectif 2] L'intervalle $[0, 1]$ est divisé en cluster. Un joueur appartient à un cluster si sa valeur appartient au cluster.
 
-\section{Les modèles}
-  Soit $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation et $N$ agents (=joueurs). Chaque agent connait tout le graphe $F$, ils connaissent donc tous les arguments et la question.
-
-  \paragraph{Initialisation}
-  \begin{enumerate}
-    \item Chaque agent analyse le débat, il "like" les arguments qu'il trouve recevables et "dislike" ceux qu'il juge inconsistant.
-    Les arguments recevables auront donc 1 "like" et 0 "dislike", ceux inconsistant auront 0 "like" et 1 "dislike" et les autres 0 "like" et "dislike".
-    \item En tenant compte de ces poids il calcule la valeur qu'il associe à la question. Cette valeur n'est pas connu des autres agents.
-  \end{enumerate}
-
-  \paragraph{Le jeu}(deux variantes possibles)
-    \begin{description}
-      \item[Variante 1] Les agents se regroupent autour d'une table où seul la question est exposée. Ils reconstruisent le débat en ajoutant les arguments les uns après les autres. Pour ce faire lorsqu'un agent vote ("like" ou "dislike") sur un argument non présent, l'argument s'ajoute à la représentation avec le vote.
-
-      \item[Variante 2] Les agents se regroupent autour d'une table où une représentation du débat s'y trouve. Cette représentation est dépourvu de poids ("like" ou "dislike") et la valeur de la question dans cette représentation est affiché et connu de tous.
-    \end{description}
-
-  \paragraph{objectif}(deux objectifs différents possibles)
-  \begin{description}
-    \item[Objectif 1] L'objectif pour chacun des joueurs va être de faire tendre la valeur de la question de cette représentation vers sa valeur calculée lors de la phase d'initialisation.
-    \item[Objectif 2] L'intervalle $[0, 1]$ est divisé en cluster. Un joueur appartient à un cluster si sa valeur appartient au cluster.
-
-    L'objectif de chaque joueur est que la valeur finale du débat appartienne à son cluster. Les joueurs peuvent alors former des alliances.
-  \end{description}
+        L'objectif de chaque joueur est que la valeur finale du débat appartienne à son cluster. Les joueurs peuvent alors former des alliances.
+      \end{description}
 
 
-  \paragraph{Règles}(deux variantes possibles)
-    \begin{description}
-      \item[Variante 1] Chaque agent peut voter qu'une fois (k fois) par argument.
+    \paragraph{Règles}(deux variantes possibles)
+      \begin{description}
+        \item[Variante 1] Chaque agent peut voter qu'une fois (k fois) par argument.
 
-      \item[Variante 2] Les agents peuvent changer d'avis sur le vote qu'ils ont attribué à un argument et donc retirer leur vote ou l'inverser.
-    \end{description}
+        \item[Variante 2] Les agents peuvent changer d'avis sur le vote qu'ils ont attribué à un argument et donc retirer leur vote ou l'inverser.
+      \end{description}
 
     \paragraph{Dynamique\\}
       On considère dans ces modèles une dynamique de meilleure réponse. Round Robin.
 
     \paragraph{Les questions qu'on se pose}
-    \begin{itemize}
-      \item Il y a t-il convergence?
-      \item Si tous les agents ont la même valeur à la fin de l'initialisation, il y a t-il convergence? Il existe alors un équilibre mais peut-on toujours l'atteindre? (Ce n'est pas la même question? Si on peut toujours atteindre l'équilibre alors ça converge, et si ça converge alors il y a un équilibre? Non?)
-      \item Quel est le prix de l'anarchie dans le cas de la règle 1?
-      \item Peut-on trouver une stratégie pour les agents?
-    \end{itemize}
+      \begin{itemize}
+        \item Il y a t-il convergence?
+        \item Si tous les agents ont la même valeur à la fin de l'initialisation, il y a t-il convergence? Il existe alors un équilibre mais peut-on toujours l'atteindre? (Ce n'est pas la même question? Si on peut toujours atteindre l'équilibre alors ça converge, et si ça converge alors il y a un équilibre? Non?)
+        \item Quel est le prix de l'anarchie dans le cas de la règle 1?
+        \item Peut-on trouver une stratégie pour les agents?
+      \end{itemize}
 
 
 
-\section{Problèmes liés aux modèles}
-\begin{problem}
-  Dans notre cas, on considère que la question (notons la $q$) ne reçoit aucun vote (ce qui est plutôt intuitif). Mais si on prend cette définition pour la sémantique alors $LM(q) = 0$ quelques soit les attaquants car $\tau_\varepsilon(q) = 0$.
-\end{problem}
+  \section{Problèmes liés aux modèles}
+    \begin{problem}
+      Dans notre cas, on considère que la question (notons la $q$) ne reçoit aucun vote (ce qui est plutôt intuitif). Mais si on prend cette définition pour la sémantique alors $LM(q) = 0$ quelques soit les attaquants car $\tau_\varepsilon(q) = 0$.
+    \end{problem}
 
-\begin{solution}
-    On a changé la définition de $\tau$ cf. définition \ref{ref:def_tau} page \pageref{ref:def_tau}
-\end{solution}
+    \begin{solution}
+      On a changé la définition de $\tau$ cf. définition \ref{ref:def_tau} page \pageref{ref:def_tau}
+    \end{solution}
 
-\begin{problem}
-    Un autre problème un peu similaire au précédent. D'après la définition de Leite et Martins un argument qui n'a pas de vote a un poids à 0 (i.e. $\tau_\varepsilon (a) = 0$) et un vote qui n'a que des votes négatif a également un poids à 0.
+    \begin{problem}
+      Un autre problème un peu similaire au précédent.
+      D'après la définition de Leite et Martins un argument qui n'a pas de vote a un poids à 0 (i.e. $\tau_\varepsilon (a) = 0$) et un vote qui n'a que des votes négatif a également un poids à 0.
 
-    Le problème dans l'initialisation (entre autre) est que "disliker" un argument (ne pas le trouver recevable du tout) ou ne pas avoir d'avis reviens au même, ce fait ce propage à tous les fils de ces arguments.
+      Le problème dans l'initialisation (entre autre) est que "disliker" un argument (ne pas le trouver recevable du tout) ou ne pas avoir d'avis reviens au même, ce fait ce propage à tous les fils de ces arguments.
 
-    Cela peut paraitre incohérent.
-\end{problem}
+      Cela peut paraitre incohérent.
+    \end{problem}
 
-\begin{solution}
-    La nouvelle définition de $\tau$ (cf. définition \ref{ref:def_tau} page \pageref{ref:def_tau}) corrige également cette incohérence.
-\end{solution}
-
-
-\section{Tests et Exemples}
-
-\subsection{Le cas des Arbres}
-\subsubsection{Question: Peut-on trouver des arbres ou les agents n'ont pas les mêmes préférences mais la même valeur à la fin de l'initialisation?\newline}
-
-\paragraph{Si l'on considère la variante de la fonction $\tau$}
-
-\subparagraph{rappel} Cette variante défini la fonction $\tau$ en forçant les cas limites (c.f. remarque de la definition \ref{ref:def_tau}) \\
-
-Sur le débat représenté dans la figure \ref{fig:dif_pref} on remarque que le joueur 1 et le joueur 2 ont des avis totalement différents sur chacun des arguments. En revanche la valeur de la question est la même. A savoir : $LM_1(q) = LM_2(q) = 0.125$
-
-\begin{figure}
-\centering
-\begin{tabular}{ccc}
-  \begin{tikzpicture}[>=stealth]
-  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-  "a1\\ (0,0)" -> "q\\ (0,0)";
-  "a2\\ (0,0)" -> "q\\ (0,0)";
-  "a3\\ (0,0)" -> "a1\\ (0,0)";
-  "a4\\ (0,0)" -> "a1\\ (0,0)";
-  "a5\\ (0,0)" -> "a2\\ (0,0)";
-  "a6\\ (0,0)" -> "a2\\ (0,0)";
-  "a7\\ (0,0)" -> "a3\\ (0,0)";
-  "a8\\ (0,0)" -> "a3\\ (0,0)";
-  };
-  \end{tikzpicture} &
-  \begin{tikzpicture}[>=stealth]
-  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-  "a1\\ (1,0)" -> "q\\ (0,0)";
-  "a2\\ (0,1)" -> "q\\ (0,0)";
-  "a3\\ (1,0)" -> "a1\\ (1,0)";
-  "a4\\ (0,1)" -> "a1\\ (1,0)";
-  "a5\\ (1,0)" -> "a2\\ (0,1)";
-  "a6\\ (1,0)" -> "a2\\ (0,1)";
-  "a7\\ (0,0)" -> "a3\\ (1,0)";
-  "a8\\ (0,0)" -> "a3\\ (1,0)";
-  };
-  \end{tikzpicture} &
-  \begin{tikzpicture}[>=stealth]
-  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-  "a1\\ (0,0)" -> "q\\ (0,0)";
-  "a2\\ (0,0)" -> "q\\ (0,0)";
-  "a3\\ (0,1)" -> "a1\\ (0,0)";
-  "a4\\ (0,1)" -> "a1\\ (0,0)";
-  "a5\\ (0,1)" -> "a2\\ (0,0)";
-  "a6\\ (0,1)" -> "a2\\ (0,0)";
-  "a7\\ (1,0)" -> "a3\\ (0,1)";
-  "a8\\ (1,0)" -> "a3\\ (0,1)";
-  };
-  \end{tikzpicture} \\
-\end{tabular}
-
-\caption{De gauche à droite: graphe général, préférences du joueur 1, préférences du joueur 2}
-\label{fig:dif_pref}
-\end{figure}
-
-\paragraph{Si l'on considère la première définition de $\tau$\\}
-Je n'ai pas encore trouvé d'exemple qui possède cette propriété.
-Cela est dû à la définition de $\tau$, un argument "disliker" n'aura pas un poids égale à 0 et un argument "liker" n'aura pas un poids égale à 1.
+    \begin{solution}
+      La nouvelle définition de $\tau$ (cf. définition \ref{ref:def_tau} page \pageref{ref:def_tau}) corrige également cette incohérence.
+    \end{solution}
 
 
-\subsubsection{Règle du jeu : ONESHOT Question: Si tous les agents ont la même valeur à la fin de l'initialisation, peut-on atteindre l'équilibre?}
+  \section{Tests et Exemples}
+    \subsection{Le cas des Arbres}
+      \subsubsection{Question: Peut-on trouver des arbres ou les agents n'ont pas les mêmes préférences mais la même valeur à la fin de l'initialisation?\newline}
 
-\paragraph{Si l'on considère la variante de la définition de $\tau$\\}
+        \paragraph{Si l'on considère la variante de la fonction $\tau$}
 
-Sur l'exemple précédent (c.f. figure \ref{fig:dif_pref}) on atteint l'équilibre.
+          \subparagraph{rappel} Cette variante défini la fonction $\tau$ en forçant les cas limites (c.f. remarque de la definition \ref{ref:def_tau}) \\
 
-Sur l'exemple trivial de la figure \ref{fig:trivial} on atteint également l'équilibre.
+          Sur le débat représenté dans la figure \ref{fig:dif_pref} on remarque que le joueur 1 et le joueur 2 ont des avis totalement différents sur chacun des arguments. En revanche la valeur de la question est la même. A savoir : $LM_1(q) = LM_2(q) = 0.125$
 
-\begin{figure}
-\centering
-\begin{tabular}{cccc}
-  \begin{tikzpicture}[>=stealth]
-  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-  "a1\\ (0,0)" -> "q\\ (0,0)";
-  "a2\\ (0,0)" -> "q\\ (0,0)";
-  "a3\\ (0,0)" -> "q\\ (0,0)";
-  };
-  \end{tikzpicture} &
+          \begin{figure}
+            \centering
+            \begin{tabular}{ccc}
+              \begin{tikzpicture}[>=stealth]
+              \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+              "a1\\ (0,0)" -> "q\\ (0,0)";
+              "a2\\ (0,0)" -> "q\\ (0,0)";
+              "a3\\ (0,0)" -> "a1\\ (0,0)";
+              "a4\\ (0,0)" -> "a1\\ (0,0)";
+              "a5\\ (0,0)" -> "a2\\ (0,0)";
+              "a6\\ (0,0)" -> "a2\\ (0,0)";
+              "a7\\ (0,0)" -> "a3\\ (0,0)";
+              "a8\\ (0,0)" -> "a3\\ (0,0)";
+              };
+              \end{tikzpicture} &
+              \begin{tikzpicture}[>=stealth]
+              \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+              "a1\\ (1,0)" -> "q\\ (0,0)";
+              "a2\\ (0,1)" -> "q\\ (0,0)";
+              "a3\\ (1,0)" -> "a1\\ (1,0)";
+              "a4\\ (0,1)" -> "a1\\ (1,0)";
+              "a5\\ (1,0)" -> "a2\\ (0,1)";
+              "a6\\ (1,0)" -> "a2\\ (0,1)";
+              "a7\\ (0,0)" -> "a3\\ (1,0)";
+              "a8\\ (0,0)" -> "a3\\ (1,0)";
+              };
+              \end{tikzpicture} &
+              \begin{tikzpicture}[>=stealth]
+              \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+              "a1\\ (0,0)" -> "q\\ (0,0)";
+              "a2\\ (0,0)" -> "q\\ (0,0)";
+              "a3\\ (0,1)" -> "a1\\ (0,0)";
+              "a4\\ (0,1)" -> "a1\\ (0,0)";
+              "a5\\ (0,1)" -> "a2\\ (0,0)";
+              "a6\\ (0,1)" -> "a2\\ (0,0)";
+              "a7\\ (1,0)" -> "a3\\ (0,1)";
+              "a8\\ (1,0)" -> "a3\\ (0,1)";
+              };
+              \end{tikzpicture} \\
+            \end{tabular}
 
-  \begin{tikzpicture}[>=stealth]
-  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-  "a1\\ (1,0)" -> "q\\ (0,0)";
-  "a2\\ (0,1)" -> "q\\ (0,0)";
-  "a3\\ (0,1)" -> "q\\ (0,0)";
-  };
-  \end{tikzpicture} &
+            \caption{De gauche à droite: graphe général, préférences du joueur 1, préférences du joueur 2}
+            \label{fig:dif_pref}
+          \end{figure}
 
-  \begin{tikzpicture}[>=stealth]
-  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-  "a1\\ (0,1)" -> "q\\ (0,0)";
-  "a2\\ (1,0)" -> "q\\ (0,0)";
-  "a3\\ (0,1)" -> "q\\ (0,0)";
-  };
-  \end{tikzpicture} &
-
-  \begin{tikzpicture}[>=stealth]
-  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-  "a1\\ (0,1)" -> "q\\ (0,0)";
-  "a2\\ (0,1)" -> "q\\ (0,0)";
-  "a3\\ (1,0)" -> "q\\ (0,0)";
-  };
-  \end{tikzpicture} \\
-\end{tabular}
-
-\caption{De gauche à droite: graphe général, préférences du joueur 1, préférences du joueur 2, préférences du joueur 3}
-\label{fig:trivial}
-\end{figure}
+        \paragraph{Si l'on considère la première définition de $\tau$\\}
+          Je n'ai pas encore trouvé d'exemple qui possède cette propriété.
+          Cela est dû à la définition de $\tau$, un argument "disliker" n'aura pas un poids égale à 0 et un argument "liker" n'aura pas un poids égale à 1.
 
 
-\subparagraph{Remarque\\}
-Sur cet exemple, il est intéressant de noter que $LM_1(q) = LM_2(q) = LM_3(q) = 0$. En effet $LM(q) = 0.5 \cdot (1 - \curlyvee \{LM(a) | a\in Att(q)\})$ et $\curlyvee \{LM(a) | a\in Att(q)\} = 1$
+      \subsubsection{Règle du jeu : ONESHOT Question: Si tous les agents ont la même valeur à la fin de l'initialisation, peut-on atteindre l'équilibre?}
+
+        \paragraph{Si l'on considère la variante de la définition de $\tau$\\}
+
+          Sur l'exemple précédent (c.f. figure \ref{fig:dif_pref}) on atteint l'équilibre.
+
+          Sur l'exemple trivial de la figure \ref{fig:trivial} on atteint également l'équilibre.
+
+          \begin{figure}
+            \centering
+            \begin{tabular}{cccc}
+              \begin{tikzpicture}[>=stealth]
+              \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+              "a1\\ (0,0)" -> "q\\ (0,0)";
+              "a2\\ (0,0)" -> "q\\ (0,0)";
+              "a3\\ (0,0)" -> "q\\ (0,0)";
+              };
+              \end{tikzpicture} &
+
+              \begin{tikzpicture}[>=stealth]
+              \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+              "a1\\ (1,0)" -> "q\\ (0,0)";
+              "a2\\ (0,1)" -> "q\\ (0,0)";
+              "a3\\ (0,1)" -> "q\\ (0,0)";
+              };
+              \end{tikzpicture} &
+
+              \begin{tikzpicture}[>=stealth]
+              \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+              "a1\\ (0,1)" -> "q\\ (0,0)";
+              "a2\\ (1,0)" -> "q\\ (0,0)";
+              "a3\\ (0,1)" -> "q\\ (0,0)";
+              };
+              \end{tikzpicture} &
+
+              \begin{tikzpicture}[>=stealth]
+              \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+              "a1\\ (0,1)" -> "q\\ (0,0)";
+              "a2\\ (0,1)" -> "q\\ (0,0)";
+              "a3\\ (1,0)" -> "q\\ (0,0)";
+              };
+              \end{tikzpicture} \\
+            \end{tabular}
+
+            \caption{De gauche à droite: graphe général, préférences du joueur 1, préférences du joueur 2, préférences du joueur 3}
+            \label{fig:trivial}
+          \end{figure}
+
+          \subparagraph{Remarque\\}
+            Sur cet exemple, il est intéressant de noter que $LM_1(q) = LM_2(q) = LM_3(q) = 0$.
+            En effet $LM(q) = 0.5 \cdot (1 - \curlyvee \{LM(a) | a\in Att(q)\})$ et $\curlyvee \{LM(a) | a\in Att(q)\} = 1$
 
 
-\paragraph{Si l'on considère la première définition de $\tau$\\}
-A priori, on n'atteint pas l'équilibre.
+        \paragraph{Si l'on considère la première définition de $\tau$\\}
+          A priori, on n'atteint pas l'équilibre.
 
-Sur l'exemple de la figure \ref{fig:dif_pref} on atteint l'équilibre, en revanche sur la figure \ref{fig:trivial}, il semblerai qu'on ne l'atteigne pas ($LM_1(q) = LM_2(q) = LM_3(q) = 0.009604$ alors que $LM_g(q) = 0.00731$).
+          Sur l'exemple de la figure \ref{fig:dif_pref} on atteint l'équilibre, en revanche sur la figure \ref{fig:trivial}, il semblerai qu'on ne l'atteigne pas ($LM_1(q) = LM_2(q) = LM_3(q) = 0.009604$ alors que $LM_g(q) = 0.00731$).
 
-\subparagraph{remarque\\} Je me demande si cela n'est pas dû à une précision machine car le système se stabilise dans une position ou un coup est très proche d'être meilleur. Je ferais le détail des calculs la semaine prochaine pour être sur.
+          \subparagraph{remarque\\} Je me demande si cela n'est pas dû à une précision machine car le système se stabilise dans une position ou un coup est très proche d'être meilleur.
+            Je ferais le détail des calculs la semaine prochaine pour être sur.
 
-\subsubsection{Question: Notre définition de $\tau$ change t'elle radicalement les résultats obtenus sur les exemples de Leite et Martins?}
+      \subsubsection{Question: Notre définition de $\tau$ change t'elle radicalement les résultats obtenus sur les exemples de Leite et Martins?}
 
-\paragraph{Le premier exemple\\}
+        \paragraph{Le premier exemple\\}
 
-\begin{figure}
-\centering
-\begin{tikzpicture}[>=stealth]
-\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-"a\\ (20,20)" -> "b\\ (20,20)";
-"b\\ (20,20)" -> "a\\ (20,20)";
-"c\\ (60,10)" -> "b\\ (20,20)";
-"e\\ (40,10)" -> "c\\ (60,10)";
-"d\\ (10,40)" -> "c\\ (60,10)";
-"e\\ (40,10)" -> "d\\ (10,40)";
-"d\\ (10,40)" -> "e\\ (40,10)";
-};
-\end{tikzpicture}
-\caption{Exemple de l'article Social Abstract Argumentation de Leite et Martins}
-\label{fig:LM_example}
-\end{figure}
+          \begin{figure}
+            \centering
+            \begin{tikzpicture}[>=stealth]
+              \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+              "a\\ (20,20)" -> "b\\ (20,20)";
+              "b\\ (20,20)" -> "a\\ (20,20)";
+              "c\\ (60,10)" -> "b\\ (20,20)";
+              "e\\ (40,10)" -> "c\\ (60,10)";
+              "d\\ (10,40)" -> "c\\ (60,10)";
+              "e\\ (40,10)" -> "d\\ (10,40)";
+              "d\\ (10,40)" -> "e\\ (40,10)";
+              };
+            \end{tikzpicture}
+            \caption{Exemple de l'article Social Abstract Argumentation de Leite et Martins}
+            \label{fig:LM_example}
+          \end{figure}
 
-L'exemple de Leite et Martins est représenté figure \ref{fig:LM_example} et le tableau ci-dessous référence les valeurs de chacun des arguments trouvés par Leite et Martins ainsi que les notres.
+          L'exemple de Leite et Martins est représenté figure \ref{fig:LM_example} et le tableau ci-dessous référence les valeurs de chacun des arguments trouvés par Leite et Martins ainsi que les notres.
 
-\begin{tabular}{|c|c|c|c|c|c|}
-  \hline
-             & a    & b    & c    & d     & e \\
-  \hline
-  LM         & 0.37 & 0.25 & 0.19 & 0.05  & 0.76 \\
-  \hline
-  def $\tau$ & 0.36 & 0.28 & 0.13 & 0.018 & 0.86\\
-  \hline
-\end{tabular}
+          \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+                       & a    & b    & c    & d     & e \\
+            \hline
+            LM         & 0.37 & 0.25 & 0.19 & 0.05  & 0.76 \\
+            \hline
+            def $\tau$ & 0.36 & 0.28 & 0.13 & 0.018 & 0.86\\
+            \hline
+          \end{tabular}
 
-Il n'y a donc pas de différence fondamentale, les arguments sont toujours classés dans le même ordre.
+          Il n'y a donc pas de différence fondamentale, les arguments sont toujours classés dans le même ordre.
 
-\paragraph{Le deuxième exemple\\}
-Cet exemple est tiré de l'article Extending Social Abstract Argumentation with Votes on Attacks. Il est donné figure \ref{fig:LM2_example}. Les résultats observés sont :
+        \paragraph{Le deuxième exemple\\}
+          Cet exemple est tiré de l'article Extending Social Abstract Argumentation with Votes on Attacks.
+          Il est donné figure \ref{fig:LM2_example}. Les résultats observés sont :
 
-\begin{figure}
-\centering
-\begin{tikzpicture}[>=stealth]
-  \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-  "a\\ (70,70)" -> "b\\ (70,70)";
-  "b\\ (70,70)" -> "a\\ (70,70)";
-  "c\\ (54,66)" -> "a\\ (70,70)";
-  "e\\ (19,1)" -> "a\\ (70,70)";
-  "d\\ (130,61)" -> "c\\ (54,66)";
-  "d\\ (130,61)" -> "b\\ (70,70)";
-  };
-\end{tikzpicture}
-\caption{Deuxième exemple de Leite et Martins}
-\label{fig:LM2_example}
-\end{figure}
+          \begin{figure}
+            \centering
+            \begin{tikzpicture}[>=stealth]
+              \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+              "a\\ (70,70)" -> "b\\ (70,70)";
+              "b\\ (70,70)" -> "a\\ (70,70)";
+              "c\\ (54,66)" -> "a\\ (70,70)";
+              "e\\ (19,1)" -> "a\\ (70,70)";
+              "d\\ (130,61)" -> "c\\ (54,66)";
+              "d\\ (130,61)" -> "b\\ (70,70)";
+              };
+            \end{tikzpicture}
+            \caption{Deuxième exemple de Leite et Martins}
+            \label{fig:LM2_example}
+          \end{figure}
 
-\begin{tabular}{|c|c|c|c|c|c|}
-  \hline
-             & a    & b     & c     & d    & e \\
-  \hline
-  LM         & 0.02 & 0.16  & 0.14  & 0.68 & 0.95 \\
-  \hline
-  def $\tau$ & 0.16 & 0.066 & 0.063 & 0.84 & 0.63\\
-  \hline
-\end{tabular}
+          \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+                       & a    & b     & c     & d    & e \\
+            \hline
+            LM         & 0.02 & 0.16  & 0.14  & 0.68 & 0.95 \\
+            \hline
+            def $\tau$ & 0.16 & 0.066 & 0.063 & 0.84 & 0.63\\
+            \hline
+          \end{tabular}
 
-En revanche sur cet exemple les changements sont plus importants.
+          En revanche sur cet exemple les changements sont plus importants.
 
-Avec la défintion de Leite et Martins on a : $a \prec c \prec b \prec d \prec e$ alors qu'avec notre définition on a : $c \prec b \prec a \prec e \prec d$
+          Avec la défintion de Leite et Martins on a : $a \prec c \prec b \prec d \prec e$ alors qu'avec notre définition on a : $c \prec b \prec a \prec e \prec d$
 
-\color{blue}
-\section{Résultats}
-  \subsection{Atteint-on l'équilibre avec la première définition de $\tau$ dans l'exemple de la figure \ref{fig:trivial}?}
 
-    \paragraph{remarque :}Je viens de me rendre compte que j'ai peut être mal interprété le terme équilibre. J'entend par équilibre le fait d'atteindre la valeur exact souhaité par les 3 joueurs (dans le cadre de l'exemple de la figure \ref{fig:trivial}). C'est à dire 0.009604.
+  \section{Résultats}
+    \subsection{Atteint-on l'équilibre avec la première définition de $\tau$ dans l'exemple de la figure \ref{fig:trivial}?}
 
-    La réponse est non, j'ai refait le calcul exact à la main et on atteint pas 0.009604 avec ce point de départ.
+      \paragraph{remarque :}
+        Je viens de me rendre compte que j'ai peut être mal interprété le terme équilibre.
+        J'entend par équilibre le fait d'atteindre la valeur exact souhaité par les 3 joueurs (dans le cadre de l'exemple de la figure \ref{fig:trivial}).
+        C'est à dire 0.009604.
+
+        La réponse est non, j'ai refait le calcul exact à la main et on atteint pas 0.009604 avec ce point de départ.\\
 
     En revanche cet objectif existe, si on prend :
     \begin{itemize}
@@ -408,7 +421,8 @@ Avec la défintion de Leite et Martins on a : $a \prec c \prec b \prec d \prec e
       \item a2 : $likes = 0, dislikes = 3$
       \item a3 : $likes = 0, dislikes = 3$
     \end{itemize}
-    Alors $LM(q) = 0.009604$
+
+    Alors $LM(q) = 0.009604$\\
 
     En changeant le nombre de vote au départ, par exemple si on prend :
     \begin{itemize}
@@ -419,80 +433,90 @@ Avec la défintion de Leite et Martins on a : $a \prec c \prec b \prec d \prec e
 
     on atteint pas non plus l'équilibre, on reste bloqué comme avant à environ $0.00731$.
 
-\section{Tentative d'analyse de convergence sur des arbres}
-  J'ai codé la deuxième règle de jeu (celle qui autorise les changements d'avis). J'ai regardé un peu le comportement que cette règle avait.
+  \section{Tentative d'analyse de convergence sur des arbres}
+    J'ai codé la deuxième règle de jeu (celle qui autorise les changements d'avis). J'ai regardé un peu le comportement que cette règle avait.
 
-  \subsection{Exemples}
-    \paragraph{Si les joueurs ont la même valeur}
-      Sur les différents exemples que j'ai fait je converge toujours très vite et j'obtiens le même résultat que dans la règle OneShot.
+    \subsection{Exemples}
+      \paragraph{Si les joueurs ont la même valeur}
+        Sur les différents exemples que j'ai fait je converge toujours très vite et j'obtiens le même résultat que dans la règle OneShot.
 
-      Bien sur ce ne sont que des exemples...
+        Bien sur ce ne sont que des exemples...
 
 
-    \paragraph{Si les joueurs n'ont pas les mêmes croyances}
-      Tous les tests que j'ai fait convergent également. Ils peuvent parfois prendre un peu de temps, il peut y avoir beaucoup de changements d'avis mais on converge toujours.
-      (Tous les exemples que j'ai testés jusqu'à présent sont des arbres).
+      \paragraph{Si les joueurs n'ont pas les mêmes croyances}
+        Tous les tests que j'ai fait convergent également. Ils peuvent parfois prendre un peu de temps, il peut y avoir beaucoup de changements d'avis mais on converge toujours.
+        (Tous les exemples que j'ai testés jusqu'à présent sont des arbres).
 
-  \subsection{Analyse de la convergence}
-    Je me suis donc demandé si la convergence n'est pas assuré sur les arbres.
+    \subsection{Analyse de la convergence}
+      Je me suis donc demandé si la convergence n'est pas assuré sur les arbres.
 
-    Commençons par définir formellement le jeu.
-    Pour cela on va introduire quelques notations.
-    \begin{notation}
-      Soit $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation, on note $\mathcal{A}(F)$ l'ensemble $\mathcal{A}$ du graphe d'argumentation $F$. De même $\mathcal{R}(F)$ est l'ensemble $\mathcal{R}$ de $F$ et $V(F)$ est la fonction $V$ du graphe $F$.
+      Commençons par définir formellement le jeu.
+      Pour cela on va introduire quelques notations.
+      \begin{notation}
+        Soit $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation, on note $\mathcal{A}(F)$ l'ensemble $\mathcal{A}$ du graphe d'argumentation $F$.
+        De même $\mathcal{R}(F)$ est l'ensemble $\mathcal{R}$ de $F$ et $V(F)$ est la fonction $V$ du graphe $F$.
 
-    \end{notation}
-    \begin{definition}[Jeu d'argumentation]
-      Un jeu d'argumentation est représenté par un tuple $AJ=\langle J, \mathcal{F}, \Delta \rangle$ où
-      \begin{itemize}
-        \item $J = \{j_1, j_2, ..., j_n\}$ l'ensemble des joueurs qui participent au jeu.
-        \item $\mathcal{F} = \{F_1, F_2, ..., F_m\}$ un ensemble de graphes d'argumentation tel que $\forall\ 1 \leq i \leq j \leq m\ \mathcal{A}(F_i) = \mathcal{A}(F_j)$ et $\mathcal{R}(F_i) = \mathcal{R}(F_j)$.
-        \item $\Delta \subseteq \mathcal{F} \times J \times \mathcal{A}(F) \times \{-1, 0, 1\} \times \{-1, 0, 1\} \times \mathcal{F}$ Un ensemble fini de transition entre les graphes d'argumentation.
-      \end{itemize}
-    \end{definition}
+      \end{notation}
+      \begin{definition}[Jeu d'argumentation]
+        Un jeu d'argumentation est représenté par un tuple $AJ=\langle J, \mathcal{F}, \Delta \rangle$ où
+        \begin{itemize}
+          \item $J = \{j_1, j_2, ..., j_n\}$ l'ensemble des joueurs qui participent au jeu.
+          \item $\mathcal{F} = \{F_1, F_2, ..., F_m\}$ un ensemble de graphes d'argumentation tel que $\forall\ 1 \leq i \leq j \leq m\ \mathcal{A}(F_i) = \mathcal{A}(F_j)$ et $\mathcal{R}(F_i) = \mathcal{R}(F_j)$.
+          \item $\Delta \subseteq \mathcal{F} \times J \times \mathcal{A}(F) \times \{-1, 0, 1\} \times \{-1, 0, 1\} \times \mathcal{F}$ Un ensemble fini de transition entre les graphes d'argumentation.
+        \end{itemize}
+      \end{definition}
 
-    Dans ce système une configuration est défini par un couple $\sigma =(j, F)$ tel que $j \in J$ est le joueur qui doit jouer et $F$ in $\mathcal{F}$ est le graphe d'argumentation courant.
+      Dans ce système une configuration est défini par un couple $\sigma =(j, F)$ tel que $j \in J$ est le joueur qui doit jouer et $F \in \mathcal{F}$ est le graphe d'argumentation courant.
 
-    Une transition $\delta \in \Delta$ entre 2 configurations $\sigma$ et $\sigma'$ est noté $\sigma \overset{\delta}{\longrightarrow} \sigma'$. Une telle transition est possible si et seulement si $\sigma = (j_k, F)$, $\sigma' = (j_{(k+1)\ mod(n)}, F')$, $\delta = (F, j_k, a_i, x_1, x_2, F')$ et $V(F') = \left\lbrace \begin{array}{ll} V(F)(a) & \forall a \neq a_i \\ V(F)(a) + (x_1, x_2) & sinon \end{array} \right.$
+      Une transition $\delta \in \Delta$ entre 2 configurations $\sigma$ et $\sigma'$ est noté $\sigma \overset{\delta}{\longrightarrow} \sigma'$.
+      Une telle transition est possible si et seulement si $\sigma = (j_k, F)$, $\sigma' = (j_{(k+1)\ mod(n)}, F')$, $\delta = (F, j_k, a_i, x_1, x_2, F')$ et $V(F') = \left\lbrace
+        \begin{array}{ll}
+          V(F)(a) & \forall a \neq a_i \\
+          V(F)(a) + (x_1, x_2) & sinon
+        \end{array}
+      \right.$
 
-    \paragraph{Remarque} Au plus j'écris et au plus je me rend compte qu'on peut faire beaucoup plus simple comme formalisme... Je modifierai plus tard.
+      \paragraph{Remarque} Au plus j'écris et au plus je me rend compte qu'on peut faire beaucoup plus simple comme formalisme... Je modifierai plus tard.
 
-    \begin{definition}[partie]
-      une partie est un ensemble (potentiellement infini) de transition $\sigma_0 \longrightarrow \sigma_1 \longrightarrow \ldots \longrightarrow \sigma_r \ldots$
-      tel que
-      $\forall (\sigma_i, \ldots, \sigma_{i+n}), \exists k \in \{1, \ldots, n-1\}\ et\ \sigma_{i+k}(F) \neq \sigma_{i+k+1}(F)$.
+      \begin{definition}[partie]
+        une partie est un ensemble (potentiellement infini) de transition $\sigma_0 \longrightarrow \sigma_1 \longrightarrow \ldots \longrightarrow \sigma_r \ldots$
+        tel que
+        $\forall (\sigma_i, \ldots, \sigma_{i+n}), \exists k \in \{1, \ldots, n-1\}\ et\ \sigma_{i+k}(F) \neq \sigma_{i+k+1}(F)$.
 
-      On dit donc que, quelque soit la suite de $n$ coups dans la partie, au moins un des joueurs a fait une action (vote ou changement d'avis).
-  \end{definition}
+        On dit donc que, quelque soit la suite de $n$ coups dans la partie, au moins un des joueurs a fait une action (vote ou changement d'avis).
+      \end{definition}
 
-  La question qu'on se pose est donc, existe-t-il une instance avec une partie infini?
+      La question qu'on se pose est donc, existe-t-il une instance avec une partie infini?
 
-  \paragraph{Remarque} Une partie infinie implique que $\exists i, j$ tels que $|i - j| > n$ et $\sigma_i = \sigma_j$.\\
+      \paragraph{Remarque}
+        Une partie infinie implique que $\exists i, j$ tels que $|i - j| > n$ et $\sigma_i = \sigma_j$.\\
 
-  Après avoir posé ces définitions j'ai pris la partie générée par la dynamique meilleure réponse d'une instance quelconque. J'ai supposé qu'elle était infinie et j'ai essayé d'arriver à une contradiction afin de pouvoir dire qu'il y a convergence. Mais je ne trouve pas de contradiction, certaines conditions paraissent parfois étranges mais jamais totalement incohérentes.
+      Après avoir posé ces définitions j'ai pris la partie générée par la dynamique meilleure réponse d'une instance quelconque.
+      J'ai supposé qu'elle était infinie et j'ai essayé d'arriver à une contradiction afin de pouvoir dire qu'il y a convergence.
+      Mais je ne trouve pas de contradiction, certaines conditions paraissent parfois étranges mais jamais totalement incohérentes.
 
   \section{Questions}
     Je me pose une question à propos de la définition du prix de l'anarchie.
 
     On avait dit qu'on allait comparer le résultat du jeu avec la valeur trouvée si chacun des joueurs votent de la même façon que lors de la phase d'initialisation.
 
-    Or j'ai remarqué que ce résultat peut être plus mauvais que l'anarchie et qu'en revanche une configuration totalement différente peut être meilleure. Il faudrait donc logiquement que je me place par rapport à cette meilleure solution pour chercher le prix de l'anarchie? non?
+    Or j'ai remarqué que ce résultat peut être plus mauvais que l'anarchie et qu'en revanche une configuration totalement différente peut être meilleure. Il faudrait donc logiquement que je me place par rapport à cette meilleure solution pour chercher le prix de l'anarchie? non?\\
 
+    \color{blue}
+    J'ai l'impression que l'équilibre et la convergence sont 2 questions équivalentes sur notre système.
 
-\color{black}
-\section{Ce qu'il faut que je fasse}
+    En effet on a un nombre fini de possibilité de votes, la seule possibilité de ne pas converger est donc d'avoir un cycle. Or si il y a un cycle c'est qu'un joueur à toujours un coup améliorant, donc aucun des états est un état d'équilibre.
 
-\begin{itemize}
-  \color{red}
-  \item Codé la règle 2 du jeu, celle qui autorise les agents à changer d'avis.
-  \item Recalculer le déroulement du jeu dans le cadre de la première définition de $\tau$ avec l'exemple de la figure \ref{fig:trivial}
-  \item Si dans l'exemple précédent on atteint l'équilibre, réfléchir à une manière de trouvé ce résultat dans mon programme.
-  \item Si on atteint l'équilibre, chercher d'autres exemples qui pourrait ne pas marcher.
-  \item Si je n'en trouve pas, essayer de montrer qu'on atteint toujours l'équilibre?
+    Inversement, si on a pas d'état d'équilibre alors il y a toujours un joueur qui à un coup améliorant et comme le nombre d'état est fini cela implique qu'on est un cycle et donc il n'y a pas convergence.
+    (Cela ne serait pas forcement le cas sur une règle de jeu ou un argument peut avoir un nombre infini de votes).
+
   \color{black}
-  \item Regarder le prix de l'anarchie.
-  \color{blue}
-  \item Continuer la recherche de convergence dans le cadre de la règle avec changement d'avis.
-\end{itemize}
+  \section{Ce qu'il faut que je fasse}
+
+    \begin{itemize}
+      \item Regarder le prix de l'anarchie.
+      \color{blue}
+      \item Continuer la recherche de convergence dans le cadre de la règle avec changement d'avis.
+    \end{itemize}
 
 \end{document}

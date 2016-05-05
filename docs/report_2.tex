@@ -55,6 +55,7 @@
 \newtheorem{solution}{Solution}[problem]
 
 
+
 \begin{document}
   \maketitle
 
@@ -71,9 +72,9 @@
       P.S.: Le fichier Tex est sur Git, on aura donc toujours la possibilité de retrouver ce qui a été éffacé.
 
   \color{black}
-  \section{Rappel définitions}
-    \subsection{Notations}
-      \begin{notation}[Graphe d'Argumentation]
+  \section{Rappels}
+    \subsection{Définitions}
+      \begin{definition}[Graphe d'Argumentation]
 
         $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ avec :
         \begin{itemize}
@@ -81,21 +82,18 @@
           \item $\mathcal{R} \subseteq \mathcal{A} \times \mathcal{A}$ : Une relation binaire entre arguments tels que : $(a,b) \in \mathcal{R}$ si $a$ "attaque" $b$.
           \item $V: \mathcal{A} \rightarrow \mathbb{N} \times \mathbb{N} :$ La fonction qui associe, à chaque argument, le nombre de "like" et de "dislike", $V(a) = (v^+, v^-)$ signifie que $a$ à $v^+$ "like" et $v^-$ "dislike".
         \end{itemize}
-      \end{notation}
+      \end{definition}
 
       \begin{notation}
         On note $Att(a)$ l'ensemble des arguments directs qui attaquent $a$ :
         $Att(a) = \{b\ |\ (b, a)\in \mathcal{R}\}$
       \end{notation}
 
-
-    \subsection{Définitions}
-    \label{ref:def_tau}
       \begin{definition}
-        Soit $\tau_\varepsilon$ la fonction défini par :
+        Soit $\tau_1$ la fonction défini par :
         $$
           \begin{array}{rclc}
-            \tau_\varepsilon :  & \mathbb{N} \times \mathbb{N} & \longrightarrow & [0, 1] \\
+            \tau_1 :  & \mathbb{N} \times \mathbb{N} & \longrightarrow & [0, 1] \\
             & (v^+,v^-) & \longmapsto & \frac{1}{2} \cdot \left(1 + sgn(v^+ - v^-) \cdot \left(1 - e^{\frac{-|v^+ - v^-|}{\varepsilon}}\right)\right)\\
           \end{array}
         $$
@@ -117,7 +115,7 @@
           \item Avec cette définition on n'obtient pas une valeur de 1 (resp. $0$) sur l'argument $a$ si tous les agents "like" (resp. "dislikes"). On peut donc raffiner cette fonction et forcer ces cas limites :
             $$
               \begin{array}{rclc}
-                \tau_\varepsilon :  & \mathbb{N} \times \mathbb{N} & \longrightarrow & [0, 1] \\
+                \tau_2 :  & \mathbb{N} \times \mathbb{N} & \longrightarrow & [0, 1] \\
                 & (\#joueurs, 0) & \longmapsto & 1 \\
                 & (0, \#joueurs) & \longmapsto & 0 \\
                 & (v^+,v^-) & \longmapsto & \frac{1}{2} \cdot \left(1 + sgn(v^+ - v^-) \cdot \left(1 - e^{\frac{-|v^+ - v^-|}{\varepsilon}}\right)\right)\\
@@ -127,32 +125,52 @@
 
       On peut ensuite définir une sémantique d'argumentation.
       \begin{definition}[Laplace Product Semantics]
-        $\mathcal{S}_\varepsilon = \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ est la sémantique tel que :
+        $\mathcal{S}_1$ (resp $\mathcal{S}_2$) $= \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ est la sémantique tel que :
         \begin{enumerate}
           \item $x_1 \curlywedge x_2 = x_1 \cdot x_2$
           \item $x_1 \curlyvee x_2 = x_1 + x_2 - x_1 \cdot x_2$
           \item $\neg x_1 = 1 - x_1$
-          \item $\tau_\varepsilon$ la fonction défini précédement.
+          \item $\tau_1$ (resp. $\tau_2$) la fonction défini précédement.
         \end{enumerate}
-
       \end{definition}
 
+      On notera par la suite $\mathcal{S}$ lorsque $\mathcal{S}_1$ ou $\mathcal{S}_2$ peuvent être utilisée indifférement.
+      De même on notera $\tau$ pour désigner $\tau_1$ ou $\tau_2$.
+
       \begin{definition}[modèle social]
-        Soit $F= \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation et $\mathcal{S}_\varepsilon = \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ une sémantique "produit simple".
+        Soit $F= \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation et $\mathcal{S} = \langle [0, 1], \tau, \curlywedge, \curlyvee, \neg  \rangle$.
         La fonction $LM : \mathcal{A} \rightarrow [0, 1]$ est un $\mathcal{S}$-Model pour $F$ si :
 
-        $LM(a) = \tau_\varepsilon(a) \curlywedge \neg$ {\Large $\curlyvee$} $\{LM(a_i)\ |\ a_i \in Att(a)\}$
+        $LM(a) = \tau(a) \curlywedge \neg$ {\Large $\curlyvee$} $\{LM(a_i)\ |\ a_i \in Att(a)\}$
       \end{definition}
 
   \section{Les modèles}
-    Soit $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation et $N$ agents (=joueurs). Chaque agent connait tout le graphe $F$, ils connaissent donc tous les arguments et la question.
+    Soit $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation, $\mathcal{J} = \{1, \ldots, n\}$ $n$ agents ($=$ joueurs) et $\mathcal{S}$ la sémantique utilisée.
+    Chaque agent connait tout le graphe $F$, ils connaissent donc tous les arguments et la question.
 
     \paragraph{Initialisation}
       \begin{enumerate}
-        \item Chaque agent analyse le débat, il "like" les arguments qu'il trouve recevables et "dislike" ceux qu'il juge inconsistant.
+        \item Chaque agent $k$ analyse le débat, il "like" les arguments qu'il trouve recevables et "dislike" ceux qu'il juge inconsistant.
         Les arguments recevables auront donc 1 "like" et 0 "dislike", ceux inconsistant auront 0 "like" et 1 "dislike" et les autres 0 "like" et "dislike".
         \item En tenant compte de ces poids il calcule la valeur qu'il associe à la question. Cette valeur n'est pas connu des autres agents.
       \end{enumerate}
+      \begin{definition}
+        Soit $F_k = \langle \mathcal{A}, \mathcal{R}, V_k \rangle$ le graphe d'argumentation du joueur $k$.
+        La fonction $V_k$ définie donc la préférence du joueur $k$ sur chacun des arguments de $\mathcal{A}$.
+      \end{definition}
+      \begin{definition}
+        Soit $LM_k$ un $\mathcal{S}$-Model pour le graphe $F_k$.
+
+        On appelle $LM_\mathcal{J}$ la fonction qui associe à chaque joueur la valeur qu'il associe à la question.
+
+        $$
+          \begin{array}{rclc}
+            LM_\mathcal{J} :  & \mathcal{J} & \longrightarrow & [0, 1] \\
+            & k & \longmapsto & LM_k(q)\\
+          \end{array}
+        $$
+      \end{definition}
+
 
     \paragraph{Le jeu}(deux variantes possibles)
       \begin{description}
@@ -179,6 +197,53 @@
 
     \paragraph{Dynamique\\}
       On considère dans ces modèles une dynamique de meilleure réponse. Round Robin.
+
+    \subsection{Formalisation}
+
+      \begin{notation}
+        Soit $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation, on note $\mathcal{A}(F)$ l'ensemble $\mathcal{A}$ du graphe d'argumentation $F$.
+        De même $\mathcal{R}(F)$ est l'ensemble $\mathcal{R}$ de $F$ et $V(F)$ est la fonction $V$ du graphe $F$.
+      \end{notation}
+
+      \begin{definition}[Jeu d'argumentation]
+        Un jeu d'argumentation est représenté par un tuple $AJ=\langle J, \mathcal{F}, \Delta \rangle$ où
+        \begin{itemize}
+          \item $J = \{j_1, j_2, ..., j_n\}$ l'ensemble des joueurs qui participent au jeu.
+          \item $\mathcal{F} = \{F_1, F_2, ..., F_m\}$ un ensemble de graphes d'argumentation tel que $\forall\ 1 \leq i \leq j \leq m\ \mathcal{A}(F_i) = \mathcal{A}(F_j)$ et $\mathcal{R}(F_i) = \mathcal{R}(F_j)$.
+          \item $\Delta \subseteq \mathcal{F} \times J \times \mathcal{A}(F) \times \{-1, 0, 1\} \times \{-1, 0, 1\} \times \mathcal{F}$ Un ensemble fini de transition entre les graphes d'argumentation.
+        \end{itemize}
+      \end{definition}
+
+      Dans ce système une configuration est défini par un couple $\sigma =(j, F)$ tel que $j \in J$ est le joueur qui doit jouer et $F \in \mathcal{F}$ est le graphe d'argumentation courant.
+
+      Une transition $\delta \in \Delta$ entre 2 configurations $\sigma$ et $\sigma'$ est noté $\sigma \overset{\delta}{\longrightarrow} \sigma'$.
+      Une telle transition est possible si et seulement si $\sigma = (j_k, F)$, $\sigma' = (j_{(k+1)\ mod(n)}, F')$, $\delta = (F, j_k, a_i, x_1, x_2, F')$ et $V(F') = \left\lbrace
+        \begin{array}{ll}
+          V(F)(a) & \forall a \neq a_i \\
+          V(F)(a) + (x_1, x_2) & sinon
+        \end{array}
+      \right.$
+
+      \paragraph{Remarque} Au plus j'écris et au plus je me rend compte qu'on peut faire beaucoup plus simple comme formalisme... Je modifierai plus tard.
+
+      \begin{definition}[partie]
+        une partie est un ensemble (potentiellement infini) de transition $\sigma_0 \longrightarrow \sigma_1 \longrightarrow \ldots \longrightarrow \sigma_r \ldots$
+        tel que
+        $\forall (\sigma_i, \ldots, \sigma_{i+n}), \exists k \in \{1, \ldots, n-1\}\ et\ \sigma_{i+k}(F) \neq \sigma_{i+k+1}(F)$.
+
+        On dit donc que, quelque soit la suite de $n$ coups dans la partie, au moins un des joueurs a fait une action (vote ou changement d'avis).
+      \end{definition}
+
+      La question qu'on se pose est donc, existe-t-il une instance avec une partie infini?
+
+      \paragraph{Remarque}
+        Une partie infinie implique que $\exists i, j$ tels que $|i - j| > n$ et $\sigma_i = \sigma_j$.\\
+
+
+
+
+
+
 
     \paragraph{Les questions qu'on se pose}
       \begin{itemize}
@@ -449,46 +514,7 @@
     \subsection{Analyse de la convergence}
       Je me suis donc demandé si la convergence n'est pas assuré sur les arbres.
 
-      Commençons par définir formellement le jeu.
-      Pour cela on va introduire quelques notations.
-      \begin{notation}
-        Soit $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation, on note $\mathcal{A}(F)$ l'ensemble $\mathcal{A}$ du graphe d'argumentation $F$.
-        De même $\mathcal{R}(F)$ est l'ensemble $\mathcal{R}$ de $F$ et $V(F)$ est la fonction $V$ du graphe $F$.
 
-      \end{notation}
-      \begin{definition}[Jeu d'argumentation]
-        Un jeu d'argumentation est représenté par un tuple $AJ=\langle J, \mathcal{F}, \Delta \rangle$ où
-        \begin{itemize}
-          \item $J = \{j_1, j_2, ..., j_n\}$ l'ensemble des joueurs qui participent au jeu.
-          \item $\mathcal{F} = \{F_1, F_2, ..., F_m\}$ un ensemble de graphes d'argumentation tel que $\forall\ 1 \leq i \leq j \leq m\ \mathcal{A}(F_i) = \mathcal{A}(F_j)$ et $\mathcal{R}(F_i) = \mathcal{R}(F_j)$.
-          \item $\Delta \subseteq \mathcal{F} \times J \times \mathcal{A}(F) \times \{-1, 0, 1\} \times \{-1, 0, 1\} \times \mathcal{F}$ Un ensemble fini de transition entre les graphes d'argumentation.
-        \end{itemize}
-      \end{definition}
-
-      Dans ce système une configuration est défini par un couple $\sigma =(j, F)$ tel que $j \in J$ est le joueur qui doit jouer et $F \in \mathcal{F}$ est le graphe d'argumentation courant.
-
-      Une transition $\delta \in \Delta$ entre 2 configurations $\sigma$ et $\sigma'$ est noté $\sigma \overset{\delta}{\longrightarrow} \sigma'$.
-      Une telle transition est possible si et seulement si $\sigma = (j_k, F)$, $\sigma' = (j_{(k+1)\ mod(n)}, F')$, $\delta = (F, j_k, a_i, x_1, x_2, F')$ et $V(F') = \left\lbrace
-        \begin{array}{ll}
-          V(F)(a) & \forall a \neq a_i \\
-          V(F)(a) + (x_1, x_2) & sinon
-        \end{array}
-      \right.$
-
-      \paragraph{Remarque} Au plus j'écris et au plus je me rend compte qu'on peut faire beaucoup plus simple comme formalisme... Je modifierai plus tard.
-
-      \begin{definition}[partie]
-        une partie est un ensemble (potentiellement infini) de transition $\sigma_0 \longrightarrow \sigma_1 \longrightarrow \ldots \longrightarrow \sigma_r \ldots$
-        tel que
-        $\forall (\sigma_i, \ldots, \sigma_{i+n}), \exists k \in \{1, \ldots, n-1\}\ et\ \sigma_{i+k}(F) \neq \sigma_{i+k+1}(F)$.
-
-        On dit donc que, quelque soit la suite de $n$ coups dans la partie, au moins un des joueurs a fait une action (vote ou changement d'avis).
-      \end{definition}
-
-      La question qu'on se pose est donc, existe-t-il une instance avec une partie infini?
-
-      \paragraph{Remarque}
-        Une partie infinie implique que $\exists i, j$ tels que $|i - j| > n$ et $\sigma_i = \sigma_j$.\\
 
       Après avoir posé ces définitions j'ai pris la partie générée par la dynamique meilleure réponse d'une instance quelconque.
       J'ai supposé qu'elle était infinie et j'ai essayé d'arriver à une contradiction afin de pouvoir dire qu'il y a convergence.

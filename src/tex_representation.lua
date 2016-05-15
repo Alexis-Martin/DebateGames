@@ -1,5 +1,6 @@
-local game = require "import_xml"
-local fic  = io.open("game.tex", "w")
+local import_game = require "import_xml"
+local game        = import_game("tests_games_12_05_ 17_36_27/3_players/game_8.xml")
+local fic         = io.open("game.tex", "w")
 io.output(fic)
 
 io.write("\\documentclass{article}")
@@ -12,7 +13,7 @@ io.write("\\usetikzlibrary{graphdrawing,graphs}")
 io.write("\n")
 io.write("\\usegdlibrary{layered}")
 io.write("\n")
-io.write("%Becareful if you use package fontenc, it might be raise an error. If it do, you have to remove it and use \\usepackage[utf8x]{luainputenc} in place of \\usepackage[utf8]{inputenc}")
+io.write("%Becareful if you use package fontenc, it might be raise an error. If it does, you have to remove it and use \\usepackage[utf8x]{luainputenc} in place of \\usepackage[utf8]{inputenc}")
 io.write("\n\n")
 io.write("\\begin{document}")
 
@@ -30,11 +31,11 @@ for k,v in pairs(game.graphs) do
   local list_nodes = {}
   for _, v1 in pairs(game.graphs.general.edges) do
     io.write("\"" .. v1.source .. "\\\\ ("
-      .. v.vertices[v1.source].likes .. ","
-      .. v.vertices[v1.source].dislikes .. ")\""
+      .. (v.vertices[v1.source].likes or 0) .. ","
+      .. (v.vertices[v1.source].dislikes or 0) .. ")\""
       .. " -> \"" .. v1.target .. "\\\\ ("
-      .. v.vertices[v1.target].likes .. ","
-      .. v.vertices[v1.target].dislikes .. ")\""
+      .. (v.vertices[v1.target].likes or 0) .. ","
+      .. (v.vertices[v1.target].dislikes or 0) .. ")\""
       .. ";")
     io.write("\n")
     list_nodes[v1.source] = true
@@ -43,8 +44,8 @@ for k,v in pairs(game.graphs) do
   for k2,_ in pairs(game.graphs.general.vertices) do
     if list_nodes[k2] ~= true then
       io.write("\"" .. k2 .. "\\\\ ("
-        .. v.vertices[k2].likes .. ","
-        .. v.vertices[k2].dislikes .. ")\"")
+        .. v.vertices[k2].likes or 0 .. ","
+        .. v.vertices[k2].dislikes or 0 .. ")\"")
       io.write("\n")
     end
   end

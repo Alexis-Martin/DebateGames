@@ -1,83 +1,78 @@
-local game = require "model"
+local function create_game(players, graph)
+  local game = {
+    graphs = {
+      general = graph
+    },
+    players = players
+  }
 
-local players_votes = {}
-for i=1,game.players do
-  players_votes[i] = {}
-end
+  game.setDislikes = function(player, arg, nb)
+    if not player or not game.graphs[player] then
+      player = "general"
+    end
+    game.graphs[player].vertices[arg].dislikes = nb
+    return game.graphs[player].vertices[arg].dislikes
+  end
 
-local function best_move(player)
-  local lm = game.graphs[player].LM
-  local gen_lm = game.graphs.general.LM
-  local best_vote = nil
-  local positive = nil
-  local graph = game.graphs.general
-  for arg, v in pairs(graph.vertices) do
-    if v.tag ~= "question" and players_votes[player][arg] ~= true then
-      v.likes = v.likes + 1
-      game.SAA(game.players, graph, 0.001)
-      print("player = "      .. player ..
-            " arg = "        .. arg ..
-            " positive "     .. v.likes ..
-            " lm_player = "  .. lm ..
-            " general_lm = " .. gen_lm ..
-            " new lm = "     .. graph.LM
-          )
-      if math.abs(graph.LM - lm) <= math.abs(gen_lm - lm) then
-        best_vote = arg
-        positive = true
+  game.setLikes = function(player, arg, nb)
+    if not player or not game.graphs[player] then
+      player = "general"
+    end
+    game.graphs[player].vertices[arg].likes = nb
+    return game.graphs[player].vertices[arg].likes
+  end
+
+  game.addDislike = function(player, arg)
+    if not player or not game.graphs[player] then
+      player = "general"
+    end
+
+    if not game.graphs[player].vertices[arg].dislikes then
+      game.graphs[player].vertices[arg].dislikes = 0
+    end
+
+    game.graphs[player].vertices[arg].dislikes = game.graphs[player].vertices[arg].dislikes + 1
+    return game.graphs[player].vertices[arg].dislikes
+  end
+
+  game.addLike = function(player, arg)
+    if not player or not game.graphs[player] then
+      player = "general"
+    end
+
+    if not game.graphs[player].vertices[arg].likes then
+      game.graphs[player].vertices[arg].likes = 0
+    end
+
+    game.graphs[player].vertices[arg].likes = game.graphs[player].vertices[arg].likes + 1
+    return game.graphs[player].vertices[arg].likes
+  end
+
+  local deepcopy
+  deepcopy = function (orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+      copy = {}
+      for orig_key, orig_value in next, orig, nil do
+        copy[deepcopy(orig_key)] = deepcopy(orig_value)
       end
-
-      v.likes = v.likes - 1
-      v.dislikes = v.dislikes + 1
-      game.SAA(game.players, graph, 0.001)
-      print("player = "      .. player ..
-            " arg = "        .. arg ..
-            " negative "     .. v.dislikes ..
-            " lm_player = "  .. lm ..
-            " general_lm = " .. gen_lm ..
-            " new lm = "     .. graph.LM
-          )
-      print("\n \n")
-      if math.abs(graph.LM - lm) <= math.abs(gen_lm - lm) then
-        best_vote = arg
-        positive = false
-      end
-      v.dislikes = v.dislikes - 1
+      setmetatable(copy, deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+      copy = orig
     end
+    return copy
   end
-  print("decision : best vote = " .. tostring(best_vote) .. " bool = " .. tostring(positive))
-  game.SAA(game.players, graph, 0.001)
-  if best_vote ~= nil then
-    if positive == true then
-      game.graphs.general.vertices[best_vote].likes = game.graphs.general.vertices[best_vote].likes + 1
-    else
-      game.graphs.general.vertices[best_vote].dislikes = game.graphs.general.vertices[best_vote].dislikes + 1
-    end
-    game.SAA(game.players, graph, 0.001)
-    players_votes[player][best_vote] = true
-    return best_vote
+
+  game.graphs.general.view = "general"
+
+
+
+  for _,player in ipairs(players) do
+    game.graphs[player] = deepcopy(graph)
+    game.graphs[player].view = player
   end
-  return nil
+
+  return game
 end
-
-local function one_round()
-  local nb_nil = 0
-  for i=1, game.players do
-
-    if best_move(i) == nil then
-      nb_nil = nb_nil + 1
-    end
-  end
-  return nb_nil
-end
-
-local nb_nil = one_round()
-print ("nb_nil = " .. nb_nil)
-while nb_nil < game.players do
-  nb_nil = one_round()
-  print ("nb_nil = " .. nb_nil)
-end
-
-print("LM = " .. game.graphs.general.LM)
-
-game.print_table(game)
+return create_game

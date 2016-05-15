@@ -2,7 +2,7 @@ local function create_graph(class, tags)
   local graph = {
     vertices = {},
     edges    = {},
-    class     = class
+    class    = class
   }
 
   if type(tags) == "table" then
@@ -10,26 +10,43 @@ local function create_graph(class, tags)
       graph[i] = v
     end
   end
-  --
-  graph.addVertex = function(name, parameters)
-    graph.vertices[name] = {
-      attack    = {},
-      attackers = {},
-      addAttack = function(vertex)
-        graph.vertices[name].attack[vertex] = true
-      end,
-      addAttacker = function(vertex)
-        graph.vertices[name].attackers[vertex] = true
-      end
-    }
 
-    if type(parameters) == "table" then
-      for i,v in pairs(parameters) do
-        graph.vertices[name][i] = v
+  graph.addVertex = function(name, parameters, only_new)
+    if not only_new then only_new = true else only_new = false end
+
+    if (not only_new) or (not graph.vertices[name]) then
+      graph.vertices[name] = {
+        attack    = {},
+        attackers = {},
+        name      = name,
+        addAttack = function(vertex)
+          graph.vertices[name].attack[vertex] = true
+        end,
+        addAttacker = function(vertex)
+          graph.vertices[name].attackers[vertex] = true
+        end
+      }
+
+      if type(parameters) == "table" then
+        for i,v in pairs(parameters) do
+          graph.vertices[name][i] = v
+        end
+      end
+      return true
+    end
+    return false
+  end
+
+  graph.setVertexParameters = function(name, parameters)
+    if graph.vertices[name] then
+      if type(parameters) == "table" then
+        for i, v in pairs(parameters) do
+          graph.vertices[name][i] = v
+        end
       end
     end
   end
-
+  
   graph.addEdge = function(source, target, create_news)
     graph.edges[#graph.edges + 1] = { source = source, target = target }
     if create_news == true then

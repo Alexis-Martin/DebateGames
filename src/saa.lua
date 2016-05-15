@@ -1,17 +1,19 @@
-local game = require "import_xml"
+local SAA = {}
 
-function game.SAA(players, graph, precision)
-  -- initialisation
+-- if is_tho1 is true then we use the first definition of tho else we use the second definition
+function SAA.computeGraphSAA(nb_players, graph, is_tho1, precision, save_value)
   local tho = {}
   for k, v in pairs(graph.vertices) do
-    local eps     = -players / math.log(0.04)
+    local eps     = -nb_players / math.log(0.04)
+    v.likes       = v.likes    or 0
+    v.dislikes    = v.dislikes or 0
     local int_exp = (v.likes - v.dislikes) / eps
-    --
-    -- if v.likes == 0 and v.dislikes == players then
-    --   tho[k] = 0
-    -- elseif v.dislikes == 0 and v.likes == players then
-    --   tho[k] = 1
-    if v.likes - v.dislikes < 0 then
+
+    if (not is_tho1) and v.likes == 0 and v.dislikes == nb_players then
+      tho[k] = 0
+    elseif (not is_tho1) and v.dislikes == 0 and v.likes == nb_players then
+      tho[k] = 1
+    elseif v.likes - v.dislikes < 0 then
       tho[k] = 0.5 * math.exp(int_exp)
     else
       tho[k] = 1 - 0.5 * math.exp(-int_exp)
@@ -49,29 +51,26 @@ function game.SAA(players, graph, precision)
   end
 
   iter()
+
   for _,v in pairs(graph.vertices) do
     if v.tag == "question" then
-      graph.LM = v.LM
-      break
+      if save_value and not graph.LM then
+        graph.LM = {}
+      end
+      if save_value then graph.LM[#graph.LM + 1] = v.LM end
+      return v.LM
     end
   end
 end
 
-do
-  for k, g in pairs(game.graphs) do
+function SAA.computeSAA(game, is_tho1, precision)
+  for k, graph in pairs(game.graphs) do
     if k == "general" then
-      game.SAA(game.players, g, 0.001)
+      SAA.computeGraphSAA(#game.players, graph, is_tho1, precision, true)
     else
-      game.SAA(1, g, 0.001)
+      SAA.computeGraphSAA(1, graph, is_tho1, precision, true)
     end
   end
 end
 
--- game.print_table(game)
--- for k, v in pairs(game.graphs) do
---   for k1, v1 in pairs(v.vertices) do
---     print (k, k1, v1.LM)
---   end
--- end
-
-return game
+return SAA

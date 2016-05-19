@@ -7,7 +7,7 @@ local rules           = require "rules"
 local saa             = require "saa"
 
 
-local function test_random_games(is_tho1)
+local function test_random_games(is_tho1, val_question)
   local max_players  = 3
   local max_games    = 20
   local max_vertices = 10
@@ -27,8 +27,8 @@ local function test_random_games(is_tho1)
         local dest_j = dest_v .. "game_" .. j .. ".xml"
         local game = game_generator(players, graph)
         export_game(game, dest_j)
-        saa.computeSAA(game, is_tho1, 0.001)
-        rules.mindChanged(game, is_tho1, 0.001, players^nb_vertices)
+        saa.computeSAA(game, is_tho1, val_question, 5)
+        rules.mindChanged(game, is_tho1, val_question, 5, players^nb_vertices)
         dest_j = dest_v .. "game_" .. j .. "_after.xml"
         export_game(game, dest_j)
       end
@@ -37,14 +37,14 @@ local function test_random_games(is_tho1)
 end
 
 -- do
---   test_random_games(true)
+--   test_random_games(true, 1)
 -- end
 
 do
-  local game = import_game("tests_games_12_05_ 17_36_27/3_players/game_8.xml")
+  local game = import_game("arbre1.xml")
 
-  saa.computeSAA(game, true, 5)
-  rules.mindChanged(game, true, 5, 300)
+  saa.computeSAA(game, true, 0.5, 5)
+  rules.mindChanged(game, true, 0.5, 5, 300, true)
   for k, v in pairs(game.graphs) do
     if type(v) == "table" then
       print("\n\n", k)

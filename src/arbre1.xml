@@ -1,9 +1,9 @@
 <game players="3">
   <tree view="general">
     <vertex tag="question" name="q">q</vertex>
-    <vertex name="a1" likes="1" dislikes="2">a1</vertex>
-    <vertex name="a2" likes="1" dislikes="2">a2</vertex>
-    <vertex name="a3" likes="1" dislikes="2">a3</vertex>
+    <vertex name="a1" >a1</vertex>
+    <vertex name="a2" >a2</vertex>
+    <vertex name="a3" >a3</vertex>
 
     <edge source="a1" target="q"/>
     <edge source="a2" target="q"/>

@@ -1,7 +1,7 @@
 local saa   = require "saa"
 local rules = {}
 
-function rules.mindChanged(game, is_tho1, precision, stop_at)
+function rules.mindChanged(game, is_tho1, val_question, precision, stop_at)
   local players_votes = {}
   for _, v in ipairs(game.players) do
     players_votes[v] = {}
@@ -25,7 +25,7 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
         if players_votes[player][arg] == 1 then
           -- what append if he removes his vote
           v.likes = v.likes - 1
-          temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, precision)
+          temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, val_question, precision)
           print(" arg = "        .. arg)
           print(" abandon like ")
           print("likes = " .. v.likes .. " dislikes = " .. v.dislikes)
@@ -40,7 +40,7 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
 
           -- what append if he changes his mind and vote negatively
           v.dislikes = v.dislikes + 1
-          temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, precision)
+          temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, val_question, precision)
           print(" arg = "        .. arg)
           print(" changement pour dislike ")
           print("likes = " .. v.likes .. " dislikes = " .. v.dislikes)
@@ -60,7 +60,7 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
         elseif players_votes[player][arg] == -1 then
           -- what append if he removes his vote
           v.dislikes = v.dislikes - 1
-          temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, precision)
+          temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, val_question, precision)
           print(" arg = "        .. arg)
           print(" abandon dislike ")
           print("likes = " .. v.likes .. " dislikes = " .. v.dislikes)
@@ -75,7 +75,7 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
 
           -- what append if he changes his mind and vote positively
           v.likes = v.likes + 1
-          temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, precision)
+          temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, val_question, precision)
           print(" arg = "        .. arg)
           print(" changement pour like ")
           print("likes = " .. v.likes .. " dislikes = " .. v.dislikes)
@@ -95,7 +95,7 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
         else
           -- what append if he likes this argument
           v.likes = v.likes + 1
-          temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, precision)
+          temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, val_question, precision)
           print(" arg = "        .. arg)
           print(" vote like ")
           print("likes = " .. v.likes .. " dislikes = " .. v.dislikes)
@@ -111,7 +111,7 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
           -- what append if he dislikes this argument
           v.likes = v.likes - 1
           v.dislikes = v.dislikes + 1
-          temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, precision)
+          temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, val_question, precision)
           print(" arg = "        .. arg)
           print(" vote dislike ")
           print("likes = " .. v.likes .. " dislikes = " .. v.dislikes)
@@ -131,30 +131,30 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
     print("decision : best vote = " .. tostring(best_vote) .. " bool = " .. tostring(vote) .. " lm = " .. best_lm)
     print("==============================")
     -- we compute the old value to restore all values in the graph
-    saa.computeGraphSAA(#game.players, graph, is_tho1, precision, false)
+    saa.computeGraphSAA(#game.players, graph, is_tho1, val_question, precision, false)
     -- application of the best vote we found (if there is a best vote)
     if best_vote ~= nil then
       if vote == 1 then
-        game.graphs.general.vertices[best_vote].likes = game.graphs.general.vertices[best_vote].likes + 1
+        game.addLike("general", best_vote)
         if players_votes[player][best_vote] == -1 then
-          game.graphs.general.vertices[best_vote].dislikes = game.graphs.general.vertices[best_vote].dislikes - 1
+          game.removeDislike("general", best_vote)
         end
       elseif vote == -1 then
-        game.graphs.general.vertices[best_vote].dislikes = game.graphs.general.vertices[best_vote].dislikes + 1
+        game.addDislike("general", best_vote)
         if players_votes[player][best_vote] == 1 then
-          game.graphs.general.vertices[best_vote].likes = game.graphs.general.vertices[best_vote].likes - 1
+          game.removeLike("general", best_vote)
         end
       else
         if players_votes[player][best_vote] == 1 then
-          game.graphs.general.vertices[best_vote].likes = game.graphs.general.vertices[best_vote].likes - 1
+          game.removeLike("general", best_vote)
         else
-          game.graphs.general.vertices[best_vote].dislikes = game.graphs.general.vertices[best_vote].dislikes - 1
+          game.removeDislike("general", best_vote)
         end
       end
       --store the vote
       players_votes[player][best_vote] = vote
       -- computation of the new value of the game
-      saa.computeGraphSAA(#game.players, graph, is_tho1, precision, true)
+      saa.computeGraphSAA(#game.players, graph, is_tho1, val_question, precision, true)
       return best_vote
     end
     return nil

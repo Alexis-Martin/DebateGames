@@ -43,8 +43,8 @@ end
 do
   local game = import_game("tests_games_12_05_ 17_36_27/3_players/game_8.xml")
 
-  saa.computeSAA(game, true, 0.000001)
-  rules.mindChanged(game, true, 0.000001, 300)
+  saa.computeSAA(game, true, 5)
+  rules.mindChanged(game, true, 5, 300)
   for k, v in pairs(game.graphs) do
     if type(v) == "table" then
       print("\n\n", k)

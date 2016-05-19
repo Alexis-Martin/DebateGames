@@ -46,7 +46,7 @@ local function create_graph(class, tags)
       end
     end
   end
-  
+
   graph.addEdge = function(source, target, create_news)
     graph.edges[#graph.edges + 1] = { source = source, target = target }
     if create_news == true then
@@ -66,7 +66,7 @@ local function create_graph(class, tags)
     end
   end
 
-  graph.print_graph = function ()
+  graph.print_graph = function (graph)
     local rec_print
     rec_print = function(t, tab)
       if tab == nil then tab = 0 end

@@ -23,10 +23,10 @@ def tab_x_rp(b):
     if(b <= 50):
         for x in range(-b, b, 2):
             rp.add(repart_laplace(x, b))
-    
+
     elif(b <= 250):
         for x in range(-b, b, 5):
-            rp.add(repart_laplace(x, b))       
+            rp.add(repart_laplace(x, b))
     elif(b <= 500):
         for x in range(-b, b, 10):
             rp.add(repart_laplace(x, b))
@@ -46,7 +46,7 @@ def dif_b(B):
     return dif
 
 
-    
+
 #tab = dif_b([2, 4, 10, 25, 50, 100, 250, 500, 750, 1000, 10000])
 print 0.5 + repart_laplace(150, -200/math.log(0.04)) - repart_laplace(75, -200/math.log(0.04))
 
@@ -57,8 +57,8 @@ x=np.linspace(-10,10,200)
 #plt.plot(x, tab_X_b(x, 1))
 #plt.plot(x, tab_X_b(x, 2))
 #plt.plot(x, tab_X_b(x, 5))
-plt.plot(x, tab_X_b(x, -10/(math.log(0.002))))
-#plt.plot(x, tab_X_b(x, -6/math.log(0.04)))  
+plt.plot(x, tab_X_b(x, -10/(math.log(0.04))))
+#plt.plot(x, tab_X_b(x, -6/math.log(0.04)))
 #plt.plot(x, tab_X_b(x, 50))
 #plt.plot(x, tab_X_b(x, 100))
 #plt.plot(x, tab_X_b(x, 250))

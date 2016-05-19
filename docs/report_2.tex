@@ -339,10 +339,10 @@
           Je n'ai pas encore trouvé d'exemple qui possède cette propriété.
           Cela est dû à la définition de $\tau_1$, un argument "disliker" n'aura pas un poids égale à 0 et un argument "liker" n'aura pas un poids égale à 1.
 
-
+      %TODO Modifier cette partie sur l'équilibre. En discuter avec Nicolas et Elise
       \subsubsection{Règle du jeu : ONESHOT Question: Si tous les agents ont la même valeur à la fin de l'initialisation, peut-on atteindre l'équilibre?}
 
-        \paragraph{Si l'on considère la variante de la définition de $\tau$\\}
+        \paragraph{Si l'on considère la fonction $\tau_2$\\}
 
           Sur l'exemple précédent (c.f. figure \ref{fig:dif_pref}) on atteint l'équilibre.
 
@@ -393,7 +393,7 @@
             En effet $LM(q) = 0.5 \cdot (1 - \curlyvee \{LM(a) | a\in Att(q)\})$ et $\curlyvee \{LM(a) | a\in Att(q)\} = 1$
 
 
-        \paragraph{Si l'on considère la première définition de $\tau$\\}
+        \paragraph{Si l'on considère $\tau_1$\\}
           A priori, on n'atteint pas l'équilibre.
 
           Sur l'exemple de la figure \ref{fig:dif_pref} on atteint l'équilibre, en revanche sur la figure \ref{fig:trivial}, il semblerai qu'on ne l'atteigne pas ($LM_1(q) = LM_2(q) = LM_3(q) = 0.009604$ alors que $LM_g(q) = 0.00731$).
@@ -498,7 +498,130 @@
     \end{itemize}
 
     on atteint pas non plus l'équilibre, on reste bloqué comme avant à environ $0.00731$.
+\color{blue}
+    \subsection{La convergence sur les arbres n'est pas garantie}
+      Après avoir créé un générateur qui est capable de créer un jeu et d'exécuter la règle \texttt{mind\_changed} j'ai trouvé plusieurs exemples qui semblent contredire la convergence sur les arbres.
 
+      Le plus étrange d'entre eux est un jeu à 3 joueurs avec 10 noeuds. Cet arbre est représenté figure \ref{fig:non_conv}
+
+      \begin{figure}
+        \centering
+        \begin{tabular}{cc}
+          \begin{tikzpicture}[>=stealth]
+          \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+          "a1\\ (0,0)" -> "q\\ (0,0)";
+          "a2\\ (0,0)" -> "a1\\ (0,0)";
+          "a3\\ (0,0)" -> "a2\\ (0,0)";
+          "a4\\ (0,0)" -> "q\\ (0,0)";
+          "a5\\ (0,0)" -> "a1\\ (0,0)";
+          "a6\\ (0,0)" -> "a2\\ (0,0)";
+          "a7\\ (0,0)" -> "q\\ (0,0)";
+          "a8\\ (0,0)" -> "a1\\ (0,0)";
+          "a9\\ (0,0)" -> "a6\\ (0,0)";
+          };
+          \end{tikzpicture} &
+
+          \begin{tikzpicture}[>=stealth]
+          \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+          "a1\\ (0,0)" -> "q\\ (0,0)";
+          "a2\\ (0,0)" -> "a1\\ (0,0)";
+          "a3\\ (0,1)" -> "a2\\ (0,0)";
+          "a4\\ (0,0)" -> "q\\ (0,0)";
+          "a5\\ (1,0)" -> "a1\\ (0,0)";
+          "a6\\ (1,0)" -> "a2\\ (0,0)";
+          "a7\\ (0,0)" -> "q\\ (0,0)";
+          "a8\\ (0,1)" -> "a1\\ (0,0)";
+          "a9\\ (0,1)" -> "a6\\ (1,0)";
+          };
+          \end{tikzpicture} \\
+
+          \begin{tikzpicture}[>=stealth]
+          \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+          "a1\\ (0,1)" -> "q\\ (0,0)";
+          "a2\\ (1,0)" -> "a1\\ (0,1)";
+          "a3\\ (0,0)" -> "a2\\ (1,0)";
+          "a4\\ (0,0)" -> "q\\ (0,0)";
+          "a5\\ (0,0)" -> "a1\\ (0,1)";
+          "a6\\ (1,0)" -> "a2\\ (1,0)";
+          "a7\\ (0,1)" -> "q\\ (0,0)";
+          "a8\\ (0,1)" -> "a1\\ (0,1)";
+          "a9\\ (0,0)" -> "a6\\ (1,0)";
+          };
+          \end{tikzpicture} &
+
+          \begin{tikzpicture}[>=stealth]
+          \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+          "a1\\ (1,0)" -> "q\\ (0,0)";
+          "a2\\ (0,0)" -> "a1\\ (1,0)";
+          "a3\\ (0,1)" -> "a2\\ (0,0)";
+          "a4\\ (0,1)" -> "q\\ (0,0)";
+          "a5\\ (1,0)" -> "a1\\ (1,0)";
+          "a6\\ (1,0)" -> "a2\\ (0,0)";
+          "a7\\ (0,0)" -> "q\\ (0,0)";
+          "a8\\ (0,1)" -> "a1\\ (1,0)";
+          "a9\\ (0,1)" -> "a6\\ (1,0)";
+          };
+          \end{tikzpicture} \\
+        \end{tabular}
+
+        \caption{De gauche à droite: graphe général, préférences du joueur 1, préférences du joueur 2, préférences du joueur 3}
+        \label{fig:non_conv}
+      \end{figure}
+
+      En effet sur ce graphe à partir d'un certain temps 1 joueur ne joue plus du tout et les 2 autres changent d'avis sur un seul argument (l'argument a6).
+
+      Le tableau ci-dessous montre la valeur des préférences des trois joueurs au moment de la situation initiale puis les coups joués. La dernière colonne est la valeur du graphe général (le graphe du jeu) au fur et à mesure du temps :
+
+      \begin{tabular}{|c|c|c|c|c|}
+        \hline
+                            & joueur 1   & joueur 2 & joueur 3    & general \\
+        \hline
+        situation initiale  & 0.125      & 0.25     & 0.25        & 0.1123 \\
+        \hline
+        départ de la boucle & $\cdots$   & $\cdots$ & $\cdots$    & 0.20688 \\
+        \hline
+        tour 1              & \_         & \_       & a6 like     & 0.20699 \\
+        \hline
+        tour 2              & a6 dislike & \_       & \_          & 0.20688 \\
+        \hline
+        tour 3              & \_         & \_       & a6 dislike  & 0.2070 \\
+        \hline
+        tour 4              & a6 like    & \_       & \_          & 0.20688 \\
+        \hline
+        tour 5              & \_         & \_       & a6 annule   & 0.20699 \\
+        \hline
+        tour 6              & a6 annule  & \_       & \_          & 0.20688 \\
+        \hline
+        tour 7              & \_         & \_       & a6 like     & 0.20699 \\
+        \hline
+        tour 8              & a6 dislike & \_       & \_          & 0.20688 \\
+        \hline
+      \end{tabular}
+
+      le graphe au départ de la boucle est représenté figure \ref{fig:avant_boucle}
+
+      \begin{figure}
+      \centering
+      \begin{tikzpicture}[>=stealth]
+      \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+      "a1\\ (1,2)" -> "q\\ (0,0)";
+      "a2\\ (2,1)" -> "a1\\ (1,2)";
+      "a3\\ (0,2)" -> "a2\\ (2,1)";
+      "a4\\ (1,1)" -> "q\\ (0,0)";
+      "a5\\ (2,1)" -> "a1\\ (1,2)";
+      "a6\\ (0,1)" -> "a2\\ (2,1)";
+      "a7\\ (1,2)" -> "q\\ (0,0)";
+      "a8\\ (2,1)" -> "a1\\ (1,2)";
+      "a9\\ (2,0)" -> "a6\\ (0,1)";
+      };
+      \end{tikzpicture}
+      \caption{graphe juste avant la boucle}
+      \label{fig:avant_boucle}
+      \end{figure}
+
+      \paragraph{}J'ai exécuté plusieurs fois le calcul du jeu sur ce graphe et dans certains cas assez rare le jeu s'arrête. Donc la convergence dépend de l'ordre dans lequel les joueurs votes.
+
+\color{red}
   \section{Tentative d'analyse de convergence sur des arbres}
     J'ai codé la deuxième règle de jeu (celle qui autorise les changements d'avis). J'ai regardé un peu le comportement que cette règle avait.
 
@@ -522,6 +645,7 @@
       J'ai supposé qu'elle était infinie et j'ai essayé d'arriver à une contradiction afin de pouvoir dire qu'il y a convergence.
       Mais je ne trouve pas de contradiction, certaines conditions paraissent parfois étranges mais jamais totalement incohérentes.
 
+\color{black}
   \section{Questions}
     Je me pose une question à propos de la définition du prix de l'anarchie.
 
@@ -529,7 +653,7 @@
 
     Or j'ai remarqué que ce résultat peut être plus mauvais que l'anarchie et qu'en revanche une configuration totalement différente peut être meilleure. Il faudrait donc logiquement que je me place par rapport à cette meilleure solution pour chercher le prix de l'anarchie? non?\\
 
-    \color{blue}
+    \color{red}
     J'ai l'impression que l'équilibre et la convergence sont 2 questions équivalentes sur notre système.
 
     En effet on a un nombre fini de possibilité de votes, la seule possibilité de ne pas converger est donc d'avoir un cycle. Or si il y a un cycle c'est qu'un joueur à toujours un coup améliorant, donc aucun des états est un état d'équilibre.

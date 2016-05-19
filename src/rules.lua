@@ -14,7 +14,10 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
     local best_lm   = gen_lm
     local vote      = nil
     local graph     = game.graphs.general
-
+    print("===================================")
+    print(player .. " : LM = " .. player_lm)
+    print("general : LM = " .. gen_lm)
+    print("===================================")
     for arg, v in pairs(graph.vertices) do
       local temp_lm
       if v.tag ~= "question" then
@@ -23,14 +26,13 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
           -- what append if he removes his vote
           v.likes = v.likes - 1
           temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, precision)
-          -- print("player = "      .. player ..
-          --       " arg = "        .. arg ..
-          --       " abandon like " .. v.likes ..
-          --       " lm_player = "  .. lm ..
-          --       " general_lm = " .. gen_lm ..
-          --       " new lm = "     .. graph.LM
-          --     )
-          if math.abs(temp_lm - player_lm) <= math.abs(best_lm - player_lm) then
+          print(" arg = "        .. arg)
+          print(" abandon like ")
+          print("likes = " .. v.likes .. " dislikes = " .. v.dislikes)
+          print(" best lm = "    .. best_lm)
+          print(" new lm = "     .. temp_lm)
+          print("--------------------------------")
+          if math.abs(temp_lm - player_lm) < math.abs(best_lm - player_lm) then
             best_vote = arg
             best_lm   = temp_lm
             vote      = nil
@@ -39,15 +41,13 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
           -- what append if he changes his mind and vote negatively
           v.dislikes = v.dislikes + 1
           temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, precision)
-          -- print("player = "        .. player ..
-          --       " arg = "          .. arg ..
-          --       " changement neg " .. v.dislikes ..
-          --       " lm_player = "    .. lm ..
-          --       " general_lm = "   .. gen_lm ..
-          --       " new lm = "       .. graph.LM
-          --     )
-          -- print("\n \n")
-          if math.abs(temp_lm - player_lm) <= math.abs(best_lm - player_lm) then
+          print(" arg = "        .. arg)
+          print(" changement pour dislike ")
+          print("likes = " .. v.likes .. " dislikes = " .. v.dislikes)
+          print(" best lm = "    .. best_lm)
+          print(" new lm = "     .. temp_lm)
+          print("--------------------------------")
+          if math.abs(temp_lm - player_lm) < math.abs(best_lm - player_lm) then
             best_vote = arg
             best_lm   = temp_lm
             vote      = -1
@@ -61,14 +61,13 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
           -- what append if he removes his vote
           v.dislikes = v.dislikes - 1
           temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, precision)
-          -- print("player = "         .. player ..
-          --       " arg = "           .. arg ..
-          --       " abandon dislike " .. v.dislikes ..
-          --       " lm_player = "     .. lm ..
-          --       " general_lm = "    .. gen_lm ..
-          --       " new lm = "        .. graph.LM
-          --     )
-          if math.abs(temp_lm - player_lm) <= math.abs(best_lm - player_lm) then
+          print(" arg = "        .. arg)
+          print(" abandon dislike ")
+          print("likes = " .. v.likes .. " dislikes = " .. v.dislikes)
+          print(" best lm = "    .. best_lm)
+          print(" new lm = "     .. temp_lm)
+          print("--------------------------------")
+          if math.abs(temp_lm - player_lm) < math.abs(best_lm - player_lm) then
             best_vote = arg
             best_lm   = temp_lm
             vote      = nil
@@ -77,15 +76,13 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
           -- what append if he changes his mind and vote positively
           v.likes = v.likes + 1
           temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, precision)
-          -- print("player = "        .. player ..
-          --       " arg = "          .. arg ..
-          --       " changement pos " .. v.likes ..
-          --       " lm_player = "    .. lm ..
-          --       " general_lm = "   .. gen_lm ..
-          --       " new lm = "       .. graph.LM
-          --     )
-          -- print("\n \n")
-          if math.abs(temp_lm - player_lm) <= math.abs(best_lm - player_lm) then
+          print(" arg = "        .. arg)
+          print(" changement pour like ")
+          print("likes = " .. v.likes .. " dislikes = " .. v.dislikes)
+          print(" best lm = "    .. best_lm)
+          print(" new lm = "     .. temp_lm)
+          print("--------------------------------")
+          if math.abs(temp_lm - player_lm) < math.abs(best_lm - player_lm) then
             best_vote = arg
             best_lm   = temp_lm
             vote      = 1
@@ -99,14 +96,13 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
           -- what append if he likes this argument
           v.likes = v.likes + 1
           temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, precision)
-          -- print("player = "      .. player ..
-          --       " arg = "        .. arg ..
-          --       " positive "     .. v.likes ..
-          --       " lm_player = "  .. lm ..
-          --       " general_lm = " .. gen_lm ..
-          --       " new lm = "     .. graph.LM
-          --     )
-          if math.abs(temp_lm - player_lm) <= math.abs(best_lm - player_lm) then
+          print(" arg = "        .. arg)
+          print(" vote like ")
+          print("likes = " .. v.likes .. " dislikes = " .. v.dislikes)
+          print(" best lm = "    .. best_lm)
+          print(" new lm = "     .. temp_lm)
+          print("--------------------------------")
+          if math.abs(temp_lm - player_lm) < math.abs(best_lm - player_lm) then
             best_vote = arg
             best_lm   = temp_lm
             vote      = 1
@@ -116,15 +112,13 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
           v.likes = v.likes - 1
           v.dislikes = v.dislikes + 1
           temp_lm = saa.computeGraphSAA(#game.players, graph, is_tho1, precision)
-          -- print("player = "      .. player ..
-          --       " arg = "        .. arg ..
-          --       " negative "     .. v.dislikes ..
-          --       " lm_player = "  .. lm ..
-          --       " general_lm = " .. gen_lm ..
-          --       " new lm = "     .. graph.LM
-          --     )
-          -- print("\n \n")
-          if math.abs(temp_lm - player_lm) <= math.abs(best_lm - player_lm) then
+          print(" arg = "        .. arg)
+          print(" vote dislike ")
+          print("likes = " .. v.likes .. " dislikes = " .. v.dislikes)
+          print(" best lm = "    .. best_lm)
+          print(" new lm = "     .. temp_lm)
+          print("--------------------------------")
+          if math.abs(temp_lm - player_lm) < math.abs(best_lm - player_lm) then
             best_vote = arg
             best_lm   = temp_lm
             vote      = -1
@@ -134,7 +128,8 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
         end
       end
     end
-    -- print("decision : best vote = " .. tostring(best_vote) .. " bool = " .. tostring(vote))
+    print("decision : best vote = " .. tostring(best_vote) .. " bool = " .. tostring(vote) .. " lm = " .. best_lm)
+    print("==============================")
     -- we compute the old value to restore all values in the graph
     saa.computeGraphSAA(#game.players, graph, is_tho1, precision, false)
     -- application of the best vote we found (if there is a best vote)
@@ -183,7 +178,7 @@ function rules.mindChanged(game, is_tho1, precision, stop_at)
     nb_round = nb_round + 1
     nb_nil   = one_round()
     if type(stop_at) == "number" and
-       #game.graphs.general.LM >= stop_at then
+       nb_round >= stop_at then
       break
     end
   end

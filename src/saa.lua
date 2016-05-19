@@ -8,8 +8,9 @@ function SAA.computeGraphSAA(nb_players, graph, is_tho1, precision, save_value)
     v.likes       = v.likes    or 0
     v.dislikes    = v.dislikes or 0
     local int_exp = (v.likes - v.dislikes) / eps
-
-    if (not is_tho1) and v.likes == 0 and v.dislikes == nb_players then
+    if v.tag == "question" then
+      tho[k] = 1
+    elseif (not is_tho1) and v.likes == 0 and v.dislikes == nb_players then
       tho[k] = 0
     elseif (not is_tho1) and v.dislikes == 0 and v.likes == nb_players then
       tho[k] = 1

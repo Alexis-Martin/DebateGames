@@ -18,7 +18,7 @@ local function import_game(fic)
   local class
   for _,g in pairs(data) do
     if type(g) == "table" and g.view == "general" then
-      class = g.class
+      class = g.xml
     end
   end
   local graph = create_graph(class, { view = "general" })

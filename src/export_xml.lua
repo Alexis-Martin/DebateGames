@@ -1,6 +1,12 @@
 local function export_game(game, dest)
   local nb_graph = 0
-  local xml = "<game players=\"" .. #game.players .. "\">\n\t"
+  local xml = "<game players=\"" .. #game.players .. "\""
+  for k, v in pairs(game) do
+    if type(v) == "number" then
+      xml = xml .. " " .. k .. "=\"" .. v .. "\""
+    end
+  end
+  xml = xml .. ">\n\t"
   for _, graph in pairs(game.graphs) do
 
     xml = xml .. "<" .. graph.class .. " view=\"" .. graph.view .. "\">"

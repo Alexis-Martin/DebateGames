@@ -114,7 +114,6 @@ local function create_game(players, graph)
       mean = mean + game.graphs[list_players[i]].LM[1]
     end
     mean = mean / (#list_players - 2)
-    print(mean, #list_players - 2)
     for i = 0, #game.graphs.general.LM-1 do
       table.insert(values[1], i)
       for p = 2, #list_players do

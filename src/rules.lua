@@ -6,6 +6,8 @@ function rules.mindChanged(game, fun, epsilon, val_question, precision, stop_at,
   for _, v in ipairs(game.players) do
     players_votes[v] = {}
   end
+  local changed = 0
+  local pass    = 0
 
   local function best_move(player)
     local player_lm = game.graphs[player].LM[#game.graphs[player].LM]
@@ -152,15 +154,24 @@ function rules.mindChanged(game, fun, epsilon, val_question, precision, stop_at,
     if best_vote ~= nil then
       if vote == 1 then
         game.addLike("general", best_vote)
+        if players_votes[player][best_vote] == 0 then
+          changed = changed + 1
+        end
         if players_votes[player][best_vote] == -1 then
           game.removeDislike("general", best_vote)
+          changed = changed + 1
         end
       elseif vote == -1 then
         game.addDislike("general", best_vote)
+        if players_votes[player][best_vote] == 0 then
+          changed = changed + 1
+        end
         if players_votes[player][best_vote] == 1 then
           game.removeLike("general", best_vote)
+          changed = changed + 1
         end
       else
+        changed = changed + 1
         if players_votes[player][best_vote] == 1 then
           game.removeLike("general", best_vote)
         else
@@ -168,11 +179,12 @@ function rules.mindChanged(game, fun, epsilon, val_question, precision, stop_at,
         end
       end
       --store the vote
-      players_votes[player][best_vote] = vote
+      players_votes[player][best_vote] = vote or 0
       -- computation of the new value of the game
       saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision, true)
       return best_vote
     end
+    pass = pass + 1
     return nil
   end
 
@@ -187,17 +199,27 @@ function rules.mindChanged(game, fun, epsilon, val_question, precision, stop_at,
   end
 
   -- print("round 1")
-  local nb_round = 2
+  local nb_round = #game.players
   local nb_nil   = one_round()
   while nb_nil < #game.players do
-    -- print("round " .. nb_round)
-    nb_round = nb_round + 1
+    nb_round = nb_round + #game.players
     nb_nil   = one_round()
     if type(stop_at) == "number" and
        nb_round >= stop_at then
       break
     end
   end
+
+  local mean = 0
+  for i = 1, #game.players do
+    mean = mean + game.graphs[game.players[i]].LM[1]
+  end
+  mean = mean / (#game.players)
+  game.mean       = mean
+  game.rounds     = nb_round - #game.players
+  game.changed    = changed
+  game.pass       = pass - #game.players
+  -- game.max_rounds = 3 ^ (#game.graphs.general.vertices)
 end
 
 return rules

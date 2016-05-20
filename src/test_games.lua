@@ -8,9 +8,9 @@ local saa             = require "saa"
 
 
 local function test_random_games(val_question)
-  local max_players  = 6
-  local max_games    = 20
-  local max_vertices = 20
+  local max_players  = 2
+  local max_games    = 5
+  local max_vertices = 10
   local nb_tests     = max_vertices * max_games * (max_players-1)
   local options      = {
     xlabel = "round",

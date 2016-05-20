@@ -4,8 +4,9 @@ local SAA = {}
 local function round(num, idp)
   return tonumber(string.format("%." .. (idp or 0) .. "f", num))
 end
-function SAA.computeGraphSAA(nb_players, graph, is_tho1, val_question, precision, save_value)
+function SAA.computeGraphSAA(nb_players, graph, fun, epsilon, val_question, precision, save_value)
   local tho = {}
+  epsilon = epsilon or 0
   for k, v in pairs(graph.vertices) do
     local eps     = -nb_players / math.log(0.04)
     v.likes       = v.likes    or 0
@@ -13,14 +14,18 @@ function SAA.computeGraphSAA(nb_players, graph, is_tho1, val_question, precision
     local int_exp = (v.likes - v.dislikes) / eps
     if type(val_question) == "number" and v.tag == "question" then
       tho[k] = val_question
-    elseif (not is_tho1) and v.likes == 0 and v.dislikes == nb_players then
+    elseif fun == "tau_2" and v.likes == 0 and v.dislikes == nb_players then
       tho[k] = 0
-    elseif (not is_tho1) and v.dislikes == 0 and v.likes == nb_players then
+    elseif fun == "tau_2" and v.dislikes == 0 and v.likes == nb_players then
       tho[k] = 1
-    elseif v.likes - v.dislikes < 0 then
+    elseif (fun == "tau_1" or fun == "tau_2") and v.likes - v.dislikes < 0 then
       tho[k] = 0.5 * math.exp(int_exp)
-    else
+    elseif (fun == "tau_1" or fun == "tau_2") and v.likes - v.dislikes >= 0 then
       tho[k] = 1 - 0.5 * math.exp(-int_exp)
+    elseif fun == "L_&_M" and v.likes + v.dislikes + epsilon == 0 then
+      tho[k] = 0
+    elseif fun == "L_&_M" then
+      tho[k] = v.likes / (v.likes + v.dislikes + epsilon)
     end
     v.LM = round(tho[k], precision)
   end
@@ -67,12 +72,12 @@ function SAA.computeGraphSAA(nb_players, graph, is_tho1, val_question, precision
   end
 end
 
-function SAA.computeSAA(game, is_tho1,val_question, precision)
+function SAA.computeSAA(game, fun, epsilon, val_question, precision)
   for k, graph in pairs(game.graphs) do
     if k == "general" then
-      SAA.computeGraphSAA(#game.players, graph, is_tho1,val_question, precision, true)
+      SAA.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision, true)
     else
-      SAA.computeGraphSAA(1, graph, is_tho1, val_question, precision, true)
+      SAA.computeGraphSAA(1, graph, fun, epsilon, val_question, precision, true)
     end
   end
 end

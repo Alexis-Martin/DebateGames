@@ -1,3 +1,4 @@
+local gp = require('gnuplot')
 local function create_game(players, graph)
   local game = {
     graphs = {
@@ -5,6 +6,18 @@ local function create_game(players, graph)
     },
     players = players
   }
+
+  game.restoreGame = function()
+    for _, v in pairs(game.graphs.general.vertices) do
+      v.likes    = 0
+      v.dislikes = 0
+      v.LM       = nil
+    end
+    game.graphs.general.LM = nil
+    for _,p in ipairs(players) do
+      game.graphs[p].LM = nil
+    end
+  end
 
   game.setDislikes = function(player, arg, nb)
     if not player or not game.graphs[player] then
@@ -74,6 +87,54 @@ local function create_game(players, graph)
       game.graphs[player].vertices[arg].likes = game.graphs[player].vertices[arg].likes - 1
     end
     return game.graphs[player].vertices[arg].likes
+  end
+
+  game.plot = function(list_players, output, open)
+    if not list_players then
+      list_players = {}
+      for _, player in ipairs(players) do
+        table.insert(list_players, player)
+      end
+      table.insert(list_players, "general")
+    end
+
+    local values = {}
+    local using  = {}
+    local title  = {}
+
+    values[1] = {}
+    table.insert(using, 1)
+    for i = 2, #list_players + 1 do
+      values[i] = {}
+      table.insert(using, i)
+      table.insert(title, list_players[i-1])
+    end
+
+    for i = 0, #game.graphs.general.LM-1 do
+      table.insert(values[1], i)
+      for p = 2, #list_players + 1 do
+        table.insert(values[p], game.graphs[list_players[p-1]].LM[i+1] or game.graphs[list_players[p-1]].LM[1])
+      end
+    end
+
+    local g = gp{
+        -- all optional, with sane defaults
+        width  = 640,
+        height = 480,
+        xlabel = "X axis",
+        ylabel = "Y axis",
+        key    = "top left",
+        consts = {
+            gamma = 2.5
+        },
+
+        data = {
+            gp.array {values, title = title, using = using, with  = 'linespoints'},
+        }
+    }
+
+    g:plot(output, open)
+
   end
 
   local deepcopy

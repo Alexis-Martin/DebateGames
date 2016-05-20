@@ -89,47 +89,54 @@ local function create_game(players, graph)
     return game.graphs[player].vertices[arg].likes
   end
 
-  game.plot = function(list_players, output, open)
-    if not list_players then
-      list_players = {}
-      for _, player in ipairs(players) do
-        table.insert(list_players, player)
-      end
-      table.insert(list_players, "general")
+  game.plot = function(output, open, option)
+    local list_players = {}
+    for _, player in ipairs(players) do
+      table.insert(list_players, player)
     end
+    table.insert(list_players, "general")
+    table.insert(list_players, "moyenne")
 
-    local values = {}
-    local using  = {}
-    local title  = {}
+    local values         = {}
+    local using          = {}
+    local players_title  = {}
 
     values[1] = {}
     table.insert(using, 1)
     for i = 2, #list_players + 1 do
       values[i] = {}
       table.insert(using, i)
-      table.insert(title, list_players[i-1])
+      table.insert(players_title, list_players[i-1])
     end
 
+    local mean = 0
+    for i = 1, #list_players -2 do
+      mean = mean + game.graphs[list_players[i]].LM[1]
+    end
+    mean = mean / (#list_players - 2)
+    print(mean, #list_players - 2)
     for i = 0, #game.graphs.general.LM-1 do
       table.insert(values[1], i)
-      for p = 2, #list_players + 1 do
+      for p = 2, #list_players do
         table.insert(values[p], game.graphs[list_players[p-1]].LM[i+1] or game.graphs[list_players[p-1]].LM[1])
       end
+      table.insert(values[#values], mean)
     end
 
     local g = gp{
         -- all optional, with sane defaults
-        width  = 640,
-        height = 480,
-        xlabel = "X axis",
-        ylabel = "Y axis",
-        key    = "top left",
+        width  = option.width  or 640,
+        height = option.height or 480,
+        xlabel = option.xlabel or "X axis",
+        ylabel = option.ylabel or "Y axis",
+        key    = option.key    or "top left",
+        title  = option.title  or nil,
         consts = {
             gamma = 2.5
         },
 
         data = {
-            gp.array {values, title = title, using = using, with  = 'linespoints'},
+            gp.array {values, title = players_title, using = using, with  = 'linespoints'},
         }
     }
 

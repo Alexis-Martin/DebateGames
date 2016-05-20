@@ -92,6 +92,7 @@ local options = {
     function(g, code)
         local tm   = gnuplot.terminal[g._type]
         local size = ""
+        
         if g.width and g.height then
             size = ("size %s, %s"):format(g.width, g.height)
         end

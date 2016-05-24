@@ -1,5 +1,5 @@
 local import_game = require "import_xml"
-local game        = import_game("tests_games_12_05_ 17_36_27/3_players/game_8.xml")
+local game        = import_game("/home/talkie/Documents/Stage/DebateGames/tests/test_changement_q_1_24_05_11_09_40/game_change.xml")
 local fic         = io.open("game.tex", "w")
 io.output(fic)
 

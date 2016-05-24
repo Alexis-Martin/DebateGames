@@ -49,7 +49,8 @@ function SAA.computeGraphSAA(nb_players, graph, fun, epsilon, val_question, prec
 
       v.LM = tho[k] * (1 - conorm)
       v.LM = round(v.LM, precision)
-      if math.abs(v.LM - last_LM[k]) > precision then
+      if math.abs(v.LM - last_LM[k]) > 10^-precision then
+
         loop = true
       end
     end

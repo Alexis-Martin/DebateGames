@@ -16,7 +16,14 @@ local function create_game(players, graph)
     game.graphs.general.LM = nil
     for _,p in ipairs(players) do
       game.graphs[p].LM = nil
+      for _, v in pairs(game.graphs[p].vertices) do
+        v.LM = nil
+      end
     end
+    game.changed = nil
+    game.rounds  = nil
+    game.pass    = nil
+    game.mean    = nil
   end
 
   game.setDislikes = function(player, arg, nb)
@@ -121,7 +128,7 @@ local function create_game(players, graph)
       end
       table.insert(values[#values], mean)
     end
-
+    option  = option or {}
     local g = gp{
         -- all optional, with sane defaults
         width  = option.width  or 640,

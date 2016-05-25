@@ -31,11 +31,25 @@ local function show_tex (game, output)
     for _, v1 in pairs(game.graphs.general.edges) do
       io.write("\"" .. v1.source .. "\\\\ ("
         .. (v.vertices[v1.source].likes or 0) .. ","
-        .. (v.vertices[v1.source].dislikes or 0) .. ")\""
-        .. " -> \"" .. v1.target .. "\\\\ ("
+        .. (v.vertices[v1.source].dislikes or 0) .. ")")
+
+        if  v.vertices[v1.source].tag == "question"
+        and v.vertices[v1.source].LM then
+          io.write("\\\\lm = " .. v.vertices[v1.source].LM)
+        end
+        io.write("\"")
+
+        io.write(" -> \"" .. v1.target .. "\\\\ ("
         .. (v.vertices[v1.target].likes or 0) .. ","
-        .. (v.vertices[v1.target].dislikes or 0) .. ")\""
-        .. ";")
+        .. (v.vertices[v1.target].dislikes or 0) .. ")")
+
+
+        if  v.vertices[v1.target].tag == "question"
+        and v.vertices[v1.target].LM then
+          io.write("\\\\lm = " .. v.vertices[v1.target].LM)
+        end
+        io.write("\";")
+
       io.write("\n")
       list_nodes[v1.source] = true
       list_nodes[v1.target] = true
@@ -58,6 +72,49 @@ local function show_tex (game, output)
     io.write("\\end{figure}")
     io.write("\n")
   end
+
+  if game.graphs.general.LM  then
+    io.write("\\begin{tabular}{|c|")
+    for _, _ in ipairs(game.players) do
+      io.write("c|")
+    end
+    io.write("c|}")
+    io.write("\n")
+    io.write("\\hline")
+    io.write("\n")
+    io.write("& ")
+    for _, p in ipairs(game.players) do
+      io.write(p .. " & ")
+    end
+    io.write("general \\\\")
+    io.write("\n")
+    io.write("\\hline")
+    io.write("\n")
+    for _, v in pairs(game.graphs.general.LM) do
+      io.write("tour " .. v.run .. " & ")
+      for _, p in ipairs(game.players) do
+        if v.player == p then
+          if v.arg_vote == "none" then
+            io.write("pass & ")
+          elseif v.vote == 1 then
+            io.write(v.arg_vote .. " like " .. "& ")
+          elseif v.vote == -1 then
+            io.write(v.arg_vote .. " dislike " .. "& ")
+          else
+            io.write(v.arg_vote .. " annule " .. "& ")
+          end
+        else
+          io.write("\\_" .. " & ")
+        end
+      end
+      io.write(v.value .. " \\\\")
+      io.write("\n")
+      io.write("\\hline")
+      io.write("\n")
+    end
+    io.write("\\end{tabular}")
+  end
+  io.write("\n")
 
   io.write("\\end{document}")
 end

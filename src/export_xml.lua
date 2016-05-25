@@ -39,8 +39,14 @@ local function export_game(game, dest)
 
     if type(graph.LM) == "table" then
       xml = xml .. "\n\t\t<LM>"
-      for i, LM in ipairs(graph.LM) do
-        xml = xml .. "\n\t\t\t<LM run=\"" .. i .. "\">" .. LM .. "</LM>"
+      for _, LM in ipairs(graph.LM) do
+        xml = xml .. "\n\t\t\t<LM "
+        for k, v in pairs(LM) do
+          if k ~= "value" then
+            xml = xml .. k .. "=\"" .. v .. "\" "
+          end
+        end
+        xml = xml .. ">" .. LM.value .."</LM>"
       end
       xml = xml .. "\n\t\t</LM>"
     end

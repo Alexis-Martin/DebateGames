@@ -118,13 +118,17 @@ local function create_game(players, graph)
 
     local mean = 0
     for i = 1, #list_players -2 do
-      mean = mean + game.graphs[list_players[i]].LM[1]
+      mean = mean + game.graphs[list_players[i]].LM[1].value
     end
     mean = mean / (#list_players - 2)
     for i = 0, #game.graphs.general.LM-1 do
       table.insert(values[1], i)
       for p = 2, #list_players do
-        table.insert(values[p], game.graphs[list_players[p-1]].LM[i+1] or game.graphs[list_players[p-1]].LM[1])
+        if list_players[p-1] == "general" then
+          table.insert(values[p], game.graphs[list_players[p-1]].LM[i+1].value)
+        else
+          table.insert(values[p], game.graphs[list_players[p-1]].LM[1].value)
+        end
       end
       table.insert(values[#values], mean)
     end

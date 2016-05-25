@@ -4,7 +4,7 @@ local SAA = {}
 local function round(num, idp)
   return tonumber(string.format("%." .. (idp or 0) .. "f", num))
 end
-function SAA.computeGraphSAA(nb_players, graph, fun, epsilon, val_question, precision, save_value)
+function SAA.computeGraphSAA(nb_players, graph, fun, epsilon, val_question, precision)
   local tho = {}
   epsilon = epsilon or 0
   for k, v in pairs(graph.vertices) do
@@ -64,10 +64,6 @@ function SAA.computeGraphSAA(nb_players, graph, fun, epsilon, val_question, prec
 
   for _,v in pairs(graph.vertices) do
     if v.tag == "question" then
-      if save_value and not graph.LM then
-        graph.LM = {}
-      end
-      if save_value then graph.LM[#graph.LM + 1] = v.LM end
       return v.LM
     end
   end
@@ -75,11 +71,16 @@ end
 
 function SAA.computeSAA(game, fun, epsilon, val_question, precision)
   for k, graph in pairs(game.graphs) do
+    local lm
     if k == "general" then
-      SAA.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision, true)
+      lm = SAA.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
     else
-      SAA.computeGraphSAA(1, graph, fun, epsilon, val_question, precision, true)
+      lm = SAA.computeGraphSAA(1, graph, fun, epsilon, val_question, precision)
     end
+    if not graph.LM then
+      graph.LM = {}
+    end
+    graph.LM[#graph.LM + 1] = {run = #graph.LM + 1, value = lm}
   end
 end
 

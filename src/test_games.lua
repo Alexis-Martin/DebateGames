@@ -1,6 +1,7 @@
 local game_generator  = require "game_generator"
 local graph_generator = require "graph_generator"
 local export_game     = require "export_xml"
+local export_tex      = require "tex_representation"
 local import_game     = require "import_xml"
 local lfs             = require "lfs"
 local rules           = require "rules"
@@ -30,14 +31,17 @@ local function test_random_games(val_question)
       for j = 1, max_games do
         print((players-2) * max_vertices * max_games + (nb_vertices-1) * max_games + j .. "/" .. nb_tests)
         -- local nb_vertices = 6 --math.random(2, 50)
-        local graph  = graph_generator(nb_vertices)
-        local dest_j = dest_v .. "game_" .. j .. ".xml"
-        local game   = game_generator(players, graph)
+        local graph    = graph_generator(nb_vertices)
+        local dest_j   = dest_v .. "game_" .. j .. ".xml"
+        local dest_tex = dest_v .. "game_" .. j .. ".tex"
+        local game     = game_generator(players, graph)
         export_game(game, dest_j)
+        export_tex(game, dest_tex)
         -- test tau_1
         saa.computeSAA   (game, "tau_1", nil, val_question, 5)
         rules.mindChanged(game, "tau_1", nil, val_question, 5)
         dest_j         = dest_v .. "game_" .. j .. "_tau_1.xml"
+        dest_tex       = dest_v .. "game_" .. j .. "_tau_1.tex"
         local dest_png = dest_v .. "game_" .. j .. "_tau_1.png"
         options.title  = players     .. " players "
                       .. nb_vertices .. " vertices "
@@ -45,11 +49,13 @@ local function test_random_games(val_question)
                       .. " function tau_1"
         game.plot  (dest_png, false, options)
         export_game(game, dest_j)
+        export_tex(game, dest_tex)
         game.restoreGame()
         -- test tau_2
         saa.computeSAA   (game, "tau_2", nil, val_question, 5)
         rules.mindChanged(game, "tau_2", nil, val_question, 5)
         dest_j        = dest_v .. "game_" .. j .. "_tau_2.xml"
+        dest_tex      = dest_v .. "game_" .. j .. "_tau_2.tex"
         dest_png      = dest_v .. "game_" .. j .. "_tau_2.png"
         options.title = players     .. " players "
                      .. nb_vertices .. " vertices "
@@ -57,17 +63,20 @@ local function test_random_games(val_question)
                      .. " function tau_2"
         game.plot  (dest_png, false, options)
         export_game(game, dest_j)
+        export_tex(game, dest_tex)
         game.restoreGame()
         -- test L_&_M
         saa.computeSAA   (game, "L_&_M", 0.1, val_question, 5)
         rules.mindChanged(game, "L_&_M", 0.1, val_question, 5)
         dest_j        = dest_v .. "game_" .. j .. "_L_&_M.xml"
+        dest_tex      = dest_v .. "game_" .. j .. "_L_&_M.tex"
         dest_png      = dest_v .. "game_" .. j .. "_L_&_M.png"
         options.title = players     .. " players "
                      .. nb_vertices .. " vertices "
                      .. "game "     .. j
                      .. " function L&M"
         game.plot  (dest_png, false, options)
+        export_tex(game, dest_tex)
         export_game(game, dest_j)
       end
     end
@@ -170,7 +179,7 @@ end
 
 
 do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/test_changement_q_1_24_05_11_09_40/game_change.xml")
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/tests_games_q_1_25_05_15_29_24/2_players/10_vertices/game_1_tau_1.xml")
 
   saa.computeSAA(game, "tau_1", nil, 1, 10)
   rules.mindChanged(game, "tau_1", nil, 1, 10, 300, {view = "strokes", file = "test_game_change.log"})

@@ -16,8 +16,8 @@ function rules.mindChanged(game, fun, epsilon, val_question, precision, stop_at,
   local pass    = 0
 
   local function best_move(player)
-    local player_lm = game.graphs[player].LM[#game.graphs[player].LM]
-    local gen_lm    = game.graphs.general.LM[#game.graphs.general.LM]
+    local player_lm = game.graphs[player].LM[#game.graphs[player].LM].value
+    local gen_lm    = game.graphs.general.LM[#game.graphs.general.LM].value
     local best_vote = nil
     local best_lm   = gen_lm
     local vote      = nil
@@ -175,7 +175,7 @@ function rules.mindChanged(game, fun, epsilon, val_question, precision, stop_at,
 
     end
     -- we compute the old value to restore all values in the graph
-    saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision, false)
+    saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
     -- application of the best vote we found (if there is a best vote)
     if best_vote ~= nil then
       if vote == 1 then
@@ -207,9 +207,29 @@ function rules.mindChanged(game, fun, epsilon, val_question, precision, stop_at,
       --store the vote
       players_votes[player][best_vote] = vote or 0
       -- computation of the new value of the game
-      saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision, true)
+      local lm = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
+      if not graph.LM then
+        graph.LM = {}
+      end
+      graph.LM[#graph.LM + 1] = {
+        run      = #graph.LM + 1,
+        player   = player,
+        arg_vote = best_vote,
+        vote     = vote or 0,
+        value    = lm
+      }
       return best_vote
     end
+    local lm = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
+    if not graph.LM then
+      graph.LM = {}
+    end
+    graph.LM[#graph.LM + 1] = {
+      run      = #graph.LM + 1,
+      player   = player,
+      arg_vote = "none",
+      value    = lm
+    }
     pass = pass + 1
     return nil
   end
@@ -238,7 +258,7 @@ function rules.mindChanged(game, fun, epsilon, val_question, precision, stop_at,
 
   local mean = 0
   for i = 1, #game.players do
-    mean = mean + game.graphs[game.players[i]].LM[1]
+    mean = mean + game.graphs[game.players[i]].LM[1].value
   end
   mean = mean / (#game.players)
   game.mean       = mean

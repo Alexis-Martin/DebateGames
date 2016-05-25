@@ -46,6 +46,7 @@
 {\newline}
 {}
 
+\newtheorem{proposition}{Proposition}[section]
 \theoremstyle{defi}
 \newtheorem{definition}{Définition}[section]
 \theoremstyle{not}
@@ -123,7 +124,44 @@
               \end{array}
             $$\\
         \end{enumerate}
+\color{blue}
+      \begin{proposition}
+        Les fonctions $\tau$ sont croissantes selon $v^+$ et décroissantes selon $v^-$.
+      \end{proposition}
+      \begin{proof}
+        On va montrer la croissance (resp. décroissance) selon $v^+$ (resp. $v^-$) pour la fonction $\tau_1$ et cette preuve sera suffisante pour se convaincre pour $tau_2$.
 
+        Commençons par remarquer que :
+        $$tau_1(v^+, v^-) = \left\{
+          \begin{array}{ll}
+            \frac{1}{2} \cdot \exp(\frac{v^+ - v^-}{\varepsilon})  & \mbox{si } v^+ - v^- < 0 \\
+            1 - \frac{1}{2} \cdot \exp(\frac{v^- - v^+}{\varepsilon}) & \mbox{sinon} \\
+          \end{array}
+        \right.$$
+
+        Soit $v^- \in \mathcal{N}$ et $v_1^+, v_2^+ \in \mathcal{N}$ tel que $v_1^+ < v_2^+$. Montrons que $tau_1(v_1^+, v^-) < tau_1(v_2^+, v^-)$
+
+        3 cas possibles :
+        \begin{itemize}
+          \item si $v_1^+ - v^- < 0$ et $v_2^+ - v^- < 0$
+          $$tau_1(v_1^+, v^-) - tau_1(v_2^+, v^-) = \frac{1}{2} \cdot \exp(\frac{- v^-}{\varepsilon})(\exp(\frac{v_1^+}{\varepsilon}) - \exp(\frac{v_2^+}{\varepsilon}))$$
+
+          $\exp$ est une fonction croissante donc $tau_1(v_1^+, v^-) < tau_1(v_2^+, v^-)$
+
+          \item si $v_1^+ - v^- < 0$ et $v_2^+ - v^- \geq 0$
+          $$tau_1(v_1^+, v^-) - tau_1(v_2^+, v^-) = \frac{1}{2} \cdot \exp(\frac{v_1^+ - v^-}{\varepsilon}) - 1 + \frac{1}{2} \cdot \exp(\frac{v^- - v_2^+}{\varepsilon})$$
+
+          En remarquant que $\exp(\frac{v_1^+ - v^-}{\varepsilon}) < 1$ et que $\exp(\frac{v^- - v_2^+}{\varepsilon}) \leq 1$ on en conclut que $tau_1(v_1^+, v^-) < tau_1(v_2^+, v^-)$
+
+          \item si $v_1^+ - v^- \geq 0$ et $v_2^+ - v^- \geq 0$
+          $$tau_1(v_1^+, v^-) - tau_1(v_2^+, v^-) = \frac{1}{2} \cdot \exp(\frac{v^-}{\varepsilon})(\exp(\frac{- v_2^+}{\varepsilon}) - \exp(\frac{- v_1^+}{\varepsilon}))$$
+
+          $\exp(\frac{- v_2^+}{\varepsilon}) < \exp(\frac{- v_1^+}{\varepsilon})$ donc $tau_1(v_1^+, v^-) < tau_1(v_2^+, v^-)$
+        \end{itemize}
+
+        La preuve est la même pour la décroissance selon $v^-$.
+      \end{proof}
+\color{black}
       On peut ensuite définir une sémantique d'argumentation.
       \begin{definition}[Laplace Product Semantics]
         $\mathcal{S}_1$ (resp $\mathcal{S}_2$) $= \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ est la sémantique tel que :
@@ -198,54 +236,6 @@
 
     \paragraph{Dynamique\\}
       On considère dans ces modèles une dynamique de meilleure réponse. Round Robin.
-
-\color{red}
-    \subsection{Formalisation}
-
-      \begin{notation}
-        On note $\mathcal{A}(F)$ l'ensemble $\mathcal{A}$ du graphe d'argumentation $F$.
-        De même $\mathcal{R}(F)$ est l'ensemble $\mathcal{R}$ de $F$ et $V(F)$ est la fonction $V$ du graphe $F$.
-      \end{notation}
-
-      \begin{definition}[Jeu d'argumentation]
-        Un jeu d'argumentation est représenté par un tuple $AJ=\langle J, \mathcal{F}, \Delta \rangle$ où
-        \begin{itemize}
-          \item $J = \{j_1, j_2, ..., j_n\}$ l'ensemble des joueurs qui participent au jeu.
-          \item $\mathcal{F} = \{F_1, F_2, ..., F_m\}$ un ensemble de graphes d'argumentation tel que $\forall\ 1 \leq i \leq j \leq m\ \mathcal{A}(F_i) = \mathcal{A}(F_j)$ et $\mathcal{R}(F_i) = \mathcal{R}(F_j)$.
-          \item $\Delta \subseteq \mathcal{F} \times J \times \mathcal{A}(F) \times \{-1, 0, 1\} \times \{-1, 0, 1\} \times \mathcal{F}$ Un ensemble fini de transition entre les graphes d'argumentation.
-        \end{itemize}
-      \end{definition}
-
-      Dans ce système une configuration est défini par un couple $\sigma =(j, F)$ tel que $j \in J$ est le joueur qui doit jouer et $F \in \mathcal{F}$ est le graphe d'argumentation courant.
-
-      Une transition $\delta \in \Delta$ entre 2 configurations $\sigma$ et $\sigma'$ est noté $\sigma \overset{\delta}{\longrightarrow} \sigma'$.
-      Une telle transition est possible si et seulement si $\sigma = (j_k, F)$, $\sigma' = (j_{(k+1)\ mod(n)}, F')$, $\delta = (F, j_k, a_i, x_1, x_2, F')$ et $V(F') = \left\lbrace
-        \begin{array}{ll}
-          V(F)(a) & \forall a \neq a_i \\
-          V(F)(a) + (x_1, x_2) & sinon
-        \end{array}
-      \right.$
-
-      \paragraph{Remarque} Au plus j'écris et au plus je me rend compte qu'on peut faire beaucoup plus simple comme formalisme... Je modifierai plus tard.
-
-      \begin{definition}[partie]
-        une partie est un ensemble (potentiellement infini) de transition $\sigma_0 \longrightarrow \sigma_1 \longrightarrow \ldots \longrightarrow \sigma_r \ldots$
-        tel que
-        $\forall (\sigma_i, \ldots, \sigma_{i+n}), \exists k \in \{1, \ldots, n-1\}\ et\ \sigma_{i+k}(F) \neq \sigma_{i+k+1}(F)$.
-
-        On dit donc que, quelque soit la suite de $n$ coups dans la partie, au moins un des joueurs a fait une action (vote ou changement d'avis).
-      \end{definition}
-
-      La question qu'on se pose est donc, existe-t-il une instance avec une partie infini?
-
-      \paragraph{Remarque}
-        Une partie infinie implique que $\exists i, j$ tels que $|i - j| > n$ et $\sigma_i = \sigma_j$.\\
-
-
-
-
-
-\color{black}
 
     \paragraph{Les questions qu'on se pose}
       \begin{itemize}
@@ -498,7 +488,7 @@
     \end{itemize}
 
     on atteint pas non plus l'équilibre, on reste bloqué comme avant à environ $0.00731$.
-\color{blue}
+\color{red}
     \subsection{La convergence sur les arbres n'est pas garantie}
       Après avoir créé un générateur qui est capable de créer un jeu et d'exécuter la règle \texttt{mind\_changed} j'ai trouvé plusieurs exemples qui semblent contredire la convergence sur les arbres.
 
@@ -620,30 +610,13 @@
       \end{figure}
 
       \paragraph{}J'ai exécuté plusieurs fois le calcul du jeu sur ce graphe et dans certains cas assez rare le jeu s'arrête. Donc la convergence dépend de l'ordre dans lequel les joueurs votes.
+\color{blue}
+  \section{Nouveaux résultats sur les arbres}
+    Suite à une analyse un peu plus appronfondie des exemples qui ne convergeaient pas la semaine dernière j'ai remarqué que cela était dû à une erreur dans mon code...
 
-\color{red}
-  \section{Tentative d'analyse de convergence sur des arbres}
-    J'ai codé la deuxième règle de jeu (celle qui autorise les changements d'avis). J'ai regardé un peu le comportement que cette règle avait.
+    Après une double correction voici quelques exemples d'arbres qui sont intéressant:
+     
 
-    \subsection{Exemples}
-      \paragraph{Si les joueurs ont la même valeur}
-        Sur les différents exemples que j'ai fait je converge toujours très vite et j'obtiens le même résultat que dans la règle OneShot.
-
-        Bien sur ce ne sont que des exemples...
-
-
-      \paragraph{Si les joueurs n'ont pas les mêmes croyances}
-        Tous les tests que j'ai fait convergent également. Ils peuvent parfois prendre un peu de temps, il peut y avoir beaucoup de changements d'avis mais on converge toujours.
-        (Tous les exemples que j'ai testés jusqu'à présent sont des arbres).
-
-    \subsection{Analyse de la convergence}
-      Je me suis donc demandé si la convergence n'est pas assuré sur les arbres.
-
-
-
-      Après avoir posé ces définitions j'ai pris la partie générée par la dynamique meilleure réponse d'une instance quelconque.
-      J'ai supposé qu'elle était infinie et j'ai essayé d'arriver à une contradiction afin de pouvoir dire qu'il y a convergence.
-      Mais je ne trouve pas de contradiction, certaines conditions paraissent parfois étranges mais jamais totalement incohérentes.
 
 \color{black}
   \section{Questions}
@@ -653,20 +626,10 @@
 
     Or j'ai remarqué que ce résultat peut être plus mauvais que l'anarchie et qu'en revanche une configuration totalement différente peut être meilleure. Il faudrait donc logiquement que je me place par rapport à cette meilleure solution pour chercher le prix de l'anarchie? non?\\
 
-    \color{red}
-    J'ai l'impression que l'équilibre et la convergence sont 2 questions équivalentes sur notre système.
-
-    En effet on a un nombre fini de possibilité de votes, la seule possibilité de ne pas converger est donc d'avoir un cycle. Or si il y a un cycle c'est qu'un joueur à toujours un coup améliorant, donc aucun des états est un état d'équilibre.
-
-    Inversement, si on a pas d'état d'équilibre alors il y a toujours un joueur qui à un coup améliorant et comme le nombre d'état est fini cela implique qu'on est un cycle et donc il n'y a pas convergence.
-    (Cela ne serait pas forcement le cas sur une règle de jeu ou un argument peut avoir un nombre infini de votes).
-
-  \color{black}
   \section{Ce qu'il faut que je fasse}
 
     \begin{itemize}
       \item Regarder le prix de l'anarchie.
-      \color{blue}
       \item Continuer la recherche de convergence dans le cadre de la règle avec changement d'avis.
     \end{itemize}
 

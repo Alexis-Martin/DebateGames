@@ -38,11 +38,13 @@ local function test_random_games(val_question)
         export_game(game, dest_j)
         export_tex(game, dest_tex)
         -- test tau_1
+        local dest_log = dest_v .. "game_" .. j .. "_tau_1.log"
         saa.computeSAA   (game, "tau_1", nil, val_question, 5)
-        rules.mindChanged(game, "tau_1", nil, val_question, 5)
+        rules.mindChanged(game, "tau_1", nil, val_question, 5, {view = "all", file = dest_log})
         dest_j         = dest_v .. "game_" .. j .. "_tau_1.xml"
         dest_tex       = dest_v .. "game_" .. j .. "_tau_1.tex"
         local dest_png = dest_v .. "game_" .. j .. "_tau_1.png"
+
         options.title  = players     .. " players "
                       .. nb_vertices .. " vertices "
                       .. "game "     .. j
@@ -52,8 +54,9 @@ local function test_random_games(val_question)
         export_tex(game, dest_tex)
         game.restoreGame()
         -- test tau_2
+        dest_log = dest_v .. "game_" .. j .. "_tau_2.log"
         saa.computeSAA   (game, "tau_2", nil, val_question, 5)
-        rules.mindChanged(game, "tau_2", nil, val_question, 5)
+        rules.mindChanged(game, "tau_2", nil, val_question, 5, {view = "all", file = dest_log})
         dest_j        = dest_v .. "game_" .. j .. "_tau_2.xml"
         dest_tex      = dest_v .. "game_" .. j .. "_tau_2.tex"
         dest_png      = dest_v .. "game_" .. j .. "_tau_2.png"
@@ -66,8 +69,9 @@ local function test_random_games(val_question)
         export_tex(game, dest_tex)
         game.restoreGame()
         -- test L_&_M
+        dest_log = dest_v .. "game_" .. j .. "_L_&_M.log"
         saa.computeSAA   (game, "L_&_M", 0.1, val_question, 5)
-        rules.mindChanged(game, "L_&_M", 0.1, val_question, 5)
+        rules.mindChanged(game, "L_&_M", 0.1, val_question, 5, {view = "all", file = dest_log})
         dest_j        = dest_v .. "game_" .. j .. "_L_&_M.xml"
         dest_tex      = dest_v .. "game_" .. j .. "_L_&_M.tex"
         dest_png      = dest_v .. "game_" .. j .. "_L_&_M.png"
@@ -104,22 +108,25 @@ end
 --     game              = game_generator(players, graph)
 --
 --     -- test tau_1
---     saa.computeSAA   (game, "tau_1", nil, 0.5, 5)
---     rules.mindChanged(game, "tau_1", nil, 0.5, 5)
+--     saa.computeSAA   (game, "tau_1", nil, 1, 5)
+--     rules.mindChanged(game, "tau_1", nil, 1, 5)
 --     if game.changed > 0 then change = true else game = nil end
 --   end
---   local dest = "../tests/test_changement_q_0,5_" .. os.date("%d_%m_%H_%M_%S") .. "/"
+--   local dest = "../tests/test_changement_q_1_" .. os.date("%d_%m_%H_%M_%S") .. "/"
 --   lfs.mkdir(dest)
 --   local dest_j = dest .. "game_change_tau_1.xml"
 --   export_game(game, dest_j)
 --   dest_j         = dest .. "game_change.xml"
 --   local dest_png = dest .. "game_change_tau_1.png"
+--   local dest_tex = dest .. "game_change_tau_1.tex"
+--   export_tex(game, dest_tex)
 --   options.title  = players     .. " players "
 --                 .. nb_vertices .. " vertices "
 --                 .. " function tau_1"
 --   game.plot  (dest_png, false, options)
 --   game.restoreGame()
 --   export_game(game, dest_j)
+--
 -- end
 
 
@@ -175,14 +182,14 @@ end
 
 
 
-
-
-
+--
+--
+--
 do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/tests_games_q_1_25_05_15_29_24/2_players/10_vertices/game_1_tau_1.xml")
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/test_changement_q_0,5_26_05_10_49_06/game_change.xml")
 
   saa.computeSAA(game, "tau_1", nil, 1, 10)
-  rules.mindChanged(game, "tau_1", nil, 1, 10, 300, {view = "strokes", file = "test_game_change.log"})
+  rules.mindChanged(game, "tau_1", nil, 1, 10, 300)
   -- for k, v in pairs(game.graphs) do
   --   if type(v) == "table" then
   --     print("\n\n", k)

@@ -2,6 +2,18 @@ local function show_tex (game, output)
   local fic         = io.open(output, "w")
   io.output(fic)
 
+  local players_votes = {}
+
+  if game.graphs.general.LM and #game.players <= 3 then
+    for _, v in ipairs(game.graphs.general.LM) do
+      if v.arg_vote and v.arg_vote ~= "none" then
+        if not players_votes[v.arg_vote] then players_votes[v.arg_vote] = {} end
+
+        players_votes[v.arg_vote][v.player] = v.vote
+      end
+    end
+  end
+
   io.write("\\documentclass{article}")
   io.write("\n\n")
   io.write("\\usepackage{graphicx}")
@@ -29,26 +41,50 @@ local function show_tex (game, output)
 
     local list_nodes = {}
     for _, v1 in pairs(game.graphs.general.edges) do
-      io.write("\"" .. v1.source .. "\\\\ ("
+      io.write("\"" .. v1.source)
+      if game.graphs.general.LM and players_votes[v1.source] and k == "general" and #game.players <= 3 then
+        for _,p in ipairs(game.players) do
+          local like
+          local dislike
+          if players_votes[v1.source][p] == 1 then like = 1 end
+          if players_votes[v1.source][p] == -1 then dislike = 1 end
+          io.write("\\\\ ("
+            .. (like or 0) .. ","
+            .. (dislike or 0) .. ")")
+        end
+      else
+      io.write("\\\\ ("
         .. (v.vertices[v1.source].likes or 0) .. ","
         .. (v.vertices[v1.source].dislikes or 0) .. ")")
+      end
+      if  v.vertices[v1.source].tag == "question"
+      and v.vertices[v1.source].LM then
+        io.write("\\\\lm = " .. v.vertices[v1.source].LM)
+      end
+      io.write("\"")
 
-        if  v.vertices[v1.source].tag == "question"
-        and v.vertices[v1.source].LM then
-          io.write("\\\\lm = " .. v.vertices[v1.source].LM)
+      io.write(" -> \"" .. v1.target)
+      if game.graphs.general.LM and players_votes[v1.target] and k == "general" and #game.players <= 3 then
+        for _,p in ipairs(game.players) do
+          local like
+          local dislike
+          if players_votes[v1.target][p] == 1 then like = 1 end
+          if players_votes[v1.target][p] == -1 then dislike = 1 end
+          io.write("\\\\ ("
+            .. (like or 0) .. ","
+            .. (dislike or 0) .. ")")
         end
-        io.write("\"")
-
-        io.write(" -> \"" .. v1.target .. "\\\\ ("
+      else
+        io.write("\\\\ ("
         .. (v.vertices[v1.target].likes or 0) .. ","
         .. (v.vertices[v1.target].dislikes or 0) .. ")")
+      end
 
-
-        if  v.vertices[v1.target].tag == "question"
-        and v.vertices[v1.target].LM then
-          io.write("\\\\lm = " .. v.vertices[v1.target].LM)
-        end
-        io.write("\";")
+      if  v.vertices[v1.target].tag == "question"
+      and v.vertices[v1.target].LM then
+        io.write("\\\\lm = " .. v.vertices[v1.target].LM)
+      end
+      io.write("\";")
 
       io.write("\n")
       list_nodes[v1.source] = true

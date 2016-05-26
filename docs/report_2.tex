@@ -615,7 +615,109 @@
     Suite à une analyse un peu plus appronfondie des exemples qui ne convergeaient pas la semaine dernière j'ai remarqué que cela était dû à une erreur dans mon code...
 
     Après une double correction voici quelques exemples d'arbres qui sont intéressant:
-     
+
+    \begin{itemize}
+      \item Le premier exemple est un jeu assez général comportant 10 noeuds et 3 joueurs. Ce jeu est représenté figure \ref{fig:3_players_10_vertices}
+    \end{itemize}
+
+    \begin{figure}
+      \centering
+      \begin{tabular}{cc}
+        \begin{tikzpicture}[>=stealth]
+        \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+        "a1\\ (0,0)" -> "q\\ (0,0)";
+        "a2\\ (0,0)" -> "q\\ (0,0)";
+        "a3\\ (0,0)" -> "q\\ (0,0)";
+        "a4\\ (0,0)" -> "a2\\ (0,0)";
+        "a5\\ (0,0)" -> "a1\\ (0,0)";
+        "a6\\ (0,0)" -> "q\\ (0,0)";
+        "a7\\ (0,0)" -> "a6\\ (0,0)";
+        "a8\\ (0,0)" -> "a6\\ (0,0)";
+        "a9\\ (0,0)" -> "a2\\ (0,0)";
+        "a10\\ (0,0)" -> "a6\\ (0,0)";
+        };
+        \end{tikzpicture} &
+
+        \begin{tikzpicture}[>=stealth]
+        \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+        "a1\\ (1,0)" -> "q\\ (0,0)";
+        "a2\\ (0,0)" -> "q\\ (0,0)";
+        "a3\\ (0,1)" -> "q\\ (0,0)";
+        "a4\\ (1,0)" -> "a2\\ (0,0)";
+        "a5\\ (0,0)" -> "a1\\ (1,0)";
+        "a6\\ (0,0)" -> "q\\ (0,0)";
+        "a7\\ (0,0)" -> "a6\\ (0,0)";
+        "a8\\ (0,0)" -> "a6\\ (0,0)";
+        "a9\\ (0,0)" -> "a2\\ (0,0)";
+        "a10\\ (0,0)" -> "a6\\ (0,0)";
+        };
+        \end{tikzpicture} \\
+
+        \begin{tikzpicture}[>=stealth]
+        \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+        "a1\\ (0,0)" -> "q\\ (0,0)";
+        "a2\\ (0,1)" -> "q\\ (0,0)";
+        "a3\\ (0,1)" -> "q\\ (0,0)";
+        "a4\\ (1,0)" -> "a2\\ (0,1)";
+        "a5\\ (0,0)" -> "a1\\ (0,0)";
+        "a6\\ (0,1)" -> "q\\ (0,0)";
+        "a7\\ (0,1)" -> "a6\\ (0,1)";
+        "a8\\ (1,0)" -> "a6\\ (0,1)";
+        "a9\\ (1,0)" -> "a2\\ (0,1)";
+        "a10\\ (0,0)" -> "a6\\ (0,1)";
+        };
+        \end{tikzpicture} &
+
+        \begin{tikzpicture}[>=stealth]
+        \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+        "a1\\ (1,0)" -> "q\\ (0,0)";
+        "a2\\ (0,1)" -> "q\\ (0,0)";
+        "a3\\ (0,1)" -> "q\\ (0,0)";
+        "a4\\ (0,1)" -> "a2\\ (0,1)";
+        "a5\\ (0,1)" -> "a1\\ (1,0)";
+        "a6\\ (0,1)" -> "q\\ (0,0)";
+        "a7\\ (1,0)" -> "a6\\ (0,1)";
+        "a8\\ (0,1)" -> "a6\\ (0,1)";
+        "a9\\ (1,0)" -> "a2\\ (0,1)";
+        "a10\\ (0,0)" -> "a6\\ (0,1)";
+        };
+        \end{tikzpicture} \\
+
+        \begin{tikzpicture}[>=stealth]
+        \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+        "a1\\ (0,0)\\ (0,1)\\ (1,0)" -> "q\\ (0,0)\\lm = 0.46209";
+        "a2\\ (0,0)\\ (0,1)\\ (1,0)" -> "q\\ (0,0)\\lm = 0.46209";
+        "a3\\ (0,1)\\ (0,1)\\ (1,0)" -> "q\\ (0,0)\\lm = 0.46209";
+        "a4\\ (0,0)\\ (1,0)\\ (0,1)" -> "a2\\ (0,0)\\ (0,1)\\ (1,0)";
+        "a5\\ (0,0)\\ (1,0)\\ (0,1)" -> "a1\\ (0,0)\\ (0,1)\\ (1,0)";
+        "a6\\ (0,0)\\ (0,1)\\ (1,0)" -> "q\\ (0,0)\\lm = 0.46209";
+        "a7\\ (0,0)\\ (1,0)\\ (0,1)" -> "a6\\ (0,0)\\ (0,1)\\ (1,0)";
+        "a8\\ (0,0)\\ (1,0)\\ (0,1)" -> "a6\\ (0,0)\\ (0,1)\\ (1,0)";
+        "a9\\ (0,1)\\ (1,0)\\ (0,1)" -> "a2\\ (0,0)\\ (0,1)\\ (1,0)";
+        "a10\\ (0,0)\\ (1,0)\\ (0,1)" -> "a6\\ (0,0)\\ (0,1)\\ (1,0)";
+        };
+        \end{tikzpicture} &
+
+        \begin{tikzpicture}[>=stealth]
+        \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+        "a1\\ (1,0)\\ (0,1)\\ (1,0)" -> "q\\ (0,0)\\lm = 0.11241";
+        "a2\\ (1,0)\\ (0,1)\\ (1,0)" -> "q\\ (0,0)\\lm = 0.11241";
+        "a3\\ (1,0)\\ (0,1)\\ (1,0)" -> "q\\ (0,0)\\lm = 0.11241";
+        "a4\\ (0,1)\\ (1,0)\\ (0,1)" -> "a2\\ (1,0)\\ (0,1)\\ (1,0)";
+        "a5\\ (0,1)\\ (1,0)\\ (0,1)" -> "a1\\ (1,0)\\ (0,1)\\ (1,0)";
+        "a6\\ (1,0)\\ (0,1)\\ (1,0)" -> "q\\ (0,0)\\lm = 0.11241";
+        "a7\\ (0,1)\\ (1,0)\\ (0,1)" -> "a6\\ (1,0)\\ (0,1)\\ (1,0)";
+        "a8\\ (0,1)\\ (1,0)\\ (0,1)" -> "a6\\ (1,0)\\ (0,1)\\ (1,0)";
+        "a9\\ (0,1)\\ (1,0)\\ (0,1)" -> "a2\\ (1,0)\\ (0,1)\\ (1,0)";
+        "a10\\ (0,1)\\ (1,0)\\ (0,1)" -> "a6\\ (1,0)\\ (0,1)\\ (1,0)";
+        };
+        \end{tikzpicture} \\
+
+      \end{tabular}
+
+      \caption{De gauche à droite: graphe initial, préférences du joueur 1, préférences du joueur 2, préférences du joueur 3, graphe avec la fonction $tau_1$, graphe avec la fonction $LM$, courbe avec la fonction $tau_1$, courbe avec la fonction $LM$}
+      \label{fig:3_players_10_vertices}
+    \end{figure}
 
 
 \color{black}

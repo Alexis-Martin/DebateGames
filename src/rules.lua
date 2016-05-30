@@ -2,15 +2,20 @@ local saa   = require "saa"
 local rules = {}
 
 function rules.mindChanged(game, parameters)
-  assert(type(parameters) == 'table')
-  local fun          = parameters.fun          or 'tau_1'
-  local epsilon      = parameters.epsilon
-  local val_question = parameters.val_question or 1
-  local precision    = parameters.precision
-  local stop_at      = parameters.stop_at
-  local log_file     = parameters.log_file
-  local log_details  = parameters.log_details  or "all"
+  local fun          = 'tau_1'
+  local val_question = 1
+  local precision    = 5
+  local stop_at, epsilon, log_file, log_details
 
+  if type(parameters) == 'table' then
+    fun          = parameters.fun          or 'tau_1'
+    epsilon      = parameters.epsilon
+    val_question = parameters.val_question or 1
+    precision    = parameters.precision    or 5
+    stop_at      = parameters.stop_at
+    log_file     = parameters.log_file
+    log_details  = parameters.log_details  or "all"
+  end
   if log_file then
     local l_file = io.open(log_file, "w")
     io.output(l_file)

@@ -39,6 +39,7 @@ local function test_random_games(val_question)
         export_tex(game, dest_tex)
         -- test tau_1
         local dest_log = dest_v .. "game_" .. j .. "_tau_1.log"
+        game.aggregation_value("tau_1", nil, val_question, 5)
         saa.computeSAA   (game, "tau_1", nil, val_question, 5)
         rules.mindChanged(game, "tau_1", nil, val_question, 5, {view = "all", file = dest_log})
         dest_j         = dest_v .. "game_" .. j .. "_tau_1.xml"
@@ -55,6 +56,7 @@ local function test_random_games(val_question)
         game.restoreGame()
         -- test tau_2
         dest_log = dest_v .. "game_" .. j .. "_tau_2.log"
+        game.aggregation_value("tau_2", nil, val_question, 5)
         saa.computeSAA   (game, "tau_2", nil, val_question, 5)
         rules.mindChanged(game, "tau_2", nil, val_question, 5, {view = "all", file = dest_log})
         dest_j        = dest_v .. "game_" .. j .. "_tau_2.xml"
@@ -70,6 +72,7 @@ local function test_random_games(val_question)
         game.restoreGame()
         -- test L_&_M
         dest_log = dest_v .. "game_" .. j .. "_L_&_M.log"
+        game.aggregation_value("L_&_M", 0.1, val_question, 5)
         saa.computeSAA   (game, "L_&_M", 0.1, val_question, 5)
         rules.mindChanged(game, "L_&_M", 0.1, val_question, 5, {view = "all", file = dest_log})
         dest_j        = dest_v .. "game_" .. j .. "_L_&_M.xml"
@@ -186,17 +189,19 @@ end
 --
 --
 do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/test_changement_q_0,5_26_05_10_49_06/game_change.xml")
-
-  saa.computeSAA(game, "tau_1", nil, 1, 10)
-  rules.mindChanged(game, "tau_1", nil, 1, 10, 300)
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range.xml")
+  game.aggregation_value("tau_1", 0.1, 1, 5)
+  saa.computeSAA(game, "tau_1", 0.1, 1, 5)
+  rules.mindChanged(game, "tau_1", 0.1, 1, 5, 300)
   -- for k, v in pairs(game.graphs) do
   --   if type(v) == "table" then
   --     print("\n\n", k)
   --     v.print_graph(v)
   --   end
   -- end
-  game.plot("output.png", true)
+  game.plot("/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.png", true)
   -- local dest_j = "tests_games_12_05_ 17_36_27/3_players/game_8_after.xml"
-  -- export_game(game, "/home/talkie/Documents/Stage/DebateGames/tests/tests_games_20_05_16_55_15/3_players/10_vertices/game_16_tau_1_bis.xml")
+  export_game(game, "/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.xml")
+  export_tex(game, "/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.tex")
+
 end

@@ -614,10 +614,29 @@
   \section{Nouveaux résultats sur les arbres}
     Suite à une analyse un peu plus appronfondie des exemples qui ne convergeaient pas la semaine dernière j'ai remarqué que cela était dû à une erreur dans mon code...
 
-    Après une double correction voici quelques exemples d'arbres qui sont intéressant:
+    Après une double correction voici quelques exemples d'arbres qui sont intéressant:\\
 
     \begin{itemize}
-      \item Le premier exemple est un jeu assez général comportant 10 noeuds et 3 joueurs. Ce jeu est représenté figure \ref{fig:3_players_10_vertices}
+      \item Le premier exemple est un jeu assez général comportant 10 noeuds et 3 joueurs.
+        Ce jeu est représenté figure \ref{fig:3_players_10_vertices}
+
+        Lorsque l'on considère la fonction $\tau_1$, chaque joueur à une préférence différente pour la question.
+        \begin{description}
+          \item[Joueur 1 : ] $LM_1(q) = 0.46622$
+          \item[Joueur 2 : ] $LM_2(q) = 0.73485$
+          \item[Joueur 3 : ] $LM_3(q) = 0.03879$
+        \end{description}
+
+        Sur le graphique de la fonction $\tau_1$ on remarque la valeur converge vers la valeur médiane des joueurs. Cette propriété n'est en revanche pas toujours vérifiée. De même elle se trouve entre les valeurs min et max des joueurs, mais c'est un cas particulier que l'on peut contredire.
+
+        Dans ce jeu il a également eu 7 coups ou le joueur a décidé de ne pas jouer et il y a eu 1 changement d'avis.
+
+      \item Le deuxième est un petit exemple montrant un cas ou la valeur n'est pas comprise entre les valeurs min et max des joueurs.
+        Il est représenté sur la figure \ref{fig:not_in_range}.
+
+        On remarque que le joueur 1 a voté de manière a avoir la valeur du graphe la plus forte possible.
+
+        En revanche pour le joueur 2 des coups peuvent encore permettre d'augmenter la valeur du graphe mais ces coups ne sont pas meilleurs que la valeur actuelle pour le joueur 2.
     \end{itemize}
 
     \begin{figure}
@@ -713,21 +732,67 @@
         };
         \end{tikzpicture} \\
 
+        \includegraphics[scale=0.35]{/home/talkie/Documents/Stage/DebateGames/docs/examples/game_10_tau1.png}&
+        \includegraphics[scale=0.35]{/home/talkie/Documents/Stage/DebateGames/docs/examples/game_10_LM.png}
       \end{tabular}
 
-      \caption{De gauche à droite: graphe initial, préférences du joueur 1, préférences du joueur 2, préférences du joueur 3, graphe avec la fonction $tau_1$, graphe avec la fonction $LM$, courbe avec la fonction $tau_1$, courbe avec la fonction $LM$}
+      \caption{De gauche à droite: graphe initial, préférences du joueur 1, préférences du joueur 2, préférences du joueur 3, graphe avec la fonction $\tau_1$, graphe avec la fonction $LM$, courbe avec la fonction $\tau_1$, courbe avec la fonction $LM$}
       \label{fig:3_players_10_vertices}
     \end{figure}
 
+    \begin{figure}
+      \centering
+      \begin{tabular}{cc}
+        \begin{tikzpicture}[>=stealth]
+        \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+        "a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.99980008";
+        "a2\\ (1,0)" -> "a1\\ (0,1)";
+        "a3\\ (1,0)" -> "a1\\ (0,1)";
+        "a4\\ (0,1)" -> "a1\\ (0,1)";
+        "a5\\ (0,0)" -> "a3\\ (1,0)";
+        };
+        \end{tikzpicture} &
+
+        \begin{tikzpicture}[>=stealth]
+        \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+        "a1\\ (1,0)" -> "q\\ (0,0)\\lm = 0.99039208";
+        "a2\\ (1,0)" -> "a1\\ (1,0)";
+        "a3\\ (0,1)" -> "a1\\ (1,0)";
+        "a4\\ (0,0)" -> "a1\\ (1,0)";
+        "a5\\ (0,1)" -> "a3\\ (0,1)";
+        };
+        \end{tikzpicture} \\
+
+        \begin{tikzpicture}[>=stealth]
+        \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+        "a1\\ (0,1)\\ (1,0)" -> "q\\ (0,0)\\lm = 0.98725";
+        "a2\\ (1,0)\\ (0,1)" -> "a1\\ (0,1)\\ (1,0)";
+        "a3\\ (1,0)\\ (1,0)" -> "a1\\ (0,1)\\ (1,0)";
+        "a4\\ (1,0)\\ (0,0)" -> "a1\\ (0,1)\\ (1,0)";
+        "a5\\ (0,1)\\ (1,0)" -> "a3\\ (1,0)\\ (1,0)";
+        };
+        \end{tikzpicture} &
+
+        \includegraphics[scale=0.35]{/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau_1.png}
+      \end{tabular}
+
+      \caption{De gauche à droite: préférences du joueur 1, préférences du joueur 2, graphe avec la fonction $\tau_1$, courbe avec la fonction $\tau_1$}
+      \label{fig:not_in_range}
+    \end{figure}
+
+    \paragraph{remarque/intuition}
+      Pour montrer la convergence, c'est suffisant de traiter chacun des joueurs séparement dans l'évolution du système.
+      J'entend par là qu'il est suffisant de montrer que pour chaque joueur (et quelque soit les votes des autres joueurs) on arrive à une situation d'équilibre pour ce joueur.
 
 \color{black}
   \section{Questions}
+\color{red}
     Je me pose une question à propos de la définition du prix de l'anarchie.
 
     On avait dit qu'on allait comparer le résultat du jeu avec la valeur trouvée si chacun des joueurs votent de la même façon que lors de la phase d'initialisation.
 
     Or j'ai remarqué que ce résultat peut être plus mauvais que l'anarchie et qu'en revanche une configuration totalement différente peut être meilleure. Il faudrait donc logiquement que je me place par rapport à cette meilleure solution pour chercher le prix de l'anarchie? non?\\
-
+\color{black}
   \section{Ce qu'il faut que je fasse}
 
     \begin{itemize}

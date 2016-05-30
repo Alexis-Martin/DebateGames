@@ -20,10 +20,11 @@ local function create_game(players, graph)
         v.LM = nil
       end
     end
-    game.changed = nil
-    game.rounds  = nil
-    game.pass    = nil
-    game.mean    = nil
+    game.changed         = nil
+    game.rounds          = nil
+    game.pass            = nil
+    game.mean            = nil
+    game.aggregate_value = nil
   end
 
   game.setDislikes = function(player, arg, nb)
@@ -104,6 +105,12 @@ local function create_game(players, graph)
     table.insert(list_players, "general")
     table.insert(list_players, "moyenne")
 
+    local agg = 0
+    if game.aggregate_value then
+      table.insert(list_players, "aggregation")
+      agg = 1
+    end
+
     local values         = {}
     local using          = {}
     local players_title  = {}
@@ -117,20 +124,21 @@ local function create_game(players, graph)
     end
 
     local mean = 0
-    for i = 1, #list_players -2 do
+    for i = 1, #list_players - agg - 2 do
       mean = mean + game.graphs[list_players[i]].LM[1].value
     end
-    mean = mean / (#list_players - 2)
+    mean = mean / (#list_players - agg - 2)
     for i = 0, #game.graphs.general.LM-1 do
       table.insert(values[1], i)
-      for p = 2, #list_players do
+      for p = 2, #list_players - agg do
         if list_players[p-1] == "general" then
           table.insert(values[p], game.graphs[list_players[p-1]].LM[i+1].value)
         else
           table.insert(values[p], game.graphs[list_players[p-1]].LM[1].value)
         end
       end
-      table.insert(values[#values], mean)
+      table.insert(values[#values - agg], mean)
+      if game.aggregate_value then table.insert(values[#values], game.aggregate_value) end
     end
     option  = option or {}
     local g = gp{
@@ -172,7 +180,21 @@ local function create_game(players, graph)
 
   game.graphs.general.view = "general"
 
-
+  game.aggregation_value = function(fun, epsilon, val_question, precision)
+    local graph = deepcopy(game.graphs.general)
+    for _, v in pairs(graph.vertices) do
+      v.likes    = 0
+      v.dislikes = 0
+    end
+    for _, player in ipairs(game.players) do
+      for k,v in pairs(game.graphs[player].vertices) do
+        graph.vertices[k].likes    = graph.vertices[k].likes + (v.likes or 0)
+        graph.vertices[k].dislikes = graph.vertices[k].dislikes + (v.dislikes or 0)
+      end
+    end
+    local saa = require "saa"
+    game.aggregate_value = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
+  end
 
   for _,player in ipairs(players) do
     game.graphs[player] = deepcopy(graph)

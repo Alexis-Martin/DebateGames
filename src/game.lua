@@ -1,4 +1,6 @@
-local gp = require('gnuplot')
+local gp   = require 'gnuplot'
+local yaml = require 'yaml'
+
 local function create_game(players, graph)
   local game = {
     graphs = {
@@ -6,6 +8,10 @@ local function create_game(players, graph)
     },
     players = players
   }
+
+  game.print_game  = function(self)
+    print(yaml.dump(self))
+  end
 
   game.restoreGame = function()
     for _, v in pairs(game.graphs.general.vertices) do

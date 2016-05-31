@@ -1,8 +1,9 @@
 local xml          = require "xml"
 local create_graph = require "graph"
 local create_game  = require "game"
+local rules        = require "rules"
 
-local function import_game(fic)
+local function import_game(fic, play)
 
   local data = xml.loadpath(fic)
 
@@ -40,12 +41,46 @@ local function import_game(fic)
   --construct game
   local game = create_game(players, graph)
   for _,g in pairs(data) do
-    if type(g) == "table" then
+    if type(g) == "table" and g.view ~= "general" then
       for _, v in pairs(g) do
         if type(v) == 'table' and v.xml == 'vertex' then
           game.setDislikes(g.view, v.name, tonumber(v.dislikes))
           game.setLikes(g.view, v.name, tonumber(v.likes))
         end
+      end
+    end
+  end
+
+  if play then
+    for _,g in pairs(data) do
+      if type(g) == "table" and g.xml == "game_parameters" then
+        local parameters = {
+          fun          = g.fun,
+          val_question = g.val_question,
+          epsilon      = g.epsilon,
+          stop_at      = g.stop_at,
+          dynamique    = g.dynamique,
+          rule         = g.rule,
+        }
+        for _,g1 in pairs(data) do
+          if type(g1) == "table" and g1.view == "general" then
+            for _, v in pairs(g) do
+              if type(v) == 'table' and v.xml == 'LM' then
+                print("size of run " .. #v)
+                for i = 2, #v do
+                  if v[i].arg_vote ~= "none" then
+                    parameters.player = v[i].player
+                    parameters.vote   = tonumber(v[i].vote)
+                    parameters.arg    = v[i].arg_vote
+                    rules.playOnce(game, parameters)
+                  end
+                end
+              end
+            end
+            break
+          end
+        end
+        break
       end
     end
   end

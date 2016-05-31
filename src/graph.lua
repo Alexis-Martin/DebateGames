@@ -1,3 +1,5 @@
+local yaml = require 'yaml'
+
 local function create_graph(class, tags)
   local graph = {
     vertices = {},
@@ -66,30 +68,8 @@ local function create_graph(class, tags)
     end
   end
 
-  graph.print_graph = function (graph)
-    local rec_print
-    rec_print = function(t, tab)
-      if tab == nil then tab = 0 end
-      local tabs = ""
-      if tab > 0 then
-        for _ = 1, tab do
-          tabs = tabs .. "\t"
-        end
-      end
-
-      for k, v in pairs(t) do
-        if type(v) == "table" then
-          print(tabs .. k .. " = {")
-          rec_print(v, tab + 1)
-          print(tabs .. "}")
-        elseif type(v) == "function" then
-          print(tabs .. k .. " = function")
-        else
-          print(tabs .. k .. " = " .. tostring(v))
-        end
-      end
-    end
-    rec_print(graph)
+  graph.print_graph = function (self)
+    print(yaml.dump(self))
   end
 
   return graph

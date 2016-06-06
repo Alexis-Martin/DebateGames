@@ -12,7 +12,7 @@ local function test_random_games(val_question)
   local max_players  = 3
   local max_games    = 5
   local max_vertices = 5
-  local nb_tests     = max_vertices * max_games * (max_players-1)
+  local nb_tests     = max_vertices * max_games * (max_players)
   local options      = {
     xlabel = "round",
     ylabel = "value",
@@ -22,6 +22,13 @@ local function test_random_games(val_question)
   local dest = "../tests/tests_games_q_" .. val_question .. "_" .. os.date("%d_%m_%H_%M_%S") .. "/"
   lfs.mkdir(dest)
 
+  local parameters = {
+    val_question = val_question,
+    precision    = 5,
+    dynamique    = "random",
+    log_details  = "all"
+  }
+
   for players = 1, max_players do
     local dest_p = dest .. players .. "_players/"
     lfs.mkdir(dest_p)
@@ -29,7 +36,7 @@ local function test_random_games(val_question)
       local dest_v = dest_p .. nb_vertices .. "_vertices/"
       lfs.mkdir(dest_v)
       for j = 1, max_games do
-        print((players-2) * max_vertices * max_games + (nb_vertices-1) * max_games + j .. "/" .. nb_tests)
+        print((players-1) * max_vertices * max_games + (nb_vertices-1) * max_games + j .. "/" .. nb_tests)
         -- local nb_vertices = 6 --math.random(2, 50)
         local graph    = graph_generator(nb_vertices)
         local dest_j   = dest_v .. "game_" .. j .. ".xml"
@@ -37,18 +44,15 @@ local function test_random_games(val_question)
         local game     = game_generator(players, graph)
         export_game(game, dest_j)
         export_tex(game, dest_tex)
+
         -- test tau_1
-        local dest_log = dest_v .. "game_" .. j .. "_tau_1.log"
+        local dest_log      = dest_v .. "game_"
+                           .. j .. "_tau_1.log"
+        parameters.fun      = "tau_1"
+        parameters.log_file = dest_log
         game.aggregation_value("tau_1", nil, val_question, 5)
         saa.computeSAA   (game, "tau_1", nil, val_question, 5)
-        rules.mindChanged(game, {
-          fun          = "tau_1",
-          val_question = val_question,
-          precision    = 5,
-          log_details  = "all",
-          log_file     = dest_log,
-          dynamique    = "random",
-        })
+        rules.mindChanged(game, parameters)
         dest_j         = dest_v .. "game_" .. j .. "_tau_1.xml"
         dest_tex       = dest_v .. "game_" .. j .. "_tau_1.tex"
         local dest_png = dest_v .. "game_" .. j .. "_tau_1.png"
@@ -61,18 +65,14 @@ local function test_random_games(val_question)
         export_game(game, dest_j)
         export_tex(game, dest_tex)
         game.restoreGame()
+
         -- test tau_2
         dest_log = dest_v .. "game_" .. j .. "_tau_2.log"
+        parameters.fun      = "tau_2"
+        parameters.log_file = dest_log
         game.aggregation_value("tau_2", nil, val_question, 5)
         saa.computeSAA   (game, "tau_2", nil, val_question, 5)
-        rules.mindChanged(game, {
-          fun          = "tau_2",
-          val_question = val_question,
-          precision    = 5,
-          log_details  = "all",
-          log_file     = dest_log,
-          dynamique    = "random",
-        })
+        rules.mindChanged(game, parameters)
         dest_j        = dest_v .. "game_" .. j .. "_tau_2.xml"
         dest_tex      = dest_v .. "game_" .. j .. "_tau_2.tex"
         dest_png      = dest_v .. "game_" .. j .. "_tau_2.png"
@@ -84,18 +84,14 @@ local function test_random_games(val_question)
         export_game(game, dest_j)
         export_tex(game, dest_tex)
         game.restoreGame()
+
         -- test L_&_M
         dest_log = dest_v .. "game_" .. j .. "_L_&_M.log"
+        parameters.fun      = "L_&_M"
+        parameters.log_file = dest_log
         game.aggregation_value("L_&_M", 0.1, val_question, 5)
         saa.computeSAA   (game, "L_&_M", 0.1, val_question, 5)
-        rules.mindChanged(game, {
-          fun          = "L_&_M",
-          val_question = val_question,
-          precision    = 5,
-          log_details  = "all",
-          log_file     = dest_log,
-          dynamique    = "random",
-        })
+        rules.mindChanged(game, parameters)
         dest_j        = dest_v .. "game_" .. j .. "_L_&_M.xml"
         dest_tex      = dest_v .. "game_" .. j .. "_L_&_M.tex"
         dest_png      = dest_v .. "game_" .. j .. "_L_&_M.png"
@@ -104,16 +100,16 @@ local function test_random_games(val_question)
                      .. "game "     .. j
                      .. " function L&M"
         game.plot  (dest_png, false, options)
-        export_tex(game, dest_tex)
+        export_tex (game, dest_tex)
         export_game(game, dest_j)
       end
     end
   end
 end
 
--- do
---   test_random_games(1)
--- end
+do
+  test_random_games(1)
+end
 
 -- do
 --   local change  = false
@@ -209,26 +205,26 @@ end
 
 
 
-do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/tests_games_q_1_25_05_18_19_10/4_players/10_vertices/game_6_tau_1.xml")
-  game:print_game()
---   game.aggregation_value("tau_1", 0.1, 1, 5)
---   saa.computeSAA(game, "tau_1", 0.1, 1, 5)
+-- do
+--   local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/tests_games_q_1_25_05_18_19_10/3_players/12_vertices/game_1.xml")
+--   -- game:print_game()
+--   game.aggregation_value("L_&_M", 0.1, 1, 5)
+--   saa.computeSAA(game, "L_&_M", 0.1, 1, 5)
 --   rules.mindChanged(game, {
---     fun = "tau_1",
+--     fun = "L_&_M",
 --     val_question = 1,
 --     precision = 5,
 --     log_details = "all"
 --   })
---   -- for k, v in pairs(game.graphs) do
---   --   if type(v) == "table" then
---   --     print("\n\n", k)
---   --     v.print_graph(v)
---   --   end
---   -- end
+-- --   -- for k, v in pairs(game.graphs) do
+-- --   --   if type(v) == "table" then
+-- --   --     print("\n\n", k)
+-- --   --     v.print_graph(v)
+-- --   --   end
+-- --   -- end
 --   game.plot("output.png", true)
---   -- local dest_j = "tests_games_12_05_ 17_36_27/3_players/game_8_after.xml"
---   export_game(game,"output.xml")
---   -- export_tex(game, "/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.tex")
---
-end
+-- --   -- local dest_j = "tests_games_12_05_ 17_36_27/3_players/game_8_after.xml"
+-- --   export_game(game,"output.xml")
+-- --   -- export_tex(game, "/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.tex")
+-- --
+-- end

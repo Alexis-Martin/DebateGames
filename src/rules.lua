@@ -100,10 +100,8 @@ end
 
 function rules.mind_changed.best_move(player)
   local parameters = rules.mind_changed.parameters
-  local game   = parameters.game
-  local players_votes = parameters.players_votes
-  local changed = 0
-  local pass = 0
+  local game       = parameters.game
+  local changed    = 0
 
   local player_lm = game.graphs[player].LM[#game.graphs[player].LM].value
   local gen_lm    = game.graphs.general.LM[#game.graphs.general.LM].value
@@ -151,38 +149,12 @@ function rules.mind_changed.best_move(player)
       io.write("============================== \n")
     end
   end
-  -- we compute the old value to restore all values in the graph
-  saa.computeGraphSAA(#game.players, graph, parameters.fun, parameters.epsilon, parameters.val_question, parameters.precision)
+  -- -- we compute the old value to restore all values in the graph
+  -- saa.computeGraphSAA(#game.players, graph, parameters.fun, parameters.epsilon, parameters.val_question, parameters.precision)
+
   -- application of the best vote we found (if there is a best vote)
-  if best_vote ~= nil then
-    if vote == 1 then
-      game.addLike("general", best_vote)
-      if players_votes[player][best_vote] == 0 then
-        changed = changed + 1
-      end
-      if players_votes[player][best_vote] == -1 then
-        game.removeDislike("general", best_vote)
-        changed = changed + 1
-      end
-    elseif vote == -1 then
-      game.addDislike("general", best_vote)
-      if players_votes[player][best_vote] == 0 then
-        changed = changed + 1
-      end
-      if players_votes[player][best_vote] == 1 then
-        game.removeLike("general", best_vote)
-        changed = changed + 1
-      end
-    else
-      changed = changed + 1
-      if players_votes[player][best_vote] == 1 then
-        game.removeLike("general", best_vote)
-      else
-        game.removeDislike("general", best_vote)
-      end
-    end
-    --store the vote
-    players_votes[player][best_vote] = vote or 0
+  if best_vote then
+    changed = rules.mind_changed.do_move(player, best_vote, vote)
   end
 
   -- computation of the new value of the game
@@ -197,14 +169,77 @@ function rules.mind_changed.best_move(player)
     vote     = vote or 0,
     value    = lm
   }
-  if best_vote then return best_vote, changed, pass end
+  if best_vote then return best_vote, changed, 0 end
 
-  pass = pass + 1
-  return nil, changed, pass
+  return nil, 0, 1
 end
 
-function rules.mind_changed.playOnce(player, arg, vote)
+function rules.mind_changed.do_move(player, arg, value_vote)
+  local parameters    = rules.mind_changed.parameters
+  local game          = parameters.game
+  local players_votes = parameters.players_votes
+  local changed       = 0
 
+  if value_vote == 1 then
+    game.addLike("general", arg)
+    if players_votes[player][arg] == 0 then
+      changed = 1
+    end
+    if players_votes[player][arg] == -1 then
+      game.removeDislike("general", arg)
+      changed = 1
+    end
+  elseif value_vote == -1 then
+    game.addDislike("general", arg)
+    if players_votes[player][arg] == 0 then
+      changed = 1
+    end
+    if players_votes[player][arg] == 1 then
+      game.removeLike("general", arg)
+      changed = 1
+    end
+  else
+    changed = 1
+    if players_votes[player][arg] == 1 then
+      game.removeLike("general", arg)
+    else
+      game.removeDislike("general", arg)
+    end
+  end
+  --store the vote
+  players_votes[player][arg] = value_vote or 0
+  return changed
+end
+
+
+function rules.mind_changed.playOnce(player, arg, vote)
+  local parameters = rules.mind_changed.parameters
+  local game       = parameters.game
+  local graph      = game.graphs.general
+  local changed    = 0
+
+  if arg and arg ~= "none" then
+    changed = rules.mind_changed.do_move(player, arg, vote)
+  end
+
+  -- computation of the new value of the game
+  local lm = saa.computeGraphSAA(#game.players, graph, parameters.fun, parameters.epsilon, parameters.val_question, parameters.precision)
+
+  if not graph.LM then
+    graph.LM = {}
+  end
+  graph.LM[#graph.LM + 1] = {
+    run      = #graph.LM + 1,
+    player   = player,
+    arg_vote = arg or "none",
+    vote     = vote or 0,
+    value    = lm
+  }
+  game.rounds  = (game.rounds or 0) + 1
+  game.changed = (game.changed or 0) + changed
+  if not arg or arg == "none" then
+    game.pass  = (game.pass or 0) + 1
+  end
 end
 
 
@@ -217,9 +252,9 @@ function rules.mind_changed.mindChanged(game)
     io.output(l_file)
   end
 
-  local players_votes = {}
+  parameters.players_votes = {}
   for _, v in ipairs(game.players) do
-    players_votes[v] = {}
+    parameters.players_votes[v] = {}
   end
   local changed = 0
   local pass    = 0
@@ -227,7 +262,7 @@ function rules.mind_changed.mindChanged(game)
   local function round_robin()
     local nb_nil = 0
     for _, v in ipairs(game.players) do
-      local is_nil, is_pass, is_changed = rules.mind_changed.best_move(v)
+      local is_nil, is_changed, is_pass = rules.mind_changed.best_move(v)
       if not is_nil then
         nb_nil = nb_nil + 1
       end
@@ -238,18 +273,38 @@ function rules.mind_changed.mindChanged(game)
   end
 
   local function random_player()
-    local nb_nil = 0
-    for _ = 1, #game.players do
-      local player = math.random(1, #game.players)
-      local is_nil, is_pass, is_changed = rules.mind_changed.best_move(game.players[player])
+    local players = {}
+    for _, v in ipairs(game.players) do
+      table.insert(players, v)
+    end
+    local nil_players = {}
+    local nb_round = 0
+
+    while #players >= 1 do
+      nb_round = nb_round + 1
+
+      local player = math.random(1, #players)
+      local is_nil, is_pass, is_changed = rules.mind_changed.best_move(players[player])
+
       if not is_nil then
-        nb_nil = nb_nil + 1
-      else
-        changed = changed + is_changed
-        pass    = pass    + is_pass
+        table.insert(nil_players, players[player])
+        table.remove(players, player)
+      elseif #nil_players >= 1 then
+        for _, v in ipairs(nil_players) do
+          table.insert(players, v)
+        end
+        nil_players = {}
+      end
+      changed = changed + is_changed
+      pass    = pass    + is_pass
+
+      if type(parameters.stop_at) == "number" and
+         nb_round >= parameters.stop_at then
+        break
       end
     end
-    return nb_nil
+
+    return #game.players + 1
   end
 
   -- print("round 1")
@@ -295,13 +350,6 @@ function rules.mind_changed.mindChanged(game)
 end
 
 function rules.playOnce(game, parameters)
-  assert(type(parameters) == "table")
-  if parameters.rule == "mindChanged" then
-    rules.mind_changed.playOnce(game, parameters)
-  end
-end
-
-rules.mindChanged = function(game, parameters)
   if type(parameters) ~= 'table' then
     parameters = {
       fun          = 'tau_1',
@@ -314,10 +362,36 @@ rules.mindChanged = function(game, parameters)
     parameters.fun          = parameters.fun or 'tau_1'
     parameters.val_question = parameters.val_question or 1
     parameters.precision    = parameters.precision or 5
+    parameters.epsilon      = parameters.epsilon or 0.1
     parameters.log_details  = parameters.log_details or "all"
     parameters.dynamique    = parameters.dynamique or "round_robin"
   end
+  parameters.game               = game
 
+  if parameters.rule == "mindChanged" then
+    rules.mind_changed.parameters = parameters
+    rules.mind_changed.playOnce(parameters.player, parameters.arg, parameters.vote)
+  end
+end
+
+function rules.mindChanged(game, parameters)
+  if type(parameters) ~= 'table' then
+    parameters = {
+      fun          = 'tau_1',
+      val_question = 1,
+      precision    = 5,
+      log_details  = "all",
+      dynamique    = "round_robin"
+    }
+  else
+    parameters.fun          = parameters.fun or 'tau_1'
+    parameters.val_question = parameters.val_question or 1
+    parameters.precision    = parameters.precision or 5
+    parameters.epsilon      = parameters.epsilon or 0.1
+    parameters.log_details  = parameters.log_details or "all"
+    parameters.dynamique    = parameters.dynamique or "round_robin"
+  end
+  parameters.game               = game
   rules.mind_changed.parameters = parameters
   rules.mind_changed.mindChanged(game)
 end

@@ -1,0 +1,47 @@
+<game players="1" aggregate_value="0.0584" changed="0" pass="0" rounds="7" mean="0.0584">
+	<tree view="joueur 1">
+		<vertex name="a4" LM="0.02" dislikes="1" likes="0" />
+		<vertex name="a5" LM="0.0006" dislikes="1" likes="0" />
+		<vertex name="a2" LM="0.01959" dislikes="0" likes="1" />
+		<vertex name="a3" LM="0.98" dislikes="0" likes="1" />
+		<vertex name="q" LM="0.0584" likes="0" dislikes="0" tag="question" />
+		<vertex name="a8" LM="0.5" dislikes="0" likes="0" />
+		<vertex name="a6" LM="0.9702" dislikes="0" likes="1" />
+		<vertex name="a1" LM="0.94159" dislikes="0" likes="1" />
+		<vertex name="a7" LM="0.01" dislikes="1" likes="0" />
+		<LM>
+			<LM run="1" >0.0584</LM>
+		</LM>
+	</tree>
+
+	<tree view="general">
+		<vertex name="a4" LM="0.02" dislikes="1" likes="0" />
+		<vertex name="a5" LM="0.0006" dislikes="1" likes="0" />
+		<vertex name="a2" LM="0.01959" dislikes="1" likes="0" />
+		<vertex name="a3" LM="0.02" dislikes="1" likes="0" />
+		<vertex name="q" LM="0.0584" likes="0" dislikes="0" tag="question" />
+		<vertex name="a7" LM="0.01" dislikes="1" likes="0" />
+		<vertex name="a6" LM="0.9702" dislikes="0" likes="1" />
+		<vertex name="a1" LM="0.94159" dislikes="0" likes="1" />
+		<vertex name="a8" LM="0.5" dislikes="0" likes="0" />
+		<edge source="a1" target="q" />
+		<edge source="a2" target="a1" />
+		<edge source="a3" target="a2" />
+		<edge source="a4" target="a1" />
+		<edge source="a5" target="a2" />
+		<edge source="a6" target="a5" />
+		<edge source="a7" target="a6" />
+		<edge source="a8" target="a7" />
+		<LM>
+			<LM run="1" >0.79297</LM>
+			<LM run="2" arg_vote="a4" player="joueur 1" vote="-1" >0.59422</LM>
+			<LM run="3" arg_vote="a1" player="joueur 1" vote="1" >0.20467</LM>
+			<LM run="4" arg_vote="a2" player="joueur 1" vote="-1" >0.04621</LM>
+			<LM run="5" arg_vote="a3" player="joueur 1" vote="-1" >0.05255</LM>
+			<LM run="6" arg_vote="a5" player="joueur 1" vote="-1" >0.05819</LM>
+			<LM run="7" arg_vote="a6" player="joueur 1" vote="1" >0.05833</LM>
+			<LM run="8" arg_vote="a7" player="joueur 1" vote="-1" >0.0584</LM>
+			<LM run="9" arg_vote="none" player="joueur 1" >0.0584</LM>
+		</LM>
+	</tree>
+</game>

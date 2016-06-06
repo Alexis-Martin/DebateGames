@@ -1,0 +1,97 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage[utf8x]{luainputenc}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing,graphs}
+\usegdlibrary{layered}
+
+\begin{document}
+
+\begin{figure}
+\centering
+
+\subfigure[Préférences du joueurs 1]{
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9998";
+"a2\\ (1,0)" -> "a1\\ (0,1)";
+"a3\\ (1,0)" -> "a1\\ (0,1)";
+"a4\\ (0,1)" -> "a1\\ (0,1)";
+"a5\\ (0,0)" -> "a3\\ (1,0)";
+};
+\end{tikzpicture}
+}
+
+\subfigure[Préférences du joueur 2]{
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (1,0)" -> "q\\ (0,0)\\lm = 0.99039";
+"a2\\ (1,0)" -> "a1\\ (1,0)";
+"a3\\ (0,1)" -> "a1\\ (1,0)";
+"a4\\ (0,0)" -> "a1\\ (1,0)";
+"a5\\ (0,1)" -> "a3\\ (0,1)";
+};
+\end{tikzpicture}
+}
+
+
+\subfigure[Résultat du jeu]{
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (0,1)\\ (1,0)" -> "q\\ (0,0)\\lm = 0.98725";
+"a2\\ (1,0)\\ (0,0)" -> "a1\\ (0,1)\\ (1,0)";
+"a3\\ (1,0)\\ (1,0)" -> "a1\\ (0,1)\\ (1,0)";
+"a4\\ (1,0)\\ (0,1)" -> "a1\\ (0,1)\\ (1,0)";
+"a5\\ (0,1)\\ (1,0)" -> "a3\\ (1,0)\\ (1,0)";
+};
+\end{tikzpicture}
+}
+
+\subfigure[Evolution de la valeur du jeu en fonction des coups]{
+\includegraphics[scale=0.35]{not_in_range_tau_1.png}
+}
+\end{figure}
+
+ \begin{figure}
+       \subfigure[Liste des coups joués]{
+       \begin{tabular}{|c|c|c|c|}
+       \hline
+       & joueur 1 & joueur 2 & general \\
+       \hline
+       tour 1 & \_ & \_ & 0.90625 \\
+       \hline
+       tour 2 & a1 dislike & \_ & 0.98125 \\
+       \hline
+       tour 3 & \_ & a5 dislike & 0.98625 \\
+       \hline
+       tour 4 & a4 like & \_ & 0.99725 \\
+       \hline
+       tour 5 & \_ & a1 like & 0.98625 \\
+       \hline
+       tour 6 & a2 like & \_ & 0.99725 \\
+       \hline
+       tour 7 & \_ & a4 dislike & 0.98625 \\
+       \hline
+       tour 8 & a3 like & \_ & 0.99525 \\
+       \hline
+       tour 9 & \_ & a5 annule & 0.98625 \\
+       \hline
+       tour 10 & a5 dislike & \_ & 0.99525 \\
+       \hline
+       tour 11 & \_ & a5 like & 0.98625 \\
+       \hline
+       tour 12 & pass & \_ & 0.98625 \\
+       \hline
+       tour 13 & \_ & a3 like & 0.98725 \\
+       \hline
+       tour 14 & pass & \_ & 0.98725 \\
+       \hline
+       tour 15 & \_ & pass & 0.98725 \\
+       \hline
+       \end{tabular}
+       }
+       \caption{Partie jouée avec la fonction $\tau_1$}
+     \end{figure}
+\end{document}

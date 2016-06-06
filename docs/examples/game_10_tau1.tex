@@ -1,0 +1,158 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing,graphs}
+\usegdlibrary{layered}
+%Becareful if you use package fontenc, it might be raise an error. If it does, you have to remove it and use \usepackage[utf8x]{luainputenc} in place of \usepackage[utf8]{inputenc}
+
+\begin{document}
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (0,0)" -> "q\\ (0,0)\\lm = 0.73485";
+"a2\\ (0,1)" -> "q\\ (0,0)\\lm = 0.73485";
+"a3\\ (0,1)" -> "q\\ (0,0)\\lm = 0.73485";
+"a4\\ (1,0)" -> "a2\\ (0,1)";
+"a5\\ (0,0)" -> "a1\\ (0,0)";
+"a6\\ (0,1)" -> "q\\ (0,0)\\lm = 0.73485";
+"a7\\ (0,1)" -> "a6\\ (0,1)";
+"a8\\ (1,0)" -> "a6\\ (0,1)";
+"a9\\ (1,0)" -> "a2\\ (0,1)";
+"a10\\ (0,0)" -> "a6\\ (0,1)";
+};
+\end{tikzpicture}
+\caption{joueur 2}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (1,0)" -> "q\\ (0,0)\\lm = 0.03879";
+"a2\\ (0,1)" -> "q\\ (0,0)\\lm = 0.03879";
+"a3\\ (0,1)" -> "q\\ (0,0)\\lm = 0.03879";
+"a4\\ (0,1)" -> "a2\\ (0,1)";
+"a5\\ (0,1)" -> "a1\\ (1,0)";
+"a6\\ (0,1)" -> "q\\ (0,0)\\lm = 0.03879";
+"a7\\ (1,0)" -> "a6\\ (0,1)";
+"a8\\ (0,1)" -> "a6\\ (0,1)";
+"a9\\ (1,0)" -> "a2\\ (0,1)";
+"a10\\ (0,0)" -> "a6\\ (0,1)";
+};
+\end{tikzpicture}
+\caption{joueur 3}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (1,0)\\ (0,1)\\ (0,0)" -> "q\\ (0,0)\\lm = 0.46209";
+"a2\\ (1,0)\\ (0,1)\\ (1,0)" -> "q\\ (0,0)\\lm = 0.46209";
+"a3\\ (1,0)\\ (0,1)\\ (0,1)" -> "q\\ (0,0)\\lm = 0.46209";
+"a4\\ (0,1)\\ (1,0)\\ (0,0)" -> "a2\\ (1,0)\\ (0,1)\\ (1,0)";
+"a5\\ (0,1)\\ (1,0)\\ (0,0)" -> "a1\\ (1,0)\\ (0,1)\\ (0,0)";
+"a6\\ (1,0)\\ (0,1)\\ (0,0)" -> "q\\ (0,0)\\lm = 0.46209";
+"a7\\ (0,1)\\ (1,0)\\ (0,0)" -> "a6\\ (1,0)\\ (0,1)\\ (0,0)";
+"a8\\ (0,1)\\ (1,0)\\ (0,0)" -> "a6\\ (1,0)\\ (0,1)\\ (0,0)";
+"a9\\ (0,1)\\ (1,0)\\ (0,0)" -> "a2\\ (1,0)\\ (0,1)\\ (1,0)";
+"a10\\ (0,1)\\ (1,0)\\ (0,0)" -> "a6\\ (1,0)\\ (0,1)\\ (0,0)";
+};
+\end{tikzpicture}
+\caption{general}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (1,0)" -> "q\\ (0,0)\\lm = 0.46622";
+"a2\\ (0,0)" -> "q\\ (0,0)\\lm = 0.46622";
+"a3\\ (0,1)" -> "q\\ (0,0)\\lm = 0.46622";
+"a4\\ (1,0)" -> "a2\\ (0,0)";
+"a5\\ (0,0)" -> "a1\\ (1,0)";
+"a6\\ (0,0)" -> "q\\ (0,0)\\lm = 0.46622";
+"a7\\ (0,0)" -> "a6\\ (0,0)";
+"a8\\ (0,0)" -> "a6\\ (0,0)";
+"a9\\ (0,0)" -> "a2\\ (0,0)";
+"a10\\ (0,0)" -> "a6\\ (0,0)";
+};
+\end{tikzpicture}
+\caption{joueur 1}
+\end{figure}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+& joueur 3 & joueur 2 & joueur 1 & general \\
+\hline
+tour 1 & \_ & \_ & \_ & 0.30762 \\
+\hline
+tour 2 & a3 like & \_ & \_ & 0.10521 \\
+\hline
+tour 3 & \_ & a3 dislike & \_ & 0.30762 \\
+\hline
+tour 4 & \_ & \_ & a3 dislike & 0.51003 \\
+\hline
+tour 5 & a1 like & \_ & \_ & 0.39816 \\
+\hline
+tour 6 & \_ & a5 like & \_ & 0.58364 \\
+\hline
+tour 7 & \_ & \_ & a2 like & 0.52877 \\
+\hline
+tour 8 & a5 dislike & \_ & \_ & 0.36074 \\
+\hline
+tour 9 & \_ & a1 dislike & \_ & 0.46209 \\
+\hline
+tour 10 & \_ & \_ & pass & 0.46209 \\
+\hline
+tour 11 & a9 dislike & \_ & \_ & 0.3826 \\
+\hline
+tour 12 & \_ & a4 like & \_ & 0.51439 \\
+\hline
+tour 13 & \_ & \_ & a6 like & 0.49182 \\
+\hline
+tour 14 & a4 dislike & \_ & \_ & 0.36581 \\
+\hline
+tour 15 & \_ & a2 dislike & \_ & 0.44181 \\
+\hline
+tour 16 & \_ & \_ & a6 annule & 0.46209 \\
+\hline
+tour 17 & a2 like & \_ & \_ & 0.3826 \\
+\hline
+tour 18 & \_ & a9 like & \_ & 0.46209 \\
+\hline
+tour 19 & \_ & \_ & pass & 0.46209 \\
+\hline
+tour 20 & a6 like & \_ & \_ & 0.44181 \\
+\hline
+tour 21 & \_ & a10 like & \_ & 0.47542 \\
+\hline
+tour 22 & \_ & \_ & a8 dislike & 0.46393 \\
+\hline
+tour 23 & a10 dislike & \_ & \_ & 0.40821 \\
+\hline
+tour 24 & \_ & a7 like & \_ & 0.46393 \\
+\hline
+tour 25 & \_ & \_ & pass & 0.46393 \\
+\hline
+tour 26 & a7 dislike & \_ & \_ & 0.40821 \\
+\hline
+tour 27 & \_ & a6 dislike & \_ & 0.44182 \\
+\hline
+tour 28 & \_ & \_ & a8 annule & 0.46209 \\
+\hline
+tour 29 & a8 dislike & \_ & \_ & 0.44182 \\
+\hline
+tour 30 & \_ & a8 like & \_ & 0.46209 \\
+\hline
+tour 31 & \_ & \_ & pass & 0.46209 \\
+\hline
+tour 32 & pass & \_ & \_ & 0.46209 \\
+\hline
+tour 33 & \_ & pass & \_ & 0.46209 \\
+\hline
+tour 34 & \_ & \_ & pass & 0.46209 \\
+\hline
+\end{tabular}
+\end{document}

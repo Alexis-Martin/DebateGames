@@ -9,9 +9,9 @@ local saa             = require "saa"
 
 
 local function test_random_games(val_question)
-  local max_players  = 6
-  local max_games    = 10
-  local max_vertices = 20
+  local max_players  = 2
+  local max_games    = 30
+  local max_vertices = 15
   local nb_tests     = max_vertices * max_games * (max_players-1)
   local options      = {
     xlabel = "round",
@@ -53,46 +53,46 @@ local function test_random_games(val_question)
         game.plot  (dest_png, false, options)
         export_game(game, dest_j)
         export_tex(game, dest_tex)
-        game.restoreGame()
-        -- test tau_2
-        dest_log = dest_v .. "game_" .. j .. "_tau_2.log"
-        game.aggregation_value("tau_2", nil, val_question, 5)
-        saa.computeSAA   (game, "tau_2", nil, val_question, 5)
-        rules.mindChanged(game, "tau_2", nil, val_question, 5, {view = "all", file = dest_log})
-        dest_j        = dest_v .. "game_" .. j .. "_tau_2.xml"
-        dest_tex      = dest_v .. "game_" .. j .. "_tau_2.tex"
-        dest_png      = dest_v .. "game_" .. j .. "_tau_2.png"
-        options.title = players     .. " players "
-                     .. nb_vertices .. " vertices "
-                     .. "game "     .. j
-                     .. " function tau_2"
-        game.plot  (dest_png, false, options)
-        export_game(game, dest_j)
-        export_tex(game, dest_tex)
-        game.restoreGame()
-        -- test L_&_M
-        dest_log = dest_v .. "game_" .. j .. "_L_&_M.log"
-        game.aggregation_value("L_&_M", 0.1, val_question, 5)
-        saa.computeSAA   (game, "L_&_M", 0.1, val_question, 5)
-        rules.mindChanged(game, "L_&_M", 0.1, val_question, 5, {view = "all", file = dest_log})
-        dest_j        = dest_v .. "game_" .. j .. "_L_&_M.xml"
-        dest_tex      = dest_v .. "game_" .. j .. "_L_&_M.tex"
-        dest_png      = dest_v .. "game_" .. j .. "_L_&_M.png"
-        options.title = players     .. " players "
-                     .. nb_vertices .. " vertices "
-                     .. "game "     .. j
-                     .. " function L&M"
-        game.plot  (dest_png, false, options)
-        export_tex(game, dest_tex)
-        export_game(game, dest_j)
+        -- game.restoreGame()
+        -- -- test tau_2
+        -- dest_log = dest_v .. "game_" .. j .. "_tau_2.log"
+        -- game.aggregation_value("tau_2", nil, val_question, 5)
+        -- saa.computeSAA   (game, "tau_2", nil, val_question, 5)
+        -- rules.mindChanged(game, "tau_2", nil, val_question, 5, {view = "all", file = dest_log})
+        -- dest_j        = dest_v .. "game_" .. j .. "_tau_2.xml"
+        -- dest_tex      = dest_v .. "game_" .. j .. "_tau_2.tex"
+        -- dest_png      = dest_v .. "game_" .. j .. "_tau_2.png"
+        -- options.title = players     .. " players "
+        --              .. nb_vertices .. " vertices "
+        --              .. "game "     .. j
+        --              .. " function tau_2"
+        -- game.plot  (dest_png, false, options)
+        -- export_game(game, dest_j)
+        -- export_tex(game, dest_tex)
+        -- game.restoreGame()
+        -- -- test L_&_M
+        -- dest_log = dest_v .. "game_" .. j .. "_L_&_M.log"
+        -- game.aggregation_value("L_&_M", 0.1, val_question, 5)
+        -- saa.computeSAA   (game, "L_&_M", 0.1, val_question, 5)
+        -- rules.mindChanged(game, "L_&_M", 0.1, val_question, 5, {view = "all", file = dest_log})
+        -- dest_j        = dest_v .. "game_" .. j .. "_L_&_M.xml"
+        -- dest_tex      = dest_v .. "game_" .. j .. "_L_&_M.tex"
+        -- dest_png      = dest_v .. "game_" .. j .. "_L_&_M.png"
+        -- options.title = players     .. " players "
+        --              .. nb_vertices .. " vertices "
+        --              .. "game "     .. j
+        --              .. " function L&M"
+        -- game.plot  (dest_png, false, options)
+        -- export_tex(game, dest_tex)
+        -- export_game(game, dest_j)
       end
     end
   end
 end
 
--- do
---   test_random_games(1)
--- end
+do
+  test_random_games(1)
+end
 
 -- do
 --   local change  = false
@@ -188,20 +188,20 @@ end
 --
 --
 --
-do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range.xml")
-  game.aggregation_value("tau_1", 0.1, 1, 5)
-  saa.computeSAA(game, "tau_1", 0.1, 1, 5)
-  rules.mindChanged(game, "tau_1", 0.1, 1, 5, 300)
-  -- for k, v in pairs(game.graphs) do
-  --   if type(v) == "table" then
-  --     print("\n\n", k)
-  --     v.print_graph(v)
-  --   end
-  -- end
-  game.plot("/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.png", true)
-  -- local dest_j = "tests_games_12_05_ 17_36_27/3_players/game_8_after.xml"
-  export_game(game, "/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.xml")
-  export_tex(game, "/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.tex")
-
-end
+-- do
+--   local game = import_game("/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range.xml")
+--   game.aggregation_value("tau_1", 0.1, 1, 5)
+--   saa.computeSAA(game, "tau_1", 0.1, 1, 5)
+--   rules.mindChanged(game, "tau_1", 0.1, 1, 5, 300)
+--   -- for k, v in pairs(game.graphs) do
+--   --   if type(v) == "table" then
+--   --     print("\n\n", k)
+--   --     v.print_graph(v)
+--   --   end
+--   -- end
+--   game.plot("/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.png", true)
+--   -- local dest_j = "tests_games_12_05_ 17_36_27/3_players/game_8_after.xml"
+--   export_game(game, "/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.xml")
+--   export_tex(game, "/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.tex")
+--
+-- end

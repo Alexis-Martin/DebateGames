@@ -46,6 +46,10 @@
 {\newline}
 {}
 
+
+\newtheorem{theoreme}{Theoreme}[section]
+\newtheorem{lemme}{Lemme}[section]
+\newtheorem{corollary}{Corrolaire}[section]
 \newtheorem{proposition}{Proposition}[section]
 \theoremstyle{defi}
 \newtheorem{definition}{Définition}[section]
@@ -124,7 +128,7 @@
               \end{array}
             $$\\
         \end{enumerate}
-\color{blue}
+
       \begin{proposition}
         Les fonctions $\tau$ sont croissantes selon $v^+$ et décroissantes selon $v^-$.
       \end{proposition}
@@ -488,129 +492,7 @@
     \end{itemize}
 
     on atteint pas non plus l'équilibre, on reste bloqué comme avant à environ $0.00731$.
-\color{red}
-    \subsection{La convergence sur les arbres n'est pas garantie}
-      Après avoir créé un générateur qui est capable de créer un jeu et d'exécuter la règle \texttt{mind\_changed} j'ai trouvé plusieurs exemples qui semblent contredire la convergence sur les arbres.
 
-      Le plus étrange d'entre eux est un jeu à 3 joueurs avec 10 noeuds. Cet arbre est représenté figure \ref{fig:non_conv}
-
-      \begin{figure}
-        \centering
-        \begin{tabular}{cc}
-          \begin{tikzpicture}[>=stealth]
-          \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-          "a1\\ (0,0)" -> "q\\ (0,0)";
-          "a2\\ (0,0)" -> "a1\\ (0,0)";
-          "a3\\ (0,0)" -> "a2\\ (0,0)";
-          "a4\\ (0,0)" -> "q\\ (0,0)";
-          "a5\\ (0,0)" -> "a1\\ (0,0)";
-          "a6\\ (0,0)" -> "a2\\ (0,0)";
-          "a7\\ (0,0)" -> "q\\ (0,0)";
-          "a8\\ (0,0)" -> "a1\\ (0,0)";
-          "a9\\ (0,0)" -> "a6\\ (0,0)";
-          };
-          \end{tikzpicture} &
-
-          \begin{tikzpicture}[>=stealth]
-          \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-          "a1\\ (0,0)" -> "q\\ (0,0)";
-          "a2\\ (0,0)" -> "a1\\ (0,0)";
-          "a3\\ (0,1)" -> "a2\\ (0,0)";
-          "a4\\ (0,0)" -> "q\\ (0,0)";
-          "a5\\ (1,0)" -> "a1\\ (0,0)";
-          "a6\\ (1,0)" -> "a2\\ (0,0)";
-          "a7\\ (0,0)" -> "q\\ (0,0)";
-          "a8\\ (0,1)" -> "a1\\ (0,0)";
-          "a9\\ (0,1)" -> "a6\\ (1,0)";
-          };
-          \end{tikzpicture} \\
-
-          \begin{tikzpicture}[>=stealth]
-          \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-          "a1\\ (0,1)" -> "q\\ (0,0)";
-          "a2\\ (1,0)" -> "a1\\ (0,1)";
-          "a3\\ (0,0)" -> "a2\\ (1,0)";
-          "a4\\ (0,0)" -> "q\\ (0,0)";
-          "a5\\ (0,0)" -> "a1\\ (0,1)";
-          "a6\\ (1,0)" -> "a2\\ (1,0)";
-          "a7\\ (0,1)" -> "q\\ (0,0)";
-          "a8\\ (0,1)" -> "a1\\ (0,1)";
-          "a9\\ (0,0)" -> "a6\\ (1,0)";
-          };
-          \end{tikzpicture} &
-
-          \begin{tikzpicture}[>=stealth]
-          \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-          "a1\\ (1,0)" -> "q\\ (0,0)";
-          "a2\\ (0,0)" -> "a1\\ (1,0)";
-          "a3\\ (0,1)" -> "a2\\ (0,0)";
-          "a4\\ (0,1)" -> "q\\ (0,0)";
-          "a5\\ (1,0)" -> "a1\\ (1,0)";
-          "a6\\ (1,0)" -> "a2\\ (0,0)";
-          "a7\\ (0,0)" -> "q\\ (0,0)";
-          "a8\\ (0,1)" -> "a1\\ (1,0)";
-          "a9\\ (0,1)" -> "a6\\ (1,0)";
-          };
-          \end{tikzpicture} \\
-        \end{tabular}
-
-        \caption{De gauche à droite: graphe général, préférences du joueur 1, préférences du joueur 2, préférences du joueur 3}
-        \label{fig:non_conv}
-      \end{figure}
-
-      En effet sur ce graphe à partir d'un certain temps 1 joueur ne joue plus du tout et les 2 autres changent d'avis sur un seul argument (l'argument a6).
-
-      Le tableau ci-dessous montre la valeur des préférences des trois joueurs au moment de la situation initiale puis les coups joués. La dernière colonne est la valeur du graphe général (le graphe du jeu) au fur et à mesure du temps :
-
-      \begin{tabular}{|c|c|c|c|c|}
-        \hline
-                            & joueur 1   & joueur 2 & joueur 3    & general \\
-        \hline
-        situation initiale  & 0.125      & 0.25     & 0.25        & 0.1123 \\
-        \hline
-        départ de la boucle & $\cdots$   & $\cdots$ & $\cdots$    & 0.20688 \\
-        \hline
-        tour 1              & \_         & \_       & a6 like     & 0.20699 \\
-        \hline
-        tour 2              & a6 dislike & \_       & \_          & 0.20688 \\
-        \hline
-        tour 3              & \_         & \_       & a6 dislike  & 0.2070 \\
-        \hline
-        tour 4              & a6 like    & \_       & \_          & 0.20688 \\
-        \hline
-        tour 5              & \_         & \_       & a6 annule   & 0.20699 \\
-        \hline
-        tour 6              & a6 annule  & \_       & \_          & 0.20688 \\
-        \hline
-        tour 7              & \_         & \_       & a6 like     & 0.20699 \\
-        \hline
-        tour 8              & a6 dislike & \_       & \_          & 0.20688 \\
-        \hline
-      \end{tabular}
-
-      le graphe au départ de la boucle est représenté figure \ref{fig:avant_boucle}
-
-      \begin{figure}
-      \centering
-      \begin{tikzpicture}[>=stealth]
-      \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-      "a1\\ (1,2)" -> "q\\ (0,0)";
-      "a2\\ (2,1)" -> "a1\\ (1,2)";
-      "a3\\ (0,2)" -> "a2\\ (2,1)";
-      "a4\\ (1,1)" -> "q\\ (0,0)";
-      "a5\\ (2,1)" -> "a1\\ (1,2)";
-      "a6\\ (0,1)" -> "a2\\ (2,1)";
-      "a7\\ (1,2)" -> "q\\ (0,0)";
-      "a8\\ (2,1)" -> "a1\\ (1,2)";
-      "a9\\ (2,0)" -> "a6\\ (0,1)";
-      };
-      \end{tikzpicture}
-      \caption{graphe juste avant la boucle}
-      \label{fig:avant_boucle}
-      \end{figure}
-
-      \paragraph{}J'ai exécuté plusieurs fois le calcul du jeu sur ce graphe et dans certains cas assez rare le jeu s'arrête. Donc la convergence dépend de l'ordre dans lequel les joueurs votes.
-\color{blue}
   \section{Nouveaux résultats sur les arbres}
     Suite à une analyse un peu plus appronfondie des exemples qui ne convergeaient pas la semaine dernière j'ai remarqué que cela était dû à une erreur dans mon code...
 
@@ -783,15 +665,125 @@
     \paragraph{remarque/intuition}
       Pour montrer la convergence, c'est suffisant de traiter chacun des joueurs séparement dans l'évolution du système.
       J'entend par là qu'il est suffisant de montrer que pour chaque joueur (et quelque soit les votes des autres joueurs) on arrive à une situation d'équilibre pour ce joueur.
+\color{blue}
+  \section{Convergence des jeux à 2 joueurs sur les arbres}
+    \subsection{Rappel des questions qu'on se pose}
+      \begin{enumerate}
+        \item A 1 joueur, la valeur finale du graphe est toujours égale à son avis personnel. FAUX
+        \item Un joueur extrême ne peux jamais changer un de ses votes. VRAI
+        \item Tout états d'équilibre est entre le min et le max. FAUX
+        \item Il existe au moins 1 équilibre entre min et max. OUVERT
+        \item A deux joueurs, si la valeur initiale est entre min et max alors on converge vers cette valeur. VRAI
+        \item Soit $d_i$ la distance à la valeur initiale pour l'agent i. Tout équilibre doit être à une distance inférieure à $d_i$ pour tout agents. VRAI jusqu'à 2 joueurs
+      \end{enumerate}
 
+    \subsection{Notation}
+      Commençons par donner quelques notations :
+
+      On note $PRO$ l'ensemble des arguments qui défendent la question et $CON$ les arguments qui attaquent la question.
+
+      Par extension, on note $PRO^v_x$ avec $v \in \{-, 0, +\}$ l'ensemble des arguments sur lesquels l'agent $x$ a votés pour ($v = +$), contre ($v = -$) ou c'est abstenu ($v = 0$).
+
+      On note également $v_0$ la valeur initiale du débat, la valeur du jeu avant que le premier vote eut lieu.
+
+      Enfin, étant donné qu'on a que 2 joueurs on notera $j_{min}$ le joueur ayant la valeur minimum et $j_{max}$ celui qui à la plus grande.
+
+      \paragraph{remarque} Sur les arbres : $PRO \cap CON = \emptyset$.
+
+
+    \subsection{Preuve de la question 6}
+    \begin{theoreme}
+    \label{thm:question_6}
+       Let $d_i$ the distance to the initial state of agent $i$. With two players, any equilibrium point must be within distance $d_i$ of any agent $i$.
+    \end{theoreme}
+
+    \begin{proof}
+    Suppose for the sake of contradiction that state $s$ is stable and that $|v_s - v_0| > d_i$ for some agent $i$. There are two cases: either $v_s$ is higher than $v_i$, the target value of agent $i$, or it is lower. Suppose wlog it is lower.
+    Recall that agent $i$ can ensure that the value of the debate is exactly $v_0$ by exactly cancelling out all the other moves of the other player $j$.
+    Now since $v_s<v_0$, it must be that :
+    $$
+    C = (PRO^-_j \setminus PRO^+_i) \cup (CON^+_j \setminus CON^-_i) \cup PRO^-_i \cup CON^+i \not = \emptyset
+    $$
+    (Intuitively, this set contains all the votes that agent $i$ could counter to get to $v_0$: either voting for an argument PRO on which $j$ voted against, or voting against an argument CON on which $i$ voted for, or abstaining on an argument PRO on which he himself voted against, or abstaining on a argument CON on which he himself voted against).
+    Since playing any of this move would increase the value (under any circumstances), and playing all of them would get to $v_0$, we know for sure that all the moves in $C$ are indeed improving. Hence the state is not stable, a contradiction.
+    \end{proof}
+
+    \begin{corollary}
+      $v_0$ is actually the \emph{unique} equilibrium when $v_0 \in [v_{min},v_{max}]$
+    \end{corollary}
+
+    \begin{proof}
+      By contradiction, suppose there exist another equilibrium $v$, either $v$ is higher than $v_0$ or it is lower. suppose without lost of generality that it is lower. So the distance $d_{max}$ between the player $j_{max}$ and $v_0$ is lower than the distance between the player $j_{max}$ and $v$. By the theorem \ref{thm:question_6} this is impossible, so $v$ is not an equilibrium.
+    \end{proof}
+
+    \subsection{Preuve de la question 5}
+
+      \begin{theoreme}
+        \label{thm:question_5}
+        with two players, all systems converge, for instance we only consider Round Robin dynamic.
+      \end{theoreme}
+
+      To show this theorem we first prove a lemme.
+      \begin{definition}
+        let $AN$ the set of arguments that nobody vote on them.
+      \end{definition}
+      \begin{lemme}
+        \label{lem:question_5}
+        With two players, if the value of the state $s$ is within $max$ and $min$ then the players can change their opinion on arguments in $AN$ a limited number of time.
+      \end{lemme}
+      \begin{proof}
+        let $s$ a state where the value $v_s$ of the debate is within $max$ and $min$.
+        Note that, in this case the players are adversaries.
+
+        Suppose wlog that player $j_{max}$ vote on $a \in AN$. we have to prove that he never changes this vote.
+        The vote on $a$ increases the value of the debate because $v_s$ is lower than $max$. Just after this vote $j_{min}$ have to decrease the value and he can get at least $v_s$ if he votes on $a$.
+
+        Suppose at state $s'$, player $j_{max}$ wants to change his vote on $a$. So he wants the value decrease. The only possibility for this is, he changes his mind on an argument he votes before the state $s$ and $j_{min}$ can not decrease the value under $max$.
+
+        At state $s'+1$ the value is lower than at state $s'$, so $j_{min}$ still can not play. This remark his available for all state after $s'$ so at this time player $j_{max}$ plays alone and the game comes to an end. So $j_{max}$ change his opinion on arguments in $AN$ a limited number of times.
+      \end{proof}
+
+      It's now possible to prove the theorem \ref{thm:question_5}
+      \begin{proof}
+        Since there is a limited number of moves, we just have to show that there is no cycle. For that we prove that for each player the number of time he changed his opinion is finite.
+
+        We can separate games in three class :
+        \begin{enumerate}
+          \item The value $v_0$ is within $max$ and $min$.
+          \item The value $v_0$ is higher (resp. lower) than $max$ (resp. $min$) and the value enter between $max$ and $min$ after.
+          \item The value $v_0$ is never between $max$ and $min$
+        \end{enumerate}
+
+        \paragraph{Case 1}
+        All arguments are in $AN$ so by the lemme \ref{lem:question_5} we can directly conclude that the number of times each player changed his opinion is finite. (Actually they never change their votes).
+
+        \paragraph{Case 2}
+        Let $s$ the first state where the value is within $max$ and $min$. By lemme \ref{lem:question_5} we just have to prove that they change their mind a limited number of time on arguments played before $s$.
+
+        Suppose there is a cycle, let $s'$ the last state before the cycle where the value is within $max$ and $min$.
+        If the value stay between $max$ and $min$ the player $j_{max}$ can only vote for increasing the value so he has a limited number of possibilities, and same for $j_{min}$.
+
+        So suppose the value becomes higher than $max$. There is three possibilities :
+
+        \begin{enumerate}
+          \item If the value stay higher than $max$, then the players collaborate and they have a limited number of moves to get the value decreasing.
+
+          \item If the value changes between inside and outside $max$ and $min$, then only one player can vote for the rest of the game or $j_{max}$ always wants to increase the value and $j_{min}$ wants to decrease it.
+
+          \item If the value changes between higher than $max$ and lower than $min$. Then for all votes of each player they always want the same things (increase the value for $j_{max}$ or decrease it for $j_{min}$). Indeed, suppose $j_{max}$ wants to decrease the value, then $j_{min}$ have not a move to decrease it so he never have a move after. And so $j_{max}$ plays alone.
+        \end{enumerate}
+
+        \paragraph{case 3}
+          The players are adversaries and they only want that the value increase or decrease. So they have a limited number of possibilities.
+      \end{proof}
+
+      In this proof we use the facts that players always choose the best response, they play one after the other and that there are not ambiguous arguments (arguments that attack and defend the question at the same time).
+
+      I think we can generalize this proof for all dynamics. Maybe it can works also for ambiguous arguments if we show that an ambiguous argument attacks (resp. defends) the question stronger than it defends (resp. attacks).
 \color{black}
   \section{Questions}
-\color{red}
-    Je me pose une question à propos de la définition du prix de l'anarchie.
-
-    On avait dit qu'on allait comparer le résultat du jeu avec la valeur trouvée si chacun des joueurs votent de la même façon que lors de la phase d'initialisation.
-
-    Or j'ai remarqué que ce résultat peut être plus mauvais que l'anarchie et qu'en revanche une configuration totalement différente peut être meilleure. Il faudrait donc logiquement que je me place par rapport à cette meilleure solution pour chercher le prix de l'anarchie? non?\\
+  \color{blue}
+  Question sur les fonction potentielles, avec les conditions qu'elle doit respecter.
 \color{black}
   \section{Ce qu'il faut que je fasse}
 

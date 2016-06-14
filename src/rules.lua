@@ -284,7 +284,7 @@ function rules.mind_changed.mindChanged(game)
       nb_round = nb_round + 1
 
       local player = math.random(1, #players)
-      local is_nil, is_pass, is_changed = rules.mind_changed.best_move(players[player])
+      local is_nil, is_changed, is_pass = rules.mind_changed.best_move(players[player])
 
       if not is_nil then
         table.insert(nil_players, players[player])

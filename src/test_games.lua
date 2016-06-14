@@ -9,9 +9,10 @@ local saa             = require "saa"
 
 
 local function test_random_games(val_question)
-  local max_players  = 3
-  local max_games    = 5
-  local max_vertices = 5
+  local max_players  = 6
+  local max_games    = 10
+  local max_vertices = 20
+  local dynamique    = "random"
   local nb_tests     = max_vertices * max_games * (max_players)
   local options      = {
     xlabel = "round",
@@ -19,12 +20,12 @@ local function test_random_games(val_question)
     title  = nil
   }
   -- apply a specific rule on game with 2 to max_players players, max_graphs different trees and max_games different games for each tree and each number of players.
-  local dest = "../tests/tests_games_q_" .. val_question .. "_" .. os.date("%d_%m_%H_%M_%S") .. "/"
+  local dest = "../tests/" .. os.date("%d_%m_%H_%M_%S_") .. dynamique .. "_q_" .. val_question .. "/"
   lfs.mkdir(dest)
 
   local parameters = {
     val_question = val_question,
-    precision    = 5,
+    precision    = 8,
     dynamique    = "random",
     log_details  = "all"
   }
@@ -107,9 +108,9 @@ local function test_random_games(val_question)
   end
 end
 
-do
-  test_random_games(1)
-end
+-- do
+--   test_random_games(1)
+-- end
 
 -- do
 --   local change  = false
@@ -205,26 +206,28 @@ end
 
 
 
--- do
---   local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/tests_games_q_1_25_05_18_19_10/3_players/12_vertices/game_1.xml")
---   -- game:print_game()
---   game.aggregation_value("L_&_M", 0.1, 1, 5)
---   saa.computeSAA(game, "L_&_M", 0.1, 1, 5)
---   rules.mindChanged(game, {
---     fun = "L_&_M",
---     val_question = 1,
---     precision = 5,
---     log_details = "all"
---   })
--- --   -- for k, v in pairs(game.graphs) do
--- --   --   if type(v) == "table" then
--- --   --     print("\n\n", k)
--- --   --     v.print_graph(v)
--- --   --   end
--- --   -- end
---   game.plot("output.png", true)
--- --   -- local dest_j = "tests_games_12_05_ 17_36_27/3_players/game_8_after.xml"
--- --   export_game(game,"output.xml")
--- --   -- export_tex(game, "/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.tex")
--- --
--- end
+do
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/13_06_14_46_27_random_q_1/4_players/15_vertices/game_6.xml")
+  -- game:print_game()
+  game.aggregation_value("tau_1", 0.1, 1, 8)
+  saa.computeSAA(game, "tau_1", 0.1, 1, 8)
+  rules.mindChanged(game, {
+    fun = "tau_1",
+    val_question = 1,
+    precision = 8,
+    log_details = "all",
+    log_file = "test.log",
+    dynamique    = "random",
+  })
+--   -- for k, v in pairs(game.graphs) do
+--   --   if type(v) == "table" then
+--   --     print("\n\n", k)
+--   --     v.print_graph(v)
+--   --   end
+--   -- end
+  game.plot("output.png", true)
+--   -- local dest_j = "tests_games_12_05_ 17_36_27/3_players/game_8_after.xml"
+  export_game(game,"output.xml")
+--   -- export_tex(game, "/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.tex")
+--
+end

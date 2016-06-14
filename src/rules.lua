@@ -213,10 +213,10 @@ end
 
 
 function rules.mind_changed.playOnce(player, arg, vote)
-  local parameters = rules.mind_changed.parameters
-  local game       = parameters.game
-  local graph      = game.graphs.general
-  local changed    = 0
+  local parameters         = rules.mind_changed.parameters
+  local game               = parameters.game
+  local graph              = game.graphs.general
+  local changed            = 0
 
   if arg and arg ~= "none" then
     changed = rules.mind_changed.do_move(player, arg, vote)
@@ -236,6 +236,7 @@ function rules.mind_changed.playOnce(player, arg, vote)
     value    = lm
   }
   game.rounds  = (game.rounds or 0) + 1
+  print("round = " .. game.rounds + 1, "like = " .. graph.vertices.a3.likes, "dislikes = " .. graph.vertices.a3.dislikes)
   game.changed = (game.changed or 0) + changed
   if not arg or arg == "none" then
     game.pass  = (game.pass or 0) + 1
@@ -337,62 +338,58 @@ function rules.mind_changed.mindChanged(game)
   game.rounds          = nb_round - #game.players
   game.changed         = changed
   game.pass            = pass - #game.players
-  game.game_parameters = {
+  -- game.max_rounds = 3 ^ (#game.graphs.general.vertices)
+end
+
+function rules.playOnce(game, vote)
+  rules.mind_changed.parameters.game = game
+  if rules.mind_changed.parameters.rule == "mindChanged" then
+    rules.mind_changed.playOnce(vote.player, vote.arg, vote.vote)
+  end
+end
+
+function rules.setParameters(parameters)
+  if type(parameters) ~= 'table' then
+    parameters = {
+      fun          = 'tau_1',
+      val_question = 1,
+      precision    = 5,
+      log_details  = "all",
+      dynamique    = "round_robin"
+    }
+  else
+    parameters.fun          = parameters.fun or 'tau_1'
+    parameters.val_question = parameters.val_question or 1
+    parameters.precision    = parameters.precision or 5
+    parameters.epsilon      = parameters.epsilon or 0.1
+    parameters.log_details  = parameters.log_details or "all"
+    parameters.dynamique    = parameters.dynamique or "round_robin"
+  end
+
+  parameters.players_votes = {}
+  for _, v in ipairs(parameters.game.players) do
+    parameters.players_votes[v] = {}
+  end
+
+  parameters.game.game_parameters = {
     fun          = parameters.fun,
     val_question = parameters.val_question,
     epsilon      = parameters.epsilon,
     stop_at      = parameters.stop_at,
     dynamique    = parameters.dynamique,
     precision    = parameters.precision,
-    rule         = "mindChanged"
+    rule         = parameters.rule
   }
-  -- game.max_rounds = 3 ^ (#game.graphs.general.vertices)
-end
-
-function rules.playOnce(game, parameters)
-  if type(parameters) ~= 'table' then
-    parameters = {
-      fun          = 'tau_1',
-      val_question = 1,
-      precision    = 5,
-      log_details  = "all",
-      dynamique    = "round_robin"
-    }
-  else
-    parameters.fun          = parameters.fun or 'tau_1'
-    parameters.val_question = parameters.val_question or 1
-    parameters.precision    = parameters.precision or 5
-    parameters.epsilon      = parameters.epsilon or 0.1
-    parameters.log_details  = parameters.log_details or "all"
-    parameters.dynamique    = parameters.dynamique or "round_robin"
-  end
-  parameters.game               = game
 
   if parameters.rule == "mindChanged" then
     rules.mind_changed.parameters = parameters
-    rules.mind_changed.playOnce(parameters.player, parameters.arg, parameters.vote)
   end
 end
 
 function rules.mindChanged(game, parameters)
-  if type(parameters) ~= 'table' then
-    parameters = {
-      fun          = 'tau_1',
-      val_question = 1,
-      precision    = 5,
-      log_details  = "all",
-      dynamique    = "round_robin"
-    }
-  else
-    parameters.fun          = parameters.fun or 'tau_1'
-    parameters.val_question = parameters.val_question or 1
-    parameters.precision    = parameters.precision or 5
-    parameters.epsilon      = parameters.epsilon or 0.1
-    parameters.log_details  = parameters.log_details or "all"
-    parameters.dynamique    = parameters.dynamique or "round_robin"
-  end
-  parameters.game               = game
-  rules.mind_changed.parameters = parameters
+  parameters.game = game
+  parameters.rule = "mindChanged"
+  rules.setParameters(parameters)
   rules.mind_changed.mindChanged(game)
 end
 

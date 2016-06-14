@@ -2,6 +2,7 @@ local xml          = require "xml"
 local create_graph = require "graph"
 local create_game  = require "game"
 local rules        = require "rules"
+local saa          = require "saa"
 
 local function import_game(fic, play)
 
@@ -56,24 +57,37 @@ local function import_game(fic, play)
       if type(g) == "table" and g.xml == "game_parameters" then
         local parameters = {
           fun          = g.fun,
-          val_question = g.val_question,
-          epsilon      = g.epsilon,
-          stop_at      = g.stop_at,
+          precision    = tonumber(g.precision),
+          val_question = tonumber(g.val_question),
+          epsilon      = tonumber(g.epsilon),
+          stop_at      = tonumber(g.stop_at),
           dynamique    = g.dynamique,
           rule         = g.rule,
+          game         = game,
         }
+        rules.setParameters(parameters)
         for _,g1 in pairs(data) do
           if type(g1) == "table" and g1.view == "general" then
-            for _, v in pairs(g) do
+            for _, v in pairs(g1) do
               if type(v) == 'table' and v.xml == 'LM' then
-                print("size of run " .. #v)
+                game.aggregation_value(parameters.fun,
+                                       parameters.epsilon,
+                                       parameters.val_question,
+                                       parameters.precision
+                                      )
+                saa.computeSAA        (game,
+                                       parameters.fun,
+                                       parameters.epsilon,
+                                       parameters.val_question,
+                                       parameters.precision
+                                      )
                 for i = 2, #v do
-                  if v[i].arg_vote ~= "none" then
-                    parameters.player = v[i].player
-                    parameters.vote   = tonumber(v[i].vote)
-                    parameters.arg    = v[i].arg_vote
-                    rules.playOnce(game, parameters)
-                  end
+                  local vote = {
+                    player = v[i].player,
+                    vote   = tonumber(v[i].vote),
+                    arg    = v[i].arg_vote
+                  }
+                  rules.playOnce(game, vote)
                 end
               end
             end

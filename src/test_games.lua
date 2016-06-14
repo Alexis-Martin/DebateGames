@@ -207,27 +207,28 @@ end
 
 
 do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/13_06_14_46_27_random_q_1/4_players/15_vertices/game_6.xml")
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/13_06_14_46_27_random_q_1/4_players/11_vertices/game_1_tau_1.xml", true)
   -- game:print_game()
-  game.aggregation_value("tau_1", 0.1, 1, 8)
-  saa.computeSAA(game, "tau_1", 0.1, 1, 8)
-  rules.mindChanged(game, {
-    fun = "tau_1",
-    val_question = 1,
-    precision = 8,
-    log_details = "all",
-    log_file = "test.log",
-    dynamique    = "random",
-  })
+  -- game.aggregation_value("tau_1", 0.1, 1, 8)
+  -- saa.computeSAA(game, "tau_1", 0.1, 1, 8)
+  -- rules.mindChanged(game, {
+  --   fun = "tau_1",
+  --   val_question = 1,
+  --   precision = 8,
+  --   log_details = "all",
+  --   log_file = "test.log",
+  --   dynamique    = "random",
+  -- })
 --   -- for k, v in pairs(game.graphs) do
 --   --   if type(v) == "table" then
 --   --     print("\n\n", k)
 --   --     v.print_graph(v)
 --   --   end
 --   -- end
+  export_game(game,"output.xml")
   game.plot("output.png", true)
 --   -- local dest_j = "tests_games_12_05_ 17_36_27/3_players/game_8_after.xml"
-  export_game(game,"output.xml")
---   -- export_tex(game, "/home/talkie/Documents/Stage/DebateGames/docs/examples/not_in_range_tau1.tex")
+
+  export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/output.tex")
 --
 end

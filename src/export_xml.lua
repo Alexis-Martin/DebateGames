@@ -58,6 +58,15 @@ local function export_game(game, dest)
     end
     nb_graph = nb_graph + 1
   end
+
+  if type(game.game_parameters) == "table" then
+    xml = xml .. "<game_parameters"
+    for k, v in pairs(game.game_parameters) do
+      xml = xml .. " " .. k .. "=\"" .. tostring(v) .. "\""
+    end
+    xml = xml .. " />"
+  end
+
   xml = xml .. "</game>"
 
   if type(dest) == 'string' then

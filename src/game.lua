@@ -1,5 +1,6 @@
 local gp   = require 'gnuplot'
 local yaml = require 'yaml'
+local saa  = require "saa"
 
 local function create_game(players, graph)
   local game = {
@@ -198,8 +199,43 @@ local function create_game(players, graph)
         graph.vertices[k].dislikes = graph.vertices[k].dislikes + (v.dislikes or 0)
       end
     end
-    local saa = require "saa"
     game.aggregate_value = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
+  end
+
+  game.strongest_shot = function(fun, epsilon, val_question, precision)
+    local graph = deepcopy(game.graphs.general)
+    for _, v in pairs(graph.vertices) do
+      v.likes    = 0
+      v.dislikes = 0
+    end
+    local strongest_lm = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
+    local start_lm     = strongest_lm
+
+    for k, _ in pairs(graph.vertices.q.attackers) do
+      graph.vertices[k].dislikes = 1
+      local temp_lm = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
+      if temp_lm > strongest_lm then strongest_lm = temp_lm end
+      graph.vertices[k].dislikes = 0
+    end
+    game.strongest_shot = strongest_lm - start_lm
+  end
+
+  game.weakest_shot = function(fun, epsilon, val_question, precision)
+    local graph = deepcopy(game.graphs.general)
+    for _, v in pairs(graph.vertices) do
+      v.likes    = 0
+      v.dislikes = 0
+    end
+    local weakest_lm = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
+    local start_lm   = weakest_lm
+
+    for k, _ in pairs(graph.vertices.q.attackers) do
+      graph.vertices[k].likes = 1
+      local temp_lm = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
+      if temp_lm < weakest_lm then weakest_lm = temp_lm end
+      graph.vertices[k].likes = 0
+    end
+    game.weakest_shot = weakest_lm - start_lm
   end
 
   for _,player in ipairs(players) do

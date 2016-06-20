@@ -12,7 +12,7 @@ local function test_random_games(val_question)
   local max_players  = 6
   local max_games    = 10
   local max_vertices = 20
-  local dynamique    = "random"
+  local dynamique    = "round_robin"
   local nb_tests     = max_vertices * max_games * (max_players)
   local options      = {
     xlabel = "round",
@@ -26,7 +26,7 @@ local function test_random_games(val_question)
   local parameters = {
     val_question = val_question,
     precision    = 8,
-    dynamique    = "random",
+    dynamique    = dynamique,
     log_details  = "strokes"
   }
 

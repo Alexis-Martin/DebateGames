@@ -12,7 +12,9 @@ local function test_random_games(val_question)
   local max_players  = 6
   local max_games    = 10
   local max_vertices = 20
+  local precision    = 8
   local dynamique    = "round_robin"
+  local type_vote    = "better"
   local nb_tests     = max_vertices * max_games * (max_players)
   local options      = {
     xlabel = "round",
@@ -20,12 +22,13 @@ local function test_random_games(val_question)
     title  = nil
   }
   -- apply a specific rule on game with 2 to max_players players, max_graphs different trees and max_games different games for each tree and each number of players.
-  local dest = "../tests/" .. os.date("%d_%m_%H_%M_%S_") .. dynamique .. "_q_" .. val_question .. "/"
+  local dest = "../tests/" .. os.date("%d_%m_%H_%M_") .. dynamique .. "_" .. val_question .. "/"
   lfs.mkdir(dest)
 
   local parameters = {
     val_question = val_question,
-    precision    = 8,
+    precision    = precision,
+    type_vote    = type_vote,
     dynamique    = dynamique,
     log_details  = "strokes"
   }
@@ -38,7 +41,7 @@ local function test_random_games(val_question)
       lfs.mkdir(dest_v)
       for j = 1, max_games do
         print((players-1) * max_vertices * max_games + (nb_vertices-1) * max_games + j .. "/" .. nb_tests)
-        -- local nb_vertices = 6 --math.random(2, 50)
+
         local graph    = graph_generator(nb_vertices)
         local dest_j   = dest_v .. "game_" .. j .. ".xml"
         local dest_tex = dest_v .. "game_" .. j .. ".tex"
@@ -46,23 +49,48 @@ local function test_random_games(val_question)
         export_game(game, dest_j)
         export_tex(game, dest_tex)
 
-        -- test tau_1
-        local dest_log      = dest_v .. "game_"
-                           .. j .. "_tau_1.log"
+        -- test tau_1 with best
+        parameters.type_vote = "best"
+        local dest_log      = dest_v .. "best_"
+                           .. j .. "_tau_1_log.log"
         parameters.fun      = "tau_1"
         parameters.log_file = dest_log
-        game.aggregation_value("tau_1", nil, val_question, 5)
-        game.strongest_shot("tau_1", nil, val_question, 5)
-        game.weakest_shot("tau_1", nil, val_question, 5)
-        saa.computeSAA   (game, "tau_1", nil, val_question, 5)
+        game.aggregation_value("tau_1", nil, val_question, precision)
+        game.strongest_move("tau_1", nil, val_question, precision)
+        game.weakest_move("tau_1", nil, val_question, precision)
+        saa.computeSAA   (game, "tau_1", nil, val_question, precision)
         rules.mindChanged(game, parameters)
-        dest_j         = dest_v .. "game_" .. j .. "_tau_1.xml"
-        dest_tex       = dest_v .. "game_" .. j .. "_tau_1.tex"
-        local dest_png = dest_v .. "game_" .. j .. "_tau_1.png"
+        dest_j         = dest_v .. "best_" .. j .. "_tau_1.xml"
+        dest_tex       = dest_v .. "best_" .. j .. "_tau_1.tex"
+        local dest_png = dest_v .. "best_" .. j .. "_tau_1.png"
 
         options.title  = players     .. " players "
                       .. nb_vertices .. " vertices "
-                      .. "game "     .. j
+                      .. "best "     .. j
+                      .. " function tau_1"
+        game.plot  (dest_png, false, options)
+        export_game(game, dest_j)
+        export_tex(game, dest_tex)
+        game.restoreGame()
+
+        -- test tau_1 with better
+        parameters.type_vote = "better"
+        dest_log             = dest_v .. "better_"
+                             .. j .. "_tau_1_log.log"
+        parameters.fun      = "tau_1"
+        parameters.log_file = dest_log
+        game.aggregation_value("tau_1", nil, val_question, precision)
+        game.strongest_move("tau_1", nil, val_question, precision)
+        game.weakest_move("tau_1", nil, val_question, precision)
+        saa.computeSAA   (game, "tau_1", nil, val_question, precision)
+        rules.mindChanged(game, parameters)
+        dest_j         = dest_v .. "better_" .. j .. "_tau_1.xml"
+        dest_tex       = dest_v .. "better_" .. j .. "_tau_1.tex"
+        dest_png       = dest_v .. "better_" .. j .. "_tau_1.png"
+
+        options.title  = players     .. " players "
+                      .. nb_vertices .. " vertices "
+                      .. "better "     .. j
                       .. " function tau_1"
         game.plot  (dest_png, false, options)
         export_game(game, dest_j)

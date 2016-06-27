@@ -32,6 +32,8 @@ local function create_game(players, graph)
     game.pass            = nil
     game.mean            = nil
     game.aggregate_value = nil
+    game.strongest_shot  = nil
+    game.weakest_shot    = nil
   end
 
   game.setDislikes = function(player, arg, nb)
@@ -202,7 +204,7 @@ local function create_game(players, graph)
     game.aggregate_value = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
   end
 
-  game.strongest_shot = function(fun, epsilon, val_question, precision)
+  game.strongest_move = function(fun, epsilon, val_question, precision)
     local graph = deepcopy(game.graphs.general)
     for _, v in pairs(graph.vertices) do
       v.likes    = 0
@@ -220,7 +222,7 @@ local function create_game(players, graph)
     game.strongest_shot = strongest_lm - start_lm
   end
 
-  game.weakest_shot = function(fun, epsilon, val_question, precision)
+  game.weakest_move = function(fun, epsilon, val_question, precision)
     local graph = deepcopy(game.graphs.general)
     for _, v in pairs(graph.vertices) do
       v.likes    = 0

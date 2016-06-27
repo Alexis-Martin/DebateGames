@@ -98,6 +98,97 @@ function rules.mind_changed.test_move(player, arg, vote, print_log)
   return value_vote, lm
 end
 
+function rules.mind_changed.better_move(player)
+  local parameters = rules.mind_changed.parameters
+  local game       = parameters.game
+  local changed    = 0
+
+  local player_lm = game.graphs[player].LM[#game.graphs[player].LM].value
+  local gen_lm    = game.graphs.general.LM[#game.graphs.general.LM].value
+  local better_votes = {}
+  local graph     = game.graphs.general
+  local print_log = nil
+  if parameters.log_file and parameters.log_details == "all" then
+    io.write("===================================\n")
+    io.write(player .. " : LM = " .. player_lm .. "\n")
+    io.write("general : LM = " .. gen_lm .. "\n")
+    io.write("===================================\n")
+  end
+
+  for arg, v in pairs(graph.vertices) do
+    local temp_lm
+    local value_vote
+    if v.tag ~= "question" then
+      for _, type_vote in ipairs({"like", "dislike"}) do
+
+        if parameters.log_file and parameters.log_details == "all" then
+          print_log = {
+            general_lm = gen_lm,
+          }
+        end
+
+        value_vote, temp_lm = rules.mind_changed.test_move(player, arg, type_vote, print_log)
+
+        if math.abs(temp_lm - player_lm) < math.abs(gen_lm - player_lm) then
+          local vote = {
+            arg  = arg,
+            lm   = temp_lm,
+            vote = value_vote,
+          }
+          table.insert(better_votes, vote)
+        end
+      end
+    end
+  end
+
+  -- choose vote if there is one.
+  local vote = {}
+  if #better_votes >= 1 then
+    local i = math.random(1, #better_votes)
+    vote = better_votes[i]
+  end
+
+  if parameters.log_file then
+    if parameters.log_details == "all" then
+      io.write("decision : vote = " .. tostring(vote.arg or "none") .. " bool = " .. tostring(vote.vote or 0) .. " lm = " .. tostring(vote.lm or gen_lm) .. "\n")
+      io.write("==============================\n")
+    elseif parameters.log_details == "strokes" then
+      io.write(player .. " : votes possibles = [")
+
+      for i, v in ipairs(better_votes) do
+        io.write("(".. v.arg .. ", " .. tostring(v.vote) .. ", " .. tostring(v.lm) ..")")
+        if i < #better_votes then io.write(", ") end
+      end
+
+      io.write("] \n\t\tvote = " .. tostring(vote.arg or "none") .. " bool = " .. tostring(vote.vote or 0) .. " lm joueur = " .. player_lm .. " lm avant = " .. gen_lm .. " lm après " .. tostring(vote.lm or gen_lm) .. "\n")
+      io.write("============================== \n")
+    end
+  end
+  -- -- we compute the old value to restore all values in the graph
+  -- saa.computeGraphSAA(#game.players, graph, parameters.fun, parameters.epsilon, parameters.val_question, parameters.precision)
+
+  -- application of the best vote we found (if there is a best vote)
+  if #better_votes >= 1 then
+    changed = rules.mind_changed.do_move(player, vote.arg, vote.vote)
+  end
+
+  -- computation of the new value of the game
+  local lm = saa.computeGraphSAA(#game.players, graph, parameters.fun, parameters.epsilon, parameters.val_question, parameters.precision)
+  if not graph.LM then
+    graph.LM = {}
+  end
+  graph.LM[#graph.LM + 1] = {
+    run      = #graph.LM + 1,
+    player   = player,
+    arg_vote = vote.arg or "none",
+    vote     = vote.vote or 0,
+    value    = lm
+  }
+  if #better_votes >= 1 then return vote.arg, changed, 0 end
+
+  return nil, 0, 1
+end
+
 function rules.mind_changed.best_move(player)
   local parameters = rules.mind_changed.parameters
   local game       = parameters.game
@@ -149,8 +240,6 @@ function rules.mind_changed.best_move(player)
       io.write("============================== \n")
     end
   end
-  -- -- we compute the old value to restore all values in the graph
-  -- saa.computeGraphSAA(#game.players, graph, parameters.fun, parameters.epsilon, parameters.val_question, parameters.precision)
 
   -- application of the best vote we found (if there is a best vote)
   if best_vote then
@@ -259,11 +348,14 @@ function rules.mind_changed.mindChanged(game)
   end
   local changed = 0
   local pass    = 0
-
+  local type_vote = rules.mind_changed.best_move
+  if parameters.type_vote == "better" then
+    type_vote = rules.mind_changed.better_move
+  end
   local function round_robin()
     local nb_nil = 0
     for _, v in ipairs(game.players) do
-      local is_nil, is_changed, is_pass = rules.mind_changed.best_move(v)
+      local is_nil, is_changed, is_pass = type_vote(v)
       if not is_nil then
         nb_nil = nb_nil + 1
       end
@@ -285,7 +377,7 @@ function rules.mind_changed.mindChanged(game)
       nb_round = nb_round + 1
 
       local player = math.random(1, #players)
-      local is_nil, is_changed, is_pass = rules.mind_changed.best_move(players[player])
+      local is_nil, is_changed, is_pass = type_vote(players[player])
 
       if not is_nil then
         table.insert(nil_players, players[player])
@@ -355,6 +447,7 @@ function rules.setParameters(parameters)
       val_question = 1,
       precision    = 5,
       log_details  = "all",
+      type_vote    = "best",
       dynamique    = "round_robin"
     }
   else
@@ -363,6 +456,7 @@ function rules.setParameters(parameters)
     parameters.precision    = parameters.precision or 5
     parameters.epsilon      = parameters.epsilon or 0.1
     parameters.log_details  = parameters.log_details or "all"
+    parameters.type_vote    = parameters.type_vote or "best"
     parameters.dynamique    = parameters.dynamique or "round_robin"
   end
 
@@ -376,6 +470,7 @@ function rules.setParameters(parameters)
     val_question = parameters.val_question,
     epsilon      = parameters.epsilon,
     stop_at      = parameters.stop_at,
+    type_vote    = parameters.type_vote,
     dynamique    = parameters.dynamique,
     precision    = parameters.precision,
     rule         = parameters.rule

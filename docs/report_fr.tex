@@ -3,7 +3,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[]{geometry}
-\usepackage[frenchb]{babel}
+\usepackage[francais]{babel}
 \usepackage[utf8x]{luainputenc}
 \usepackage{mathtools}
 \usepackage{amsthm}
@@ -466,6 +466,7 @@
 
 
   \section{Résultats}
+  \color{red}
     \subsection{Atteint-on l'équilibre avec la première définition de $\tau$ dans l'exemple de la figure \ref{fig:trivial}?}
 
       \paragraph{remarque :}
@@ -492,10 +493,11 @@
     \end{itemize}
 
     on atteint pas non plus l'équilibre, on reste bloqué comme avant à environ $0.00731$.
-
+  \color{black}
   \section{Nouveaux résultats sur les arbres}
+  \color{red}
     Suite à une analyse un peu plus appronfondie des exemples qui ne convergeaient pas la semaine dernière j'ai remarqué que cela était dû à une erreur dans mon code...
-
+  \color{black}
     Après une double correction voici quelques exemples d'arbres qui sont intéressant:\\
 
     \begin{itemize}
@@ -509,7 +511,7 @@
           \item[Joueur 3 : ] $LM_3(q) = 0.03879$
         \end{description}
 
-        Sur le graphique de la fonction $\tau_1$ on remarque la valeur converge vers la valeur médiane des joueurs. Cette propriété n'est en revanche pas toujours vérifiée. De même elle se trouve entre les valeurs min et max des joueurs, mais c'est un cas particulier que l'on peut contredire.
+        Sur le graphique de la fonction $\tau_1$ on remarque que la valeur converge vers la valeur médiane des joueurs. Cette propriété n'est en revanche pas toujours vérifiée. De même elle se trouve entre les valeurs min et max des joueurs, mais c'est un cas particulier que l'on peut contredire.
 
         Dans ce jeu il a également eu 7 coups ou le joueur a décidé de ne pas jouer et il y a eu 1 changement d'avis.
 
@@ -661,10 +663,11 @@
       \caption{De gauche à droite: préférences du joueur 1, préférences du joueur 2, graphe avec la fonction $\tau_1$, courbe avec la fonction $\tau_1$}
       \label{fig:not_in_range}
     \end{figure}
-
+    \color{red}
     \paragraph{remarque/intuition}
       Pour montrer la convergence, c'est suffisant de traiter chacun des joueurs séparement dans l'évolution du système.
       J'entend par là qu'il est suffisant de montrer que pour chaque joueur (et quelque soit les votes des autres joueurs) on arrive à une situation d'équilibre pour ce joueur.
+
 \color{blue}
   \section{Convergence des jeux à 2 joueurs sur les arbres}
     \subsection{Rappel des questions qu'on se pose}
@@ -694,34 +697,79 @@
     \subsection{Preuve de la question 6}
     \begin{theoreme}
     \label{thm:question_6}
-       Let $d_i$ the distance to the initial state of agent $i$. With two players, any equilibrium point must be within distance $d_i$ of any agent $i$.
+      Soit $d_i$ la distance entre l'agent $i$ et $v_0$. A deux joueurs, tout point d'équilibre est à une distance inférieure ou égale à $d_i$ pour tout agent $i$.
     \end{theoreme}
 
     \begin{proof}
-    Suppose for the sake of contradiction that state $s$ is stable and that $|v_s - v_0| > d_i$ for some agent $i$. There are two cases: either $v_s$ is higher than $v_i$, the target value of agent $i$, or it is lower. Suppose wlog it is lower.
-    Recall that agent $i$ can ensure that the value of the debate is exactly $v_0$ by exactly cancelling out all the other moves of the other player $j$.
-    Now since $v_s<v_0$, it must be that :
-    $$
-    C = (PRO^-_j \setminus PRO^+_i) \cup (CON^+_j \setminus CON^-_i) \cup PRO^-_i \cup CON^+i \not = \emptyset
-    $$
-    (Intuitively, this set contains all the votes that agent $i$ could counter to get to $v_0$: either voting for an argument PRO on which $j$ voted against, or voting against an argument CON on which $i$ voted for, or abstaining on an argument PRO on which he himself voted against, or abstaining on a argument CON on which he himself voted against).
-    Since playing any of this move would increase the value (under any circumstances), and playing all of them would get to $v_0$, we know for sure that all the moves in $C$ are indeed improving. Hence the state is not stable, a contradiction.
+      Supposons que l'état $s$ est stable et que $|v_s - v_0| > d_i$ pour l'agent $i$.
+      Il y a deux cas : soit $v_s$ est supérieur à $v_0$ soit $v_s$ est inférieur, SPDG supposons qu'il est inférieur.
+
+      On rappel que l'agent $i$ peut obtenir exactement $v_0$ en annulant tous les coups de son adversaire $j$.
+      Comme $v_s<v_0$, on a :
+      $$
+      C = (PRO^-_j \setminus PRO^+_i) \cup (CON^+_j \setminus CON^-_i) \cup PRO^-_i \cup CON^+i \not = \emptyset
+      $$
+      (Intuitivement, cet ensemble contient tous les votes que l'agent $i$ peut faire pour obtenir $v_0$: soit voter pour un argument $PRO$ sur lequel $j$ à voter contre, ou voter contre un argument $CON$ sur lequel $j$ à voter pour, ou s'abstenir sur un argument sur lequel $j$ n'a pas réagi).
+
+      Jouer un de ces coups augmentera la valeur du débat et jouer tous les coups ammenera la valeur du débat à la valeur initiale $v_0$. Donc tous les coups de $C$ sont des coups améliorant, donc $s$ n'est pas un état stable.
     \end{proof}
 
     \begin{corollary}
-      $v_0$ is actually the \emph{unique} equilibrium when $v_0 \in [v_{min},v_{max}]$
+      $v_0$ est l'\emph{unique} equilibre lorsque $v_0 \in [v_{min},v_{max}]$
     \end{corollary}
 
     \begin{proof}
-      By contradiction, suppose there exist another equilibrium $v$, either $v$ is higher than $v_0$ or it is lower. suppose without lost of generality that it is lower. So the distance $d_{max}$ between the player $j_{max}$ and $v_0$ is lower than the distance between the player $j_{max}$ and $v$. By the theorem \ref{thm:question_6} this is impossible, so $v$ is not an equilibrium.
+      Par contradiction, supposons qu'il existe un autre equilibre $v$.
+      Soit $v$ est supérieur à $v_0$, soit il est inférieur.
+      Supposons SPDG qu'il est inférieur.
+      Donc la distance $d_{max}$ entre le joueur $j_{max}$ et $v_0$ est inférieur à la distance entre $j_{max}$ et $v$.
+      D'après le théorème \ref{thm:question_6} c'est impossible, donc $v$ n'est pas un équilibre.
     \end{proof}
 
     \subsection{Preuve de la question 5}
 
       \begin{theoreme}
         \label{thm:question_5}
+        A deux joueurs, tous les systèmes convergent.
         with two players, all systems converge, for instance we only consider Round Robin dynamic with best response.
       \end{theoreme}
+
+      \begin{proof}
+        essayons de montrer qu'il n'y a pas de cycle. pour qu'un joueur change d'avis sur un argument il faut que la valeur switch entre supérieur et inférieur à sa valeur.
+
+        Prenons la liste des situations possibles.
+        montrons qu'il ne peut pas y avoir plus de switch dans le jeu que $min(sup, inf)$.
+
+        supposons qu'il y a plus de switch. Dans ce cas on a vu 2 fois la même situation. donc cela veut dire que on a une situation $s_a$ qui est la même que $s_b$. Et entre $s_a$ et $s_b$ un certain nombre de situations.
+
+        tous les coups entre $s_a$ et $s_b$ s'annulent deux à deux.
+
+        supposons que à $s_{a+1}$ $j_max$ joue un coup améliorant sur l'argument $a$. SPDG supposons que la valeur monte.
+
+        donc à un état $s_{a+i}$ $j_max$ voudra descendre la valeur et annulera son coup sur l'argument $a$.
+
+        Cette situation peut arriver seulement si la valeur arrive au dessus de $j_max$.
+
+        à l'état $s_{a+2}$ si l'agent $j_min$ fait diminuer la valeur alors $j_max$ ne voudra pas changer la valeur sur $a$. Si il fait augmenter la valeur alors nécessairement cette valeur va se rapprocher de $j_max$. Il ne voudra donc pas changer d'avis.
+
+        à l'état $s_{a+3}$ l'agent $j_max$ pourra faire augmenter la valeur ou la faire descendre. mais sans changer son vote sur $a$. Donc lors du vote $s_{a+4}$ il y a aura 3 votes à annuler.
+        Si il fait augmenter la valeur alors $j_min$ pourra annuler son vote. Si il l'a fait diminuer alors la valeur va se rapprocher de $j_min$ donc $j_min$ ne pourra pas changer son vote.
+
+        Supposons qu'il annule. Donc la valeur va diminuer.
+
+        entre $s_a$ et $s_b$ toutes les situations rapprochent soit le joueur $max$ soit le joueur $min$. Aucune situation peut etre pire que $s_a$.
+      \end{proof}
+
+
+
+
+
+
+
+
+
+
+
 
       To show this theorem we first prove a lemme.
       \begin{definition}
@@ -784,7 +832,7 @@
 
 
       \begin{theoreme}
-        Let $F$ an argumentation graph and two players, $j_{min}$ and $j_{max}$. 
+        Let $F$ an argumentation graph and two players, $j_{min}$ and $j_{max}$.
       \end{theoreme}
 \color{black}
   \section{Questions}

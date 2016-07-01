@@ -138,27 +138,29 @@ local function test_random_games(val_question)
   end
 end
 
-do
-  test_random_games(1)
-end
-
-
 -- do
---   local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/13_06_14_46_27_random_q_1/4_players/11_vertices/game_1_tau_1.xml", true)
---   -- game:print_game()
---   -- game.aggregation_value("tau_1", 0.1, 1, 8)
---   -- saa.computeSAA(game, "tau_1", 0.1, 1, 8)
---   -- rules.mindChanged(game, {
---   --   fun = "tau_1",
---   --   val_question = 1,
---   --   precision = 8,
---   --   log_details = "all",
---   --   log_file = "test.log",
---   --   dynamique    = "random",
---   -- })
---
---   export_game(game,"output.xml")
---   game.plot("output.png", true)
---   export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/output.tex")
---
+--   test_random_games(1)
 -- end
+
+
+do
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/game_1.xml")
+  -- game:print_game()
+  -- game.aggregation_value("tau_1", 0.1, 1, 8)
+  saa.computeSAA(game, "tau_1", 0.1, 1, 8)
+  -- rules.mindChanged(game, {
+  --   fun = "tau_1",
+  --   val_question = 1,
+  --   precision = 8,
+  --   log_details = "all",
+  --   log_file = "test.log",
+  --   dynamique    = "random",
+  -- })
+  game:print_game()
+  print(game.graphs.general.LM[1].value)
+
+  --export_game(game,"output.xml")
+  --game.plot("output.png", true)
+  --export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/output.tex")
+
+end

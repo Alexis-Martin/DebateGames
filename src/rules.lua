@@ -164,8 +164,6 @@ function rules.mind_changed.better_move(player)
       io.write("============================== \n")
     end
   end
-  -- -- we compute the old value to restore all values in the graph
-  -- saa.computeGraphSAA(#game.players, graph, parameters.fun, parameters.epsilon, parameters.val_question, parameters.precision)
 
   -- application of the best vote we found (if there is a best vote)
   if #better_votes >= 1 then

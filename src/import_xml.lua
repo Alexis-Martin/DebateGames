@@ -42,7 +42,7 @@ local function import_game(fic, play)
   --construct game
   local game = create_game(players, graph)
   for _,g in pairs(data) do
-    if type(g) == "table" and g.view ~= "general" then
+    if type(g) == "table" then --and g.view ~= "general" then
       for _, v in pairs(g) do
         if type(v) == 'table' and v.xml == 'vertex' then
           game.setDislikes(g.view, v.name, tonumber(v.dislikes))

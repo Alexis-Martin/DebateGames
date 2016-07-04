@@ -443,7 +443,7 @@ function rules.setParameters(parameters)
     parameters = {
       fun          = 'tau_1',
       val_question = 1,
-      precision    = 5,
+      precision    = 8,
       log_details  = "all",
       type_vote    = "best",
       dynamique    = "round_robin"
@@ -451,7 +451,7 @@ function rules.setParameters(parameters)
   else
     parameters.fun          = parameters.fun or 'tau_1'
     parameters.val_question = parameters.val_question or 1
-    parameters.precision    = parameters.precision or 5
+    parameters.precision    = parameters.precision or 8
     parameters.epsilon      = parameters.epsilon or 0.1
     parameters.log_details  = parameters.log_details or "all"
     parameters.type_vote    = parameters.type_vote or "best"
@@ -480,6 +480,9 @@ function rules.setParameters(parameters)
 end
 
 function rules.mindChanged(game, parameters)
+  if not parameters then
+    parameters = {}
+  end
   parameters.game = game
   parameters.rule = "mindChanged"
   rules.setParameters(parameters)

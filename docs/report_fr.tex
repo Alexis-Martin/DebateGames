@@ -278,7 +278,7 @@
     \subsection{Le cas des Arbres}
       \subsubsection{Question: Peut-on trouver des arbres ou les agents n'ont pas les mêmes préférences mais la même valeur à la fin de l'initialisation?\newline}
 
-        \paragraph{Si l'on la fonction $\tau_2$}
+        \paragraph{Si on a la fonction $\tau_2$}
 
           \subparagraph{rappel} Cette fonction $\tau_2$ force les cas limites (c.f. remarque de la definition \ref{ref:def_tau}) \\
 
@@ -334,13 +334,13 @@
           Cela est dû à la définition de $\tau_1$, un argument "disliker" n'aura pas un poids égale à 0 et un argument "liker" n'aura pas un poids égale à 1.
 
       %TODO Modifier cette partie sur l'équilibre. En discuter avec Nicolas et Elise
-      \subsubsection{Règle du jeu : ONESHOT Question: Si tous les agents ont la même valeur à la fin de l'initialisation, peut-on atteindre l'équilibre?}
+      \subsubsection{Règle du jeu : ONESHOT Question: Si tous les agents ont la même valeur à la fin de l'initialisation, peut-on atteindre la valeur des agents ?}
 
         \paragraph{Si l'on considère la fonction $\tau_2$\\}
 
-          Sur l'exemple précédent (c.f. figure \ref{fig:dif_pref}) on atteint l'équilibre.
+          Sur l'exemple précédent (c.f. figure \ref{fig:dif_pref}) on atteint la valeur des agents.
 
-          Sur l'exemple trivial de la figure \ref{fig:trivial} on atteint également l'équilibre.
+          Sur l'exemple trivial de la figure \ref{fig:trivial} on atteint également la valeur des agents.
 
           \begin{figure}
             \centering
@@ -388,13 +388,13 @@
 
 
         \paragraph{Si l'on considère $\tau_1$\\}
-          A priori, on n'atteint pas l'équilibre.
+          A priori, on n'atteint pas la valeur des agents.
 
-          Sur l'exemple de la figure \ref{fig:dif_pref} on atteint l'équilibre, en revanche sur la figure \ref{fig:trivial}, il semblerai qu'on ne l'atteigne pas ($LM_1(q) = LM_2(q) = LM_3(q) = 0.009604$ alors que $LM_g(q) = 0.00731$).
-
+          Sur l'exemple de la figure \ref{fig:dif_pref} on atteint la valeur des agents, en revanche sur la figure \ref{fig:trivial}, on ne l'atteint pas ($LM_1(q) = LM_2(q) = LM_3(q) = 0.009604$ alors que $LM_g(q) = 0.00731$).
+\color{red}
           \subparagraph{remarque\\} Je me demande si cela n'est pas dû à une précision machine car le système se stabilise dans une position ou un coup est très proche d'être meilleur.
             Je ferais le détail des calculs la semaine prochaine pour être sur.
-
+\color{black}
       \subsubsection{Question: Notre définition de $\tau$ change t'elle radicalement les résultats obtenus sur les exemples de Leite et Martins?}
 
         \paragraph{Le premier exemple\\}
@@ -511,9 +511,9 @@
           \item[Joueur 3 : ] $LM_3(q) = 0.03879$
         \end{description}
 
-        Sur le graphique de la fonction $\tau_1$ on remarque que la valeur converge vers la valeur médiane des joueurs. Cette propriété n'est en revanche pas toujours vérifiée. De même elle se trouve entre les valeurs min et max des joueurs, mais c'est un cas particulier que l'on peut contredire.
+        Sur le graphique de la fonction $\tau_1$ on remarque que la valeur converge vers la valeur médiane des joueurs donc vers le joueur du milieu. Cette propriété semble se vérifier lorsque la valeur commence entre $j_min$ et $j_max$.
 
-        Dans ce jeu il a également eu 7 coups ou le joueur a décidé de ne pas jouer et il y a eu 1 changement d'avis.
+        Dans ce jeu il a également eu 7 coups ou un joueur a décidé de ne pas jouer et il y a eu 1 changement d'avis.
 
       \item Le deuxième est un petit exemple montrant un cas ou la valeur n'est pas comprise entre les valeurs min et max des joueurs.
         Il est représenté sur la figure \ref{fig:not_in_range}.
@@ -667,7 +667,18 @@
     \paragraph{remarque/intuition}
       Pour montrer la convergence, c'est suffisant de traiter chacun des joueurs séparement dans l'évolution du système.
       J'entend par là qu'il est suffisant de montrer que pour chaque joueur (et quelque soit les votes des autres joueurs) on arrive à une situation d'équilibre pour ce joueur.
+\color{blue}
+    \subsection{quelques résultats observés sur les exemples}
+      \paragraph{jeux à plus de deux joueurs}
+      \begin{itemize}
+        \item Si on a un nombre pair de joueurs et que la valeur commence au milieu des joueurs alors le jeu à l'air de s'équilibrer proche de la valeur initiale.
+        \item si on a un nombre impair de participant et que la valeur commence au milieu des joueurs alors le jeu à l'air de converger vers la valeur médiane des joueurs.
+      \end{itemize}
 
+      Il est possible qu'il existe un argument similaire à celui de la preuve de convergence des jeux à deux joueurs exposé ci-dessous.
+      Le problème est que le nombre de cas à traiter est plus conséquent et que je n'ai pas encore trouver une généralisation de ces cas afin de tous les traiter en même temps.
+
+      Dans les exemples, les joueurs extrêmes ont l'air de s'opposer leur votes et, dans le cas d'un nombre impair de joueurs, seul le joueur du milieu aurait un impact sur l'évolution de la valeur du jeu.
 \color{blue}
   \section{Convergence des jeux à 2 joueurs sur les arbres}
     \subsection{Rappel des questions qu'on se pose}
@@ -685,15 +696,50 @@
 
       On note $PRO$ l'ensemble des arguments qui défendent la question et $CON$ les arguments qui attaquent la question.
 
-      Par extension, on note $PRO^v_x$ avec $v \in \{-, 0, +\}$ l'ensemble des arguments sur lesquels l'agent $x$ a votés pour ($v = +$), contre ($v = -$) ou c'est abstenu ($v = 0$).
+      Par extension, on note $PRO^v_j$ avec $v \in \{-, 0, +\}$ l'ensemble des arguments sur lesquels l'agent $j$ a votés pour ($v = +$), contre ($v = -$) ou c'est abstenu ($v = 0$).
 
-      On note également $v_0$ la valeur initiale du débat, la valeur du jeu avant que le premier vote eut lieu.
+      On note également $v_0$ la valeur initiale du débat, la valeur du jeu avant que le premier vote eut lieu, $v_f$ la valeur finale du débat, la valeur du jeu lorsqu'aucun joueur ne peut jouer et enfin $v_i$ la valeur du jeu à l'instant $i$, avec $i \in [\![ 0;f ]\!]$.
 
-      Enfin, étant donné qu'on a que 2 joueurs on notera $j_{min}$ le joueur ayant la valeur minimum et $j_{max}$ celui qui à la plus grande.
+      Enfin, étant donné qu'on a que 2 joueurs on notera $j_{min}$ le joueur ayant la valeur minimum noté $v_{min}$ et $j_{max}$ celui qui à la plus grande noté $v_{max}$.
+
+      \begin{definition}
+        On appelle $\sigma_i \in (\mathbb{N} \times \mathbb{N})^{|\mathcal{A}|}$ la configuration à l'instant $i$ du jeu.
+      \end{definition}
+
+      $\sigma_i$ est donc un vecteur qui correspond aux votes (positifs et négatifs) sur tous les arguments à l'instant $i$.
 
       \paragraph{remarque} Sur les arbres : $PRO \cap CON = \emptyset$.
 
+    \subsection{Quelques faits intéressants}
+      \paragraph{A un joueur} on peut extraire une fonction potentielle pour le jeu :
+        $$ \Phi(i) = |v_j - v_i| $$
 
+        avec $v_j$ la valeur de l'unique joueur.
+
+        On peut facilement montrer que à chaque réponse améliorante la fonction $\Phi$ décroit.
+
+      \paragraph{Recherche de fonctions potentielles pour le jeu à 2 joueurs}
+
+        L'objectif est de trouver une fonction qui va croitre ou décroitre à chaque coup améliorant.
+
+        \begin{itemize}
+          \item La somme des distances entre la valeur et les joueurs ne fonctionne pas.
+            Cette fonction peut croitre ou décroitre selon le coup améliorant.
+
+          \item il faut trouver une fonction qui croît (ou décroît) malgré le fait que $v_f$ peut être égale à $v_0$.
+
+            Il faut donc inclure les votes des arguments ?
+
+            Serait-il possible via une fonction de quantifier le nombre de configurations améliorantes pour l'un des deux joueurs? Une fonction qui nous dirait : depuis cette configuration $i$ je ne pourrait plus jamais atteindre la configuration $j$ et donc toutes les configurations qui en descendent.
+
+            Si à chaque coup améliorant on fait descendre le nombre de situations, alors on a gagné.
+
+          \item En better response le temps qu'il faut pour trouver un équilibre est plus long. Mais on tombe à priori toujours sur un équilibre.
+
+          Il faudrait regarder si on cycle de temps en temps!
+
+          \item En random les mêmes constatations qu'en better response sont observées.
+        \end{itemize}
     \subsection{Preuve de la question 6}
     \begin{theoreme}
     \label{thm:question_6}
@@ -711,7 +757,7 @@
       $$
       (Intuitivement, cet ensemble contient tous les votes que l'agent $i$ peut faire pour obtenir $v_0$: soit voter pour un argument $PRO$ sur lequel $j$ à voter contre, ou voter contre un argument $CON$ sur lequel $j$ à voter pour, ou s'abstenir sur un argument sur lequel $j$ n'a pas réagi).
 
-      Jouer un de ces coups augmentera la valeur du débat et jouer tous les coups ammenera la valeur du débat à la valeur initiale $v_0$. Donc tous les coups de $C$ sont des coups améliorant, donc $s$ n'est pas un état stable.
+      Jouer un de ces coups augmentera la valeur du débat et jouer tous les coups ammenera la valeur du débat à la valeur initiale $v_0$. Donc tous les coups de $C$ sont des coups améliorants, donc $s$ n'est pas un état stable.
     \end{proof}
 
     \begin{corollary}
@@ -730,120 +776,111 @@
 
       \begin{theoreme}
         \label{thm:question_5}
-        A deux joueurs, tous les systèmes convergent.
-        with two players, all systems converge, for instance we only consider Round Robin dynamic with best response.
+        A deux joueurs, tous les systèmes convergent avec la dynamique Round Robin.
       \end{theoreme}
 
-      \begin{proof}
-        essayons de montrer qu'il n'y a pas de cycle. pour qu'un joueur change d'avis sur un argument il faut que la valeur switch entre supérieur et inférieur à sa valeur.
-
-        Prenons la liste des situations possibles.
-        montrons qu'il ne peut pas y avoir plus de switch dans le jeu que $min(sup, inf)$.
-
-        supposons qu'il y a plus de switch. Dans ce cas on a vu 2 fois la même situation. donc cela veut dire que on a une situation $s_a$ qui est la même que $s_b$. Et entre $s_a$ et $s_b$ un certain nombre de situations.
-
-        tous les coups entre $s_a$ et $s_b$ s'annulent deux à deux.
-
-        supposons que à $s_{a+1}$ $j_max$ joue un coup améliorant sur l'argument $a$. SPDG supposons que la valeur monte.
-
-        donc à un état $s_{a+i}$ $j_max$ voudra descendre la valeur et annulera son coup sur l'argument $a$.
-
-        Cette situation peut arriver seulement si la valeur arrive au dessus de $j_max$.
-
-        à l'état $s_{a+2}$ si l'agent $j_min$ fait diminuer la valeur alors $j_max$ ne voudra pas changer la valeur sur $a$. Si il fait augmenter la valeur alors nécessairement cette valeur va se rapprocher de $j_max$. Il ne voudra donc pas changer d'avis.
-
-        à l'état $s_{a+3}$ l'agent $j_max$ pourra faire augmenter la valeur ou la faire descendre. mais sans changer son vote sur $a$. Donc lors du vote $s_{a+4}$ il y a aura 3 votes à annuler.
-        Si il fait augmenter la valeur alors $j_min$ pourra annuler son vote. Si il l'a fait diminuer alors la valeur va se rapprocher de $j_min$ donc $j_min$ ne pourra pas changer son vote.
-
-        Supposons qu'il annule. Donc la valeur va diminuer.
-
-        entre $s_a$ et $s_b$ toutes les situations rapprochent soit le joueur $max$ soit le joueur $min$. Aucune situation peut etre pire que $s_a$.
-      \end{proof}
-
-
+      % \begin{proof}
+      %   essayons de montrer qu'il n'y a pas de cycle. pour qu'un joueur change d'avis sur un argument il faut que la valeur switch entre supérieur et inférieur à sa valeur.
+      %
+      %   Prenons la liste des situations possibles.
+      %   montrons qu'il ne peut pas y avoir plus de switch dans le jeu que $min(sup, inf)$.
+      %
+      %   supposons qu'il y a plus de switch. Dans ce cas on a vu 2 fois la même situation. donc cela veut dire que on a une situation $s_a$ qui est la même que $s_b$. Et entre $s_a$ et $s_b$ un certain nombre de situations.
+      %
+      %   tous les coups entre $s_a$ et $s_b$ s'annulent deux à deux.
+      %
+      %   supposons que à $s_{a+1}$ $j_max$ joue un coup améliorant sur l'argument $a$. SPDG supposons que la valeur monte.
+      %
+      %   donc à un état $s_{a+i}$ $j_max$ voudra descendre la valeur et annulera son coup sur l'argument $a$.
+      %
+      %   Cette situation peut arriver seulement si la valeur arrive au dessus de $j_max$.
+      %
+      %   à l'état $s_{a+2}$ si l'agent $j_min$ fait diminuer la valeur alors $j_max$ ne voudra pas changer la valeur sur $a$. Si il fait augmenter la valeur alors nécessairement cette valeur va se rapprocher de $j_max$. Il ne voudra donc pas changer d'avis.
+      %
+      %   à l'état $s_{a+3}$ l'agent $j_max$ pourra faire augmenter la valeur ou la faire descendre. mais sans changer son vote sur $a$. Donc lors du vote $s_{a+4}$ il y a aura 3 votes à annuler.
+      %   Si il fait augmenter la valeur alors $j_min$ pourra annuler son vote. Si il l'a fait diminuer alors la valeur va se rapprocher de $j_min$ donc $j_min$ ne pourra pas changer son vote.
+      %
+      %   Supposons qu'il annule. Donc la valeur va diminuer.
+      %
+      %   entre $s_a$ et $s_b$ toutes les situations rapprochent soit le joueur $max$ soit le joueur $min$. Aucune situation peut etre pire que $s_a$.
+      % \end{proof}
 
 
-
-
-
-
-
-
-
-
-      To show this theorem we first prove a lemme.
+      Pour montrer ce théorème on commence par montrer le lemme suivant:
       \begin{definition}
-        let $AN$ the set of arguments that nobody vote on them.
+        Soit $AN$ l'ensemble des arguments sur lesquels aucun des deux joueurs ne c'est prononcés.
       \end{definition}
+
       \begin{lemme}
         \label{lem:question_5}
-        With two players, if the value of the state $s$ is within $max$ and $min$ then the players can change their opinion on arguments in $AN$ a limited number of time.
+        A deux joueurs, si la valeur $v_s$ de l'état $s$ est entre $v_{max}$ et $v_{min}$ alors les joueurs vont changer d'avis sur les arguments de $AN$ un nombre limité de fois.
       \end{lemme}
       \begin{proof}
-        let $s$ a state where the value $v_s$ of the debate is within $max$ and $min$.
-        Note that, in this case the players are adversaries.
+        Soit $s$ un état où la valeur $v_s$ du débat est entre $v_{max}$ et $v_{min}$. Notons que dans ce cas les joueurs sont adversaires.
 
-        Suppose wlog that player $j_{max}$ vote on $a \in AN$. we have to prove that he never changes this vote.
-        The vote on $a$ increases the value of the debate because $v_s$ is lower than $max$. Just after this vote $j_{min}$ have to decrease the value and he can get at least $v_s$ if he votes on $a$.
+        Supposons que le joueur $j_{max}$ vote sur l'argument $a \in AN$. On doit prouver qu'il voudra changer son vote un nombre limité de fois.
+        Le vote sur $a$ augmente la valeur du débat car $v_s$ est inférieure à $v_{max}$. A l'état $s+1$, $j_{min}$ doit faire baisser la valeur du jeu et il peut obtenir une valeur au moins égale à $v_s$ en jouant contre $j_{max}$ sur l'argument $a$.
 
-        Suppose at state $s'$, player $j_{max}$ wants to change his vote on $a$. So he wants the value decrease. The only possibility for this is, he changes his mind on an argument he votes before the state $s$ and $j_{min}$ can not decrease the value under $max$.
+        Supposons que plus tard dans le jeu, à l'état $s'$, $j_{max}$ veut changer son vote sur $a$. Donc il veut que la valeur du jeu diminue. La seule possibilité pour cela est qu'il est changé d'avis sur un argument qui n'appartient pas à $AN$ (sinon $j_{min}$ pourrait contrer son vote) et que la valeur est encore au dessus de $v_{max}$ lorsque c'est à lui de jouer.
 
-        At state $s'+1$ the value is lower than at state $s'$, so $j_{min}$ still can not play. This remark his available for all state after $s'$ so at this time player $j_{max}$ plays alone and the game comes to an end. So $j_{max}$ change his opinion on arguments in $AN$ a limited number of times.
+        Donc à l'état $s'+1$ la valeur est plus faible qu'a l'état $s'$, donc $j_{min}$ ne pourra toujours pas jouer. Cette remarque est vrai pour tous les états après l'état $s'$, donc $j_{max}$ joue tout seul et donc il peut changer qu'un nombre de fois limité sur chacun des arguments.
       \end{proof}
 
-      It's now possible to prove the theorem \ref{thm:question_5}
+      prouvons maintenant le théorème \ref{thm:question_5}
       \begin{proof}
-        Since there is a limited number of moves, we just have to show that there is no cycle. For that we prove that for each player the number of time he changed his opinion is finite.
+        Comme le nombre d'états est fini, on a juste à montrer qu'il n'y a pas de cycle. Pour cela on va montrer que chaque joueur peut changer d'avis qu'un nombre limité de fois sur chacun des arguments.
 
-        We can separate games in three class :
+        On peut séparé le jeu en trois cas :
         \begin{enumerate}
-          \item The value $v_0$ is within $max$ and $min$.
-          \item The value $v_0$ is higher (resp. lower) than $max$ (resp. $min$) and the value enter between $max$ and $min$ after.
-          \item The value $v_0$ is never between $max$ and $min$
+          \item La valeur $v_0$ est entre  $v_{max}$ et $v_{min}$.
+          \item La valeur $v_0$ est supérieure (resp. inférieure) à $v_{max}$ (resp. $v_{min}$) et la valeur arrive entre $v_{max}$ et $v_{min}$ à l'état $s$.
+          \item Durant tout le jeu, la valeur du jeu n'est jamais entre $v_{max}$ et $v_{min}$
         \end{enumerate}
 
-        \paragraph{Case 1}
-        All arguments are in $AN$ so by the lemme \ref{lem:question_5} we can directly conclude that the number of times each player changed his opinion is finite. (Actually they never change their votes).
+        \paragraph{Cas 1}
+        Tous les arguments sont dans $AN$ donc par le lemme \ref{lem:question_5} on peut conclure que le nombre de fois que chaque player change d'avis est fini. (En réalité, il ne changent jamais leurs avis).
 
-        \paragraph{Case 2}
-        Let $s$ the first state where the value is within $max$ and $min$. By lemme \ref{lem:question_5} we just have to prove that they change their mind a limited number of time on arguments played before $s$.
+        \paragraph{Cas 2}
+        Soit $s$ tel que $v_{min} \leq v_s \leq v_{max}$ et que $s$ soit le premier état avec cette propriété. Grâce au lemme \ref{lem:question_5} On a juste à prouver que les joueurs changent un nombre fini de fois d'avis sur les arguments n'appartenant pas à $AN$.
 
-        Suppose there is a cycle, let $s'$ the last state before the cycle where the value is within $max$ and $min$.
-        If the value stay between $max$ and $min$ the player $j_{max}$ can only vote for increasing the value so he has a limited number of possibilities, and same for $j_{min}$.
+        SPDG, supposons que $v_0 > v_{max}$. Donc les joueurs ont joué en collaboration (pour faire diminuer la valeur) sur les arguments jouer avant l'état $s$.
 
-        So suppose the value becomes higher than $max$. There is three possibilities :
+        Donc sur tous les arguments le joueur $j_{min}$ a voté pour faire descendre la valeur ou alors il n'a pas voté.
 
-        \begin{enumerate}
-          \item If the value stay higher than $max$, then the players collaborate and they have a limited number of moves to get the value decreasing.
+        Supposons que la valeur $v_t$ d'un état $t$ se trouve inférieure à $v_{min}$ et que c'est à $v_{min}$ de jouer.
+        Tous les coups réalisés sur les arguments de $AN$ pouvant être contrés par $j_{max}$, cette situation peut arriver uniquement lors d'un vote sur un argument n'appartenant pas à $AN$.
+        $j_{max}$ ne peux pas engendrer un tel coups car ce n'est pas un coups améliorant.
+        Si $j_{min}$ vote sur l'argument $a \not\in AN$ sur lequel il n'a jamais voter.
+        Alors $j_{max}$ peut retirer sont vote sur $a$ et faire remonter la valeur à la valeur précédente.
+        Enfin $j_{min}$ ne peux changer aucun de ses votes sur les arguments n'appartenant pas à $AN$ car ils font déjà descendre la valeur.
+        Donc cette situation ne peut pas arriver.
 
-          \item If the value changes between inside and outside $max$ and $min$, then only one player can vote for the rest of the game or $j_{max}$ always wants to increase the value and $j_{min}$ wants to decrease it.
+        Donc à partir d'un état seul $j_{max}$ peut jouer et donc on converge.
 
-          \item If the value changes between higher than $max$ and lower than $min$. Then for all votes of each player they always want the same things (increase the value for $j_{max}$ or decrease it for $j_{min}$). Indeed, suppose $j_{max}$ wants to decrease the value, then $j_{min}$ have not a move to decrease it so he never have a move after. And so $j_{max}$ plays alone.
-        \end{enumerate}
 
         \paragraph{case 3}
-          The players are adversaries and they only want that the value increase or decrease. So they have a limited number of possibilities.
+          ils y a deux possibilités :
+
+          \begin{enumerate}
+            \item la valeur reste toujours au dessus (resp. en dessous) de $v_{max}$ (resp. $v_{min}$).
+              Donc les joueurs jouent en collaboration pour faire descendre la valeur et donc on converge.
+
+            \item La valeur oscille entre : supérieur à $v_{max}$ et inférieur à $v_{min}$ et donc les joueurs vont opposé leurs votes et on arrivera également à une situation stable.
+          \end{enumerate}
       \end{proof}
 
-      In this proof we use the facts that players always choose the best response, they play one after the other and that there are not ambiguous arguments (arguments that attack and defend the question at the same time).
-
-      I think we can generalize this proof for all dynamics. Maybe it can works also for ambiguous arguments if we show that an ambiguous argument attacks (resp. defends) the question stronger than it defends (resp. attacks).
-
-
-
-      \begin{theoreme}
-        Let $F$ an argumentation graph and two players, $j_{min}$ and $j_{max}$.
-      \end{theoreme}
 \color{black}
   \section{Questions}
-  \color{blue}
+  \color{red}
   Question sur les fonction potentielles, avec les conditions qu'elle doit respecter.
 \color{black}
   \section{Ce qu'il faut que je fasse}
 
     \begin{itemize}
-      \item Regarder le prix de l'anarchie.
-      \item Continuer la recherche de convergence dans le cadre de la règle avec changement d'avis.
+      \color{blue}
+      \item regarder, sur le petit jeu à 2 joueurs, si entre chaque valeur possible pour 1 joueur il y a toujours une valeur du jeu. Si non alors il n'existe pas forcement d'équilibre entre $j_{min}$ et $j_{max}$. Je peut également tester si c'est un équilibre.
+      \item coder la detection de situations identiques afin de savoir si en better response et/ou en random on repasse plusieurs fois par une situation connu.
+      \item Continuer la recherche d'une fonction potentielle?
     \end{itemize}
 
 \end{document}

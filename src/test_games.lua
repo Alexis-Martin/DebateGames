@@ -9,9 +9,9 @@ local saa             = require "saa"
 
 
 local function test_random_games(val_question)
-  local max_players  = 6
-  local max_games    = 10
-  local max_vertices = 20
+  local max_players  = 2
+  local max_games    = 30
+  local max_vertices = 15
   local precision    = 8
   local dynamique    = "round_robin"
   local type_vote    = "better"
@@ -30,7 +30,7 @@ local function test_random_games(val_question)
     precision    = precision,
     type_vote    = type_vote,
     dynamique    = dynamique,
-    log_details  = "strokes"
+    log_details  = "all"
   }
 
   for players = 1, max_players do
@@ -143,9 +143,78 @@ end
 -- end
 
 
+-- do
+-- local c = 0
+-- print (c)
+-- local players = 2
+-- local vertices = 10
+-- local precision    = 8
+-- local dynamique    = "round_robin"
+-- local type_vote    = "better"
+-- local options      = {
+--   xlabel = "round",
+--   ylabel = "value",
+--   title  = nil
+-- }
+--
+-- local parameters = {
+--   val_question = 1,
+--   precision    = precision,
+--   type_vote    = type_vote,
+--   dynamique    = dynamique,
+--   log_details  = "all"
+-- }
+-- parameters.fun      = "tau_1"
+-- parameters.log_file = "better_different_value_log.log"
+-- local graph    = graph_generator(vertices)
+-- local game     = game_generator(players, graph)
+-- export_game(game, "better_different_value_init.xml")
+-- game.aggregation_value("tau_1", nil, 1, precision)
+-- saa.computeSAA   (game, "tau_1", nil, 1, precision)
+-- rules.mindChanged(game, parameters)
+-- c = c+1
+-- local different = false
+-- if ((game.graphs["joueur 1"].LM[1].value <= game.graphs.general.LM[1].value  and
+--      game.graphs.general.LM[1].value <= game.graphs["joueur 2"].LM[1].value) or
+--     (game.graphs["joueur 2"].LM[1].value <= game.graphs.general.LM[1].value  and
+--      game.graphs.general.LM[1].value <= game.graphs["joueur 1"].LM[1].value)) and
+--     game.graphs.general.LM[1].value ~= game.graphs.general.LM[#game.graphs.general.LM].value
+--   then
+--     different = true
+-- end
+-- while (not different) do
+--   print(c)
+--   graph    = graph_generator(vertices)
+--   game     = game_generator(players, graph)
+--   export_game(game, "better_different_value_init.xml")
+--
+--   game.aggregation_value("tau_1", nil, 1, precision)
+--   saa.computeSAA   (game, "tau_1", nil, 1, precision)
+--   rules.mindChanged(game, parameters)
+--   if ((game.graphs["joueur 1"].LM[1].value <= game.graphs.general.LM[1].value  and
+--        game.graphs.general.LM[1].value <= game.graphs["joueur 2"].LM[1].value) or
+--       (game.graphs["joueur 2"].LM[1].value <= game.graphs.general.LM[1].value  and
+--        game.graphs.general.LM[1].value <= game.graphs["joueur 1"].LM[1].value)) and
+--       game.graphs.general.LM[1].value ~= game.graphs.general.LM[#game.graphs.general.LM].value
+--     then
+--       different = true
+--   end
+--   c = c + 1
+-- end
+-- options.title  = players     .. " players "
+--               .. vertices .. " vertices "
+--               .. "better " .. " function tau_1"
+-- game.plot  ("better_different_value.png", false, options)
+-- export_game(game, "better_different_value.xml")
+-- export_tex(game, "better_different_value.tex")
+--
+-- end
+
+
+
 do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/game_1.xml")
-  -- game:print_game()
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/example/differents_values/better_different_value.xml")
+  game:print_game()
   -- game.aggregation_value("tau_1", 0.1, 1, 8)
   saa.computeSAA(game, "tau_1", 0.1, 1, 8)
   -- rules.mindChanged(game, {
@@ -153,14 +222,16 @@ do
   --   val_question = 1,
   --   precision = 8,
   --   log_details = "all",
-  --   log_file = "test.log",
-  --   dynamique    = "random",
+  --   log_file = "output_log.log",
+  --   dynamique    = "round_robin",
+  --   type_vote    = "best",
   -- })
+  print("-------------------------------------------------")
   game:print_game()
-  print(game.graphs.general.LM[1].value)
+  -- print(game.graphs.general.LM[1].value)
 
-  --export_game(game,"output.xml")
-  --game.plot("output.png", true)
-  --export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/output.tex")
+  -- export_game(game,"output.xml")
+  -- game.plot("output.png", true)
+  -- export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/output.tex")
 
 end

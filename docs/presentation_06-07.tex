@@ -1,0 +1,140 @@
+\documentclass{beamer}
+
+\usepackage[frenchb]{babel}
+\usepackage[utf8x]{luainputenc}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing,graphs}
+\usegdlibrary{layered}
+
+% There are many different themes available for Beamer. A comprehensive
+% list with examples is given here:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+% You can uncomment the themes below if you would like to use a different
+% one:
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{boxes}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+\usetheme{default}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+%\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+\title{Les résultats}
+
+\begin{document}
+
+  \begin{frame}
+    \titlepage
+  \end{frame}
+
+  \begin{frame}{Better response}
+    Tous les tests indiquent qu'en better responses on converge.
+
+    Par contre c'est plus long avant d'atteindre un équilibre.
+
+    \begin{tabular}{cc}
+      \includegraphics[scale=0.25]{/home/talkie/Documents/Stage/DebateGames/tests/27_06_15_27_round_robin_1/2_players/10_vertices/best_8_tau_1.png} &
+      \includegraphics[scale=0.25]{/home/talkie/Documents/Stage/DebateGames/tests/27_06_15_27_round_robin_1/2_players/10_vertices/better_8_tau_1.png}
+    \end{tabular}
+
+    On remarque qu'en better response on arrive pas forcément sur le point de départ.
+  \end{frame}
+
+  \begin{frame}{Analyse approfondie d'un jeu à 2 joueurs}
+    \begin{minipage}{.5\linewidth}
+    \begin{figure}
+    \centering
+    \begin{tikzpicture}[>=stealth]
+    \graph [ layered layout, nodes = {scale=0.60, align=center} ] {
+    "a1\\ (0,0)" -> "q\\ (0,0)\\lm = 0.0102";
+    "a2\\ (0,1)" -> "a1\\ (0,0)";
+    "a3\\ (1,0)" -> "q\\ (0,0)\\lm = 0.0102";
+    };
+    \end{tikzpicture}
+    \caption{joueur 1}
+    \end{figure}
+
+    \begin{figure}
+    \centering
+    \begin{tikzpicture}[>=stealth]
+    \graph [ layered layout, nodes = {scale=0.60, align=center} ] {
+    "a1\\ (0,0)" -> "q\\ (0,0)\\lm = 0.375";
+    "a2\\ (0,0)" -> "a1\\ (0,0)";
+    "a3\\ (0,0)" -> "q\\ (0,0)\\lm = 0.375";
+    };
+    \end{tikzpicture}
+    \caption{initialisation}
+    \end{figure}
+
+    \end{minipage}\hfill
+    \begin{minipage}{.5\linewidth}
+      \begin{figure}
+      \centering
+      \begin{tikzpicture}[>=stealth]
+      \graph [ layered layout, nodes = {scale=0.60, align=center} ] {
+      "a1\\ (1,0)" -> "q\\ (0,0)\\lm = 0.4902";
+      "a2\\ (1,0)" -> "a1\\ (1,0)";
+      "a3\\ (0,0)" -> "q\\ (0,0)\\lm = 0.4902";
+      };
+      \end{tikzpicture}
+      \caption{joueur 2}
+      \end{figure}
+
+    \begin{figure}
+    \centering
+    \begin{tikzpicture}[>=stealth]
+    \graph [ layered layout, nodes = {scale=0.60, align=center} ] {
+    "a1\\ (1,0)\\ (0,1)" -> "q\\ (0,0)\\lm = 0.375";
+    "a2\\ (0,1)\\ (1,0)" -> "a1\\ (1,0)\\ (0,1)";
+    "a3\\ (1,0)\\ (0,1)" -> "q\\ (0,0)\\lm = 0.375";
+    };
+    \end{tikzpicture}
+    \caption{équilibre}
+    \end{figure}
+    \end{minipage}
+  \end{frame}
+
+  \begin{frame}{Résultats}
+    \begin{itemize}
+      \item Quelque soit la valeur des deux joueurs, le jeu converge (même en better response).
+      \item il y a toujours une valeur du jeu entre les valeurs possibles des joueurs (A TESTER)
+      \item Il y a toujours un point d'équilibre entre la valeur des deux joueurs. (A TESTER)
+    \end{itemize}
+
+    \begin{itemize}
+      \item Est-ce qu'un cycle peut arriver en better response et/ou random? (A TESTER)
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}{Fonctions potentielles}
+    \begin{itemize}
+      \item A un joueur il y a une fonction potentielle évidente.
+      \item A deux joueurs (ou plus) ce n'est plus vrai.
+      \item il faut trouver une fonction qui croît (ou décroît) malgré le fait que $v_f$ peut être égale à $v_0$.(Il faut donc inclure les votes des arguments ?)
+      \item Serait-il possible via une fonction de quantifier le nombre de configurations améliorantes?
+    \end{itemize}
+
+
+  \end{frame}
+\end{document}

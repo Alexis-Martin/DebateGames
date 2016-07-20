@@ -1,139 +1,346 @@
+local tools = require "tools"
 local saa   = require "saa"
-local rules = {
-  mind_changed = {},
-  one_shot     = {}
+local yaml  = require "yaml"
+local rules = {}
+
+-- default values for the parameters
+local default_p = {
+  rule         = "mind_changed",
+  type_vote    = "best",
+  dynamique    = "round_robin",
+  compute_mean = true,
+  compute_agg  = true,
+  fun          = "tau_1",
+  epsilon      = 0.1,
+  val_question = 1,
+  precision    = 8,
+  log_details  = "all",
+  check_cycle  = false
 }
 
-function rules.mind_changed.test_move(player, arg, vote, print_log)
-  local parameters    = rules.mind_changed.parameters
-  local game          = parameters.game
-  local graph         = game.graphs.general
-  local players_votes = parameters.players_votes
-  local fun           = parameters.fun
-  local epsilon       = parameters.epsilon
-  local val_question  = parameters.val_question
-  local precision     = parameters.precision
-  local vote_type     = ""
-  local value_vote    = nil
+-- current parameters of the rule
+local p = tools.deepcopy(default_p)
 
-  -- application of the vote
-  if vote == "like" and players_votes[player][arg] == 1 then
+-- functionnal parameters
+local fun_p = {}
 
-    game.removeLike(nil, arg)
-    vote_type  = "remove like"
-    value_vote = nil
+-- list of players' votes
+local players_votes = {}
 
-  elseif vote == "like"
-     and players_votes[player][arg] == -1 then
+-- parameters of the actual vote
+local current_vote  = {}
 
-    game.addLike      (nil, arg)
-    game.removeDislike(nil, arg)
-    vote_type  = "change to like"
-    value_vote = 1
+-- list of all strokes
+local historical_shots = {}
 
-  elseif vote == "like" then
+-- set names of the functions, you will find the definition at the end
+local mindChanged
+local bestMove
+local betterMove
+local testMove
+local initRoundRobin
+local roundRobin
+local initRandom
+local random
+local doMove
 
-    game.addLike(nil, arg)
-    vote_type  = "vote like"
-    value_vote = 1
 
-  elseif vote == "dislike"
-     and players_votes[player][arg] == 1 then
-
-       game.addDislike(nil, arg)
-       game.removeLike(nil, arg)
-       vote_type  = "change to dislike"
-       value_vote = -1
-
-  elseif vote == "dislike"
-     and players_votes[player][arg] == -1 then
-
-       game.removeDislike(nil, arg)
-       vote_type  = "remove dislike"
-       value_vote = nil
-
-  elseif vote == "dislike" then
-
-    game.addDislike(nil, arg)
-    vote_type  = "vote dislike"
-    value_vote = -1
+-- Set the parameters of the rules
+-- Add new parameters and change it if the key already exists
+-- @param parameters table (key, values) of parameters
+function rules.setParameters(parameters)
+  assert(type(parameters) == "table")
+  for k, v in pairs(parameters) do
+    p[k] = v
   end
-
-  -- graph value's computation
-  local lm = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
-
-  -- write logs if it is asked
-  if type(print_log) == "table" then
-    print_log.arg      = arg
-    print_log.likes    = graph.vertices[arg].likes
-    print_log.dislikes = graph.vertices[arg].dislikes
-    print_log.new_lm   = lm
-    io.write(vote_type)
-    for k, v in pairs(print_log) do
-      io.write("\t" .. k .. " = " .. tostring(v) .. "\n")
-    end
-    io.write("--------------------------")
-  end
-
-  -- restoration of the previous values
-  if vote == "like" and players_votes[player][arg] == 1 then
-    game.addLike(nil, arg)
-  elseif vote == "like"
-     and players_votes[player][arg] == -1 then
-    game.removeLike(nil, arg)
-    game.addDislike(nil, arg)
-  elseif vote == "like" then
-    game.removeLike(nil, arg)
-  elseif vote == "dislike"
-     and players_votes[player][arg] == 1 then
-       game.removeDislike(nil, arg)
-       game.addLike(nil, arg)
-  elseif vote == "dislike"
-     and players_votes[player][arg] == -1 then
-       game.addDislike(nil, arg)
-  elseif vote == "dislike" then
-    game.removeDislike(nil, arg)
-  end
-
-  return value_vote, lm
 end
 
-function rules.mind_changed.better_move(player)
-  local parameters = rules.mind_changed.parameters
-  local game       = parameters.game
-  local changed    = 0
+-- Restore the parameters to the default ones
+function rules.resetParameters()
+  p = tools.deepcopy(default_p)
+end
 
-  local player_lm = game.graphs[player].LM[#game.graphs[player].LM].value
-  local gen_lm    = game.graphs.general.LM[#game.graphs.general.LM].value
-  local better_votes = {}
-  local graph     = game.graphs.general
-  local print_log = nil
-  if parameters.log_file and parameters.log_details == "all" then
-    io.write("===================================\n")
-    io.write(player .. " : LM = " .. player_lm .. "\n")
-    io.write("general : LM = " .. gen_lm .. "\n")
-    io.write("===================================\n")
+-- Set the game to apply the rule on it
+-- @param game the game
+function rules.setGame(game)
+  rules.game = game
+end
+
+-- reset each local list to an empty list
+function rules.resetAll()
+  fun_p            = {}
+  players_votes    = {}
+  current_vote     = {}
+  historical_shots = {}
+end
+
+-- apply the rule on the game. If there is no game, the function raise an error.
+function rules.apply()
+  assert(rules.game)
+  rules.resetAll()
+  if p.rule == "mindChanged" then
+    mindChanged()
+  end
+end
+
+-- apply the rule on the specific game. if game is nil, the function raise an error.
+function rules.applyOn(game)
+  rules.setGame(game)
+  rules.apply()
+end
+
+-- apply the rule with the parameters parameters on the game, game. If one of the argument is nil, the function raise an error.
+function rules.applyOnWith(game, parameters)
+  rules.setGame(game)
+  rules.setParameters(parameters)
+  rules.apply()
+end
+
+
+-- Compute the value with the aggregation of all players' votes
+function rules.aggregationValue()
+  assert(rules.game)
+  rules.game.aggregation_value(p.fun, p.epsilon, p.val_question, p.precision)
+end
+
+-- Compute the mean players value
+function rules.meanValue()
+  assert(rules.game)
+  rules.game.mean_value(p.fun, p.epsilon, p.val_question, p.precision)
+end
+
+-- compute the social abstract argumentation algorithm on the game
+function rules.computeSAA(graph)
+  if not graph then
+    saa.computeSAA(rules.game, p.fun, p.epsilon, p.val_question, p.precision)
+  else
+    return saa.computeGraphSAA(#rules.game.players, graph, p.fun, p.epsilon, p.val_question, p.precision)
+  end
+end
+-------------------------------------------------------
+--                 ANNEX FUNCTIONS                   --
+-------------------------------------------------------
+-- These functions are used by the previous one but we can't call them directly.
+
+mindChanged = function ()
+  if p.log_file then
+    local l_file = io.open(p.log_file, "w")
+    io.output(l_file)
   end
 
-  for arg, v in pairs(graph.vertices) do
-    local temp_lm
-    local value_vote
+  -- table which contains the current votes of the players
+  players_votes = {}
+  for _, v in ipairs(rules.game.players) do
+    players_votes[v] = {}
+  end
+
+  -- count the number of mind changed and pass
+  local changed = 0
+  local pass    = 0
+
+  -- select the right function for the votes
+  fun_p.typeVote = bestMove
+  if p.type_vote == "better" then
+    fun_p.typeVote = betterMove
+  end
+
+  -- select the right function for the dynamique
+  if     p.dynamique == "round_robin" then
+    initRoundRobin()
+    fun_p.dynamique = roundRobin
+  elseif p.dynamique == "random" then
+    initRandom()
+    fun_p.dynamique = random
+  end
+
+  --compute the initial scores and some others metrics
+  rules.computeSAA()
+
+  if p.compute_agg then
+    rules.aggregationValue()
+  end
+
+  if p.compute_mean then
+    rules.meanValue()
+  end
+
+  local nb_nil = 0
+  while nb_nil ~= #rules.game.players do
+    -- take the current player
+    current_vote.player = fun_p.dynamique()
+
+    -- write logs if it asks
+    if p.log_file and p.log_details == "all" then
+      io.write("===================================\n")
+      io.write(current_vote.player .. " : LM = " .. rules.game.graphs[current_vote.player].LM[#rules.game.graphs[current_vote.player].LM].value .. "\n")
+      io.write("general : LM = " .. rules.game.graphs.general.LM[#rules.game.graphs.general.LM].value .. "\n")
+      io.write("===================================\n")
+    end
+
+    -- reinitialise current_vote
+    current_vote.lm     = nil
+    current_vote.arg    = nil
+    current_vote.vote   = nil
+    current_vote.action = nil
+    -- search the vote to do
+    fun_p.typeVote()
+
+    -- Application of the vote
+    if current_vote.arg == nil then
+      nb_nil = nb_nil + 1
+      pass   = pass + 1
+    else
+      nb_nil      = 0
+      changed     = changed + doMove()
+      local graph = rules.game.graphs.general
+      local lm    = rules.computeSAA(graph)
+
+      -- save vote
+      if not graph.LM then
+        graph.LM = {}
+      end
+      graph.LM[#graph.LM + 1] = {
+        run      = #graph.LM + 1,
+        player   = current_vote.player,
+        arg_vote = current_vote.arg or "none",
+        vote     = current_vote.vote or 0,
+        value    = lm
+      }
+
+      -- save last shot if it asks
+      if p.check_cycle and not rules.game.cycle then
+        if #historical_shots == 0 then
+          local shot = {}
+          for _, player in ipairs(rules.game.players) do
+            shot[player] = {}
+            for k, _ in pairs(graph.vertices) do
+              shot[player][k] = 0
+            end
+          end
+          historical_shots[1] = shot
+        else
+          local shot = tools.deepcopy(historical_shots[#historical_shots])
+          shot[current_vote.player][current_vote.arg] = current_vote.vote
+          table.insert(historical_shots, shot)
+        end
+      end
+
+      -- write configuration into the log file
+      if p.log_file and p.log_details == "all" then
+        io.write("configuration : \n")
+        io.write(yaml.dump(historical_shots[#historical_shots]) .. "\n")
+      end
+
+      -- search for cycle
+      local cycle = false
+      for i = 1, #historical_shots - 1 do
+        cycle = tools.equals(historical_shots[i], historical_shots[#historical_shots])
+        if cycle then
+          --write logs if it asks
+          if p.log_file then
+            io.write("configurations identiques : \n")
+            io.write("-------------------------------\n")
+            io.write("configuration 1 : run = " .. #historical_shots .. "\n")
+            io.write(yaml.dump(historical_shots[#historical_shots]) .. "\n")
+            io.write("-------------------------------\n")
+            io.write("configuration 2 : run = " .. i .. "\n")
+            io.write(yaml.dump(historical_shots[i]) .. "\n")
+            io.write("-------------------------------\n")
+            break
+          end
+        end
+      end
+      if cycle then
+        print("there is one here!!!!")
+        rules.game.cycle = true
+      end
+    end
+
+    if p.log_file then
+      if p.log_details == "all" then
+        io.write("decision :\n vote = " .. tostring(current_vote.arg) .. " bool = " .. tostring(current_vote.vote) .. "new lm = " .. (current_vote.lm or rules.game.graphs.general.LM[#rules.game.graphs.general.LM].value) .. "\n")
+        io.write("==============================\n")
+      elseif p.log_details == "strokes" then
+        io.write(current_vote.player .. " :" ..
+        " vote = " .. tostring(current_vote.arg) ..
+        " bool = " .. tostring(current_vote.vote) ..
+        " lm joueur = " .. rules.game.graphs[current_vote.player].LM[#rules.game.graphs[current_vote.player].LM].value ..
+        " lm avant = " .. rules.game.graphs.general.LM[#rules.game.graphs.general.LM].value ..
+        " lm après " .. (current_vote.lm or rules.game.graphs.general.LM[#rules.game.graphs.general.LM].value) .. "\n")
+        io.write("============================== \n")
+      end
+    end
+  end
+end
+
+local current_player = 0
+initRoundRobin = function()
+  current_player = 0
+end
+
+roundRobin = function()
+  current_player = current_player + 1
+  if current_player > #rules.game.players then
+    current_player = 1
+  end
+  return rules.game.players[current_player]
+end
+
+local players_in
+initRandom = function()
+  players_in = tools.deepcopy(rules.game.players)
+end
+
+random = function()
+  if current_vote.player and not current_vote.arg then
+    table.remove(players_in, current_vote.player)
+  elseif #players_in ~= #rules.game.players then
+    players_in = tools.deepcopy(rules.game.players)
+  end
+
+  if #players_in == 0 then return nil end
+
+  local player = math.random(1, #players_in)
+
+  return players_in[player]
+end
+
+bestMove = function()
+  current_vote.lm = rules.game.graphs.general.LM[#rules.game.graphs.general.LM].value
+  local player_lm = rules.game.graphs[current_vote.player].LM[#rules.game.graphs[current_vote.player].LM].value
+
+  for arg, v in pairs(rules.game.graphs.general.vertices) do
     if v.tag ~= "question" then
       for _, type_vote in ipairs({"like", "dislike"}) do
+        local value_vote, temp_lm, applyVote = testMove(arg, type_vote)
 
-        if parameters.log_file and parameters.log_details == "all" then
-          print_log = {
-            general_lm = gen_lm,
-          }
+        if math.abs(temp_lm - player_lm) < math.abs(current_vote.lm - player_lm) then
+          current_vote.arg    = arg
+          current_vote.lm     = temp_lm
+          current_vote.vote   = value_vote
+          current_vote.action = applyVote
         end
+      end
+    end
+  end
+end
 
-        value_vote, temp_lm = rules.mind_changed.test_move(player, arg, type_vote, print_log)
+betterMove = function ()
+  local player_lm = rules.game.graphs[current_vote.player].LM[#rules.game.graphs[current_vote.player].LM].value
+  local gen_lm    = rules.game.graphs.general.LM[#rules.game.graphs.general.LM].value
+  local better_votes = {}
+
+  for arg, v in pairs(rules.game.graphs.general.vertices) do
+    if v.tag ~= "question" then
+      for _, type_vote in ipairs({"like", "dislike"}) do
+        local value_vote, temp_lm, applyVote = testMove(arg, type_vote)
 
         if math.abs(temp_lm - player_lm) < math.abs(gen_lm - player_lm) then
           local vote = {
-            arg  = arg,
-            lm   = temp_lm,
-            vote = value_vote,
+            arg     = arg,
+            lm      = temp_lm,
+            vote    = value_vote,
+            action = applyVote
           }
           table.insert(better_votes, vote)
         end
@@ -142,351 +349,127 @@ function rules.mind_changed.better_move(player)
   end
 
   -- choose vote if there is one.
-  local vote = {}
   if #better_votes >= 1 then
     local i = math.random(1, #better_votes)
-    vote = better_votes[i]
+    current_vote.arg    = better_votes[i].arg
+    current_vote.lm     = better_votes[i].lm
+    current_vote.vote   = better_votes[i].vote
+    current_vote.action = better_votes[i].action
   end
 
-  if parameters.log_file then
-    if parameters.log_details == "all" then
-      io.write("decision : vote = " .. tostring(vote.arg or "none") .. " bool = " .. tostring(vote.vote or 0) .. " lm = " .. tostring(vote.lm or gen_lm) .. "\n")
-      io.write("==============================\n")
-    elseif parameters.log_details == "strokes" then
-      io.write(player .. " : votes possibles = [")
+  if p.log_file and p.log_details == "strokes" then
+    io.write(current_vote.player .. " : votes possibles = [")
 
-      for i, v in ipairs(better_votes) do
-        io.write("(".. v.arg .. ", " .. tostring(v.vote) .. ", " .. tostring(v.lm) ..")")
-        if i < #better_votes then io.write(", ") end
-      end
-
-      io.write("] \n\t\tvote = " .. tostring(vote.arg or "none") .. " bool = " .. tostring(vote.vote or 0) .. " lm joueur = " .. player_lm .. " lm avant = " .. gen_lm .. " lm après " .. tostring(vote.lm or gen_lm) .. "\n")
-      io.write("============================== \n")
+    for i, v in ipairs(better_votes) do
+      io.write("(".. v.arg .. ", " .. tostring(v.vote) .. ", " .. tostring(v.lm) ..")")
+      if i < #better_votes then io.write(", ") end
     end
+    io.write("] \n\n")
   end
-
-  -- application of the best vote we found (if there is a best vote)
-  if #better_votes >= 1 then
-    changed = rules.mind_changed.do_move(player, vote.arg, vote.vote)
-  end
-
-  -- computation of the new value of the game
-  local lm = saa.computeGraphSAA(#game.players, graph, parameters.fun, parameters.epsilon, parameters.val_question, parameters.precision)
-  if not graph.LM then
-    graph.LM = {}
-  end
-  graph.LM[#graph.LM + 1] = {
-    run      = #graph.LM + 1,
-    player   = player,
-    arg_vote = vote.arg or "none",
-    vote     = vote.vote or 0,
-    value    = lm
-  }
-  if #better_votes >= 1 then return vote.arg, changed, 0 end
-
-  return nil, 0, 1
 end
 
-function rules.mind_changed.best_move(player)
-  local parameters = rules.mind_changed.parameters
-  local game       = parameters.game
-  local changed    = 0
+testMove = function (arg, vote)
+  local graph         = rules.game.graphs.general
+  local vote_type     = ""
+  local value_vote    = nil
+  local player        = current_vote.player
 
-  local player_lm = game.graphs[player].LM[#game.graphs[player].LM].value
-  local gen_lm    = game.graphs.general.LM[#game.graphs.general.LM].value
-  local best_vote = nil
-  local best_lm   = gen_lm
-  local vote      = nil
-  local graph     = game.graphs.general
-  local print_log = nil
-  if parameters.log_file and parameters.log_details == "all" then
-    io.write("===================================\n")
-    io.write(player .. " : LM = " .. player_lm .. "\n")
-    io.write("general : LM = " .. gen_lm .. "\n")
-    io.write("===================================\n")
+  local print_log  = {}
+  local applyVote  = {}
+  local removeVote = {}
+  -- application of the vote
+  if vote == "like" and players_votes[player][arg] == 1 then
+    applyVote[1]  = rules.game.removeLike
+    removeVote[1] = rules.game.addLike
+    vote_type  = "remove like"
+    value_vote = nil
+
+  elseif vote == "like"
+     and players_votes[player][arg] == -1 then
+    applyVote[1]  = rules.game.addLike
+    applyVote[2]  = rules.game.removeDislike
+    removeVote[1] = rules.game.removeLike
+    removeVote[2] = rules.game.addDislike
+    vote_type  = "change to like"
+    value_vote = 1
+
+  elseif vote == "like" then
+    applyVote[1]  = rules.game.addLike
+    removeVote[1] = rules.game.removeLike
+    vote_type  = "vote like"
+    value_vote = 1
+
+  elseif vote == "dislike"
+     and players_votes[player][arg] == 1 then
+      applyVote[1]  = rules.game.addDislike
+      applyVote[2]  = rules.game.removeLike
+      removeVote[1] = rules.game.removeDislike
+      removeVote[2] = rules.game.addLike
+      vote_type  = "change to dislike"
+       value_vote = -1
+
+  elseif vote == "dislike"
+     and players_votes[player][arg] == -1 then
+      applyVote[1]  = rules.game.removeDislike
+      removeVote[1] = rules.game.addDislike
+       vote_type  = "remove dislike"
+       value_vote = nil
+
+  elseif vote == "dislike" then
+    applyVote[1]  = rules.game.addDislike
+    removeVote[1] = rules.game.removeDislike
+    vote_type  = "vote dislike"
+    value_vote = -1
   end
 
-  for arg, v in pairs(graph.vertices) do
-    local temp_lm
-    local value_vote
-    if v.tag ~= "question" then
-      for _, type_vote in ipairs({"like", "dislike"}) do
+  -- Application of vote
+  for _,v in ipairs(applyVote) do
+    v(nil, arg)
+  end
+  -- graph value's computation
+  local lm = rules.computeSAA(graph)
 
-        if parameters.log_file and parameters.log_details == "all" then
-          print_log = {
-            best_lm = best_lm,
-          }
-        end
-
-        value_vote, temp_lm = rules.mind_changed.test_move(player, arg, type_vote, print_log)
-
-        if math.abs(temp_lm - player_lm) < math.abs(best_lm - player_lm) then
-          best_vote = arg
-          best_lm   = temp_lm
-          vote      = value_vote
-        end
-      end
+  -- write logs if it is asked
+  if p.log_file and p.log_details == "all" then
+    print_log.arg      = arg
+    print_log.likes    = graph.vertices[arg].likes
+    print_log.dislikes = graph.vertices[arg].dislikes
+    print_log.new_lm   = lm
+    io.write(vote_type .. "\n")
+    for k, v in pairs(print_log) do
+      io.write("\t" .. k .. " = " .. tostring(v) .. "\n")
     end
+    io.write("--------------------------\n")
   end
 
-  if parameters.log_file then
-    if parameters.log_details == "all" then
-      io.write("decision : best vote = " .. tostring(best_vote) .. " bool = " .. tostring(vote) .. " lm = " .. best_lm .. "\n")
-      io.write("==============================\n")
-    elseif parameters.log_details == "strokes" then
-      io.write(player .. " : vote = " .. tostring(best_vote) .. " bool = " .. tostring(vote) .. " lm joueur = " .. player_lm .. " lm avant = " .. gen_lm .. " lm après " .. best_lm .. "\n")
-      io.write("============================== \n")
-    end
+  -- restoration of the previous values
+  for _,v in ipairs(removeVote) do
+    v(nil, arg)
   end
 
-  -- application of the best vote we found (if there is a best vote)
-  if best_vote then
-    changed = rules.mind_changed.do_move(player, best_vote, vote)
-  end
-
-  -- computation of the new value of the game
-  local lm = saa.computeGraphSAA(#game.players, graph, parameters.fun, parameters.epsilon, parameters.val_question, parameters.precision)
-  if not graph.LM then
-    graph.LM = {}
-  end
-  graph.LM[#graph.LM + 1] = {
-    run      = #graph.LM + 1,
-    player   = player,
-    arg_vote = best_vote or "none",
-    vote     = vote or 0,
-    value    = lm
-  }
-  if best_vote then return best_vote, changed, 0 end
-
-  return nil, 0, 1
+  return value_vote, lm, applyVote
 end
 
-function rules.mind_changed.do_move(player, arg, value_vote)
-  local parameters    = rules.mind_changed.parameters
-  local game          = parameters.game
-  local players_votes = parameters.players_votes
-  local changed       = 0
+doMove = function ()
+  assert(type(current_vote.action) == "table")
+  local changed = 0
+  for _,v in ipairs(current_vote.action) do
+    assert(type(v) == "function")
+    v(nil, current_vote.arg)
+  end
 
-  if value_vote == 1 then
-    game.addLike("general", arg)
-    if players_votes[player][arg] == 0 then
-      changed = 1
-    end
-    if players_votes[player][arg] == -1 then
-      game.removeDislike("general", arg)
-      changed = 1
-    end
-  elseif value_vote == -1 then
-    game.addDislike("general", arg)
-    if players_votes[player][arg] == 0 then
-      changed = 1
-    end
-    if players_votes[player][arg] == 1 then
-      game.removeLike("general", arg)
-      changed = 1
-    end
-  else
+  if players_votes[current_vote.player][current_vote.arg] then
     changed = 1
-    if players_votes[player][arg] == 1 then
-      game.removeLike("general", arg)
-    else
-      game.removeDislike("general", arg)
-    end
   end
+
   --store the vote
-  players_votes[player][arg] = value_vote or 0
+  players_votes[current_vote.player][current_vote.arg] = current_vote.vote or 0
+
   return changed
 end
 
 
-function rules.mind_changed.playOnce(player, arg, vote)
-  local parameters         = rules.mind_changed.parameters
-  local game               = parameters.game
-  local graph              = game.graphs.general
-  local changed            = 0
-
-  if arg and arg ~= "none" then
-    changed = rules.mind_changed.do_move(player, arg, vote)
-  end
-
-  -- computation of the new value of the game
-  local lm = saa.computeGraphSAA(#game.players, graph, parameters.fun, parameters.epsilon, parameters.val_question, parameters.precision)
-
-  if not graph.LM then
-    graph.LM = {}
-  end
-  graph.LM[#graph.LM + 1] = {
-    run      = #graph.LM + 1,
-    player   = player,
-    arg_vote = arg or "none",
-    vote     = vote or 0,
-    value    = lm
-  }
-  game.rounds  = (game.rounds or 0) + 1
-  print("round = " .. game.rounds + 1, "like = " .. graph.vertices.a3.likes, "dislikes = " .. graph.vertices.a3.dislikes)
-  game.changed = (game.changed or 0) + changed
-  if not arg or arg == "none" then
-    game.pass  = (game.pass or 0) + 1
-  end
-end
 
 
-
-function rules.mind_changed.mindChanged(game)
-  local parameters = rules.mind_changed.parameters
-
-  if parameters.log_file then
-    local l_file = io.open(parameters.log_file, "w")
-    io.output(l_file)
-  end
-
-  parameters.players_votes = {}
-  for _, v in ipairs(game.players) do
-    parameters.players_votes[v] = {}
-  end
-  local changed = 0
-  local pass    = 0
-  local type_vote = rules.mind_changed.best_move
-  if parameters.type_vote == "better" then
-    type_vote = rules.mind_changed.better_move
-  end
-  local function round_robin()
-    local nb_nil = 0
-    for _, v in ipairs(game.players) do
-      local is_nil, is_changed, is_pass = type_vote(v)
-      if not is_nil then
-        nb_nil = nb_nil + 1
-      end
-      changed = changed + is_changed
-      pass    = pass    + is_pass
-    end
-    return nb_nil
-  end
-
-  local function random_player()
-    local players = {}
-    for _, v in ipairs(game.players) do
-      table.insert(players, v)
-    end
-    local nil_players = {}
-    local nb_round = 0
-
-    while #players >= 1 do
-      nb_round = nb_round + 1
-
-      local player = math.random(1, #players)
-      local is_nil, is_changed, is_pass = type_vote(players[player])
-
-      if not is_nil then
-        table.insert(nil_players, players[player])
-        table.remove(players, player)
-      elseif #nil_players >= 1 then
-        for _, v in ipairs(nil_players) do
-          table.insert(players, v)
-        end
-        nil_players = {}
-      end
-      changed = changed + is_changed
-      pass    = pass    + is_pass
-
-      if type(parameters.stop_at) == "number" and
-         nb_round >= parameters.stop_at then
-        break
-      end
-    end
-
-    return #game.players + 1
-  end
-
-  -- print("round 1")
-  local dynamique
-  if     parameters.dynamique == "round_robin" then
-    dynamique = round_robin
-  elseif parameters.dynamique == "random" then
-    dynamique = random_player
-  end
-
-  local nb_round = #game.players
-  local nb_nil   = dynamique()
-
-  while nb_nil < #game.players do
-    nb_round = nb_round + #game.players
-    nb_nil   = dynamique()
-
-    if type(parameters.stop_at) == "number" and
-       nb_round >= parameters.stop_at then
-      break
-    end
-  end
-
-  local mean = 0
-  for i = 1, #game.players do
-    mean = mean + game.graphs[game.players[i]].LM[1].value
-  end
-  mean = mean / (#game.players)
-  game.mean            = mean
-  game.rounds          = nb_round - #game.players
-  game.changed         = changed
-  game.pass            = pass - #game.players
-  -- game.max_rounds = 3 ^ (#game.graphs.general.vertices)
-end
-
-function rules.playOnce(game, vote)
-  rules.mind_changed.parameters.game = game
-  if rules.mind_changed.parameters.rule == "mindChanged" then
-    rules.mind_changed.playOnce(vote.player, vote.arg, vote.vote)
-  end
-end
-
-function rules.setParameters(parameters)
-  if type(parameters) ~= 'table' then
-    parameters = {
-      fun          = 'tau_1',
-      val_question = 1,
-      precision    = 8,
-      log_details  = "all",
-      type_vote    = "best",
-      dynamique    = "round_robin"
-    }
-  else
-    parameters.fun          = parameters.fun or 'tau_1'
-    parameters.val_question = parameters.val_question or 1
-    parameters.precision    = parameters.precision or 8
-    parameters.epsilon      = parameters.epsilon or 0.1
-    parameters.log_details  = parameters.log_details or "all"
-    parameters.type_vote    = parameters.type_vote or "best"
-    parameters.dynamique    = parameters.dynamique or "round_robin"
-  end
-
-  parameters.players_votes = {}
-  for _, v in ipairs(parameters.game.players) do
-    parameters.players_votes[v] = {}
-  end
-
-  parameters.game.game_parameters = {
-    fun          = parameters.fun,
-    val_question = parameters.val_question,
-    epsilon      = parameters.epsilon,
-    stop_at      = parameters.stop_at,
-    type_vote    = parameters.type_vote,
-    dynamique    = parameters.dynamique,
-    precision    = parameters.precision,
-    rule         = parameters.rule
-  }
-
-  if parameters.rule == "mindChanged" then
-    rules.mind_changed.parameters = parameters
-  end
-end
-
-function rules.mindChanged(game, parameters)
-  if not parameters then
-    parameters = {}
-  end
-  parameters.game = game
-  parameters.rule = "mindChanged"
-  rules.setParameters(parameters)
-  rules.mind_changed.mindChanged(game)
-end
 
 return rules

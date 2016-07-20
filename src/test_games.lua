@@ -5,7 +5,6 @@ local export_tex      = require "tex_representation"
 local import_game     = require "import_xml"
 local lfs             = require "lfs"
 local rules           = require "rules"
-local saa             = require "saa"
 
 
 local function test_random_games(val_question)
@@ -15,6 +14,11 @@ local function test_random_games(val_question)
   local precision    = 8
   local dynamique    = "round_robin"
   local type_vote    = "better"
+  local compute_agg  = true
+  local compute_mean = false
+  local log_details  = "strokes"
+  local check_cycle  = true
+
   local nb_tests     = max_vertices * max_games * (max_players)
   local options      = {
     xlabel = "round",
@@ -30,7 +34,11 @@ local function test_random_games(val_question)
     precision    = precision,
     type_vote    = type_vote,
     dynamique    = dynamique,
-    log_details  = "strokes"
+    log_details  = log_details,
+    compute_agg  = compute_agg,
+    compute_mean = compute_mean,
+    rule         = "mindChanged",
+    check_cycle  = check_cycle
   }
 
   for players = 1, max_players do
@@ -50,16 +58,15 @@ local function test_random_games(val_question)
         export_tex(game, dest_tex)
 
         -- test tau_1 with best
-        parameters.type_vote = "best"
+        parameters.type_vote = "better"
         local dest_log      = dest_v .. "best_"
                            .. j .. "_tau_1_log.log"
         parameters.fun      = "tau_1"
         parameters.log_file = dest_log
-        game.aggregation_value("tau_1", nil, val_question, precision)
-        game.strongest_move("tau_1", nil, val_question, precision)
-        game.weakest_move("tau_1", nil, val_question, precision)
-        saa.computeSAA   (game, "tau_1", nil, val_question, precision)
-        rules.mindChanged(game, parameters)
+
+        rules.setGame(game)
+        rules.setParameters(parameters)
+        rules.apply()
         dest_j         = dest_v .. "best_" .. j .. "_tau_1.xml"
         dest_tex       = dest_v .. "best_" .. j .. "_tau_1.tex"
         local dest_png = dest_v .. "best_" .. j .. "_tau_1.png"
@@ -71,30 +78,30 @@ local function test_random_games(val_question)
         game.plot  (dest_png, false, options)
         export_game(game, dest_j)
         export_tex(game, dest_tex)
-        game.restoreGame()
+        if game.cycle then
+          return
+        end
+        -- game.restoreGame()
 
-        -- test tau_1 with better
-        parameters.type_vote = "better"
-        dest_log             = dest_v .. "better_"
-                             .. j .. "_tau_1_log.log"
-        parameters.fun      = "tau_1"
-        parameters.log_file = dest_log
-        game.aggregation_value("tau_1", nil, val_question, precision)
-        game.strongest_move("tau_1", nil, val_question, precision)
-        game.weakest_move("tau_1", nil, val_question, precision)
-        saa.computeSAA   (game, "tau_1", nil, val_question, precision)
-        rules.mindChanged(game, parameters)
-        dest_j         = dest_v .. "better_" .. j .. "_tau_1.xml"
-        dest_tex       = dest_v .. "better_" .. j .. "_tau_1.tex"
-        dest_png       = dest_v .. "better_" .. j .. "_tau_1.png"
-
-        options.title  = players     .. " players "
-                      .. nb_vertices .. " vertices "
-                      .. "better "     .. j
-                      .. " function tau_1"
-        game.plot  (dest_png, false, options)
-        export_game(game, dest_j)
-        export_tex(game, dest_tex)
+        -- -- test tau_1 with better
+        -- parameters.type_vote = "better"
+        -- dest_log             = dest_v .. "better_"
+        --                      .. j .. "_tau_1_log.log"
+        -- parameters.fun      = "tau_1"
+        -- parameters.log_file = dest_log
+        -- rules.setParameters(parameters)
+        -- rules.apply()
+        -- dest_j         = dest_v .. "better_" .. j .. "_tau_1.xml"
+        -- dest_tex       = dest_v .. "better_" .. j .. "_tau_1.tex"
+        -- dest_png       = dest_v .. "better_" .. j .. "_tau_1.png"
+        --
+        -- options.title  = players     .. " players "
+        --               .. nb_vertices .. " vertices "
+        --               .. "better "     .. j
+        --               .. " function tau_1"
+        -- game.plot  (dest_png, false, options)
+        -- export_game(game, dest_j)
+        -- export_tex(game, dest_tex)
         -- game.restoreGame()
         --
         -- -- test tau_2
@@ -137,30 +144,83 @@ local function test_random_games(val_question)
     end
   end
 end
-
+--
 -- do
 --   test_random_games(1)
 -- end
 
 
 do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/game_1.xml")
-  -- game:print_game()
-  -- game.aggregation_value("tau_1", 0.1, 1, 8)
-  saa.computeSAA(game, "tau_1", 0.1, 1, 8)
-  -- rules.mindChanged(game, {
-  --   fun = "tau_1",
-  --   val_question = 1,
-  --   precision = 8,
-  --   log_details = "all",
-  --   log_file = "test.log",
-  --   dynamique    = "random",
-  -- })
-  game:print_game()
-  print(game.graphs.general.LM[1].value)
+  local players      = 4
+  local vertices     = 15
+  local precision    = 8
+  local dynamique    = "round_robin"
+  local type_vote    = "better"
+  local compute_agg  = false
+  local compute_mean = false
+  local log_details  = "all"
+  local check_cycle  = true
 
-  --export_game(game,"output.xml")
-  --game.plot("output.png", true)
-  --export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/output.tex")
+  local options      = {
+    xlabel = "round",
+    ylabel = "value",
+    title  = nil
+  }
 
+  local parameters = {
+    val_question = 1,
+    precision    = precision,
+    type_vote    = type_vote,
+    dynamique    = dynamique,
+    log_details  = log_details,
+    compute_agg  = compute_agg,
+    compute_mean = compute_mean,
+    rule         = "mindChanged",
+    check_cycle  = check_cycle
+  }
+  parameters.fun      = "tau_1"
+  parameters.log_file = "output_log.log"
+
+  rules.setParameters(parameters)
+
+  local cycle = false
+  local game
+  local compt = 1
+
+  while not cycle do
+    print(compt)
+    compt = compt + 1
+    local graph    = graph_generator(vertices)
+    game     = game_generator(players, graph)
+
+    rules.setGame(game)
+    rules.apply()
+    cycle = game.cycle
+  end
+
+  game.plot  ("output.png", false, options)
+  export_game(game, "output.xml")
+  export_tex(game, "output.tex")
 end
+
+-- do
+--   local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/game_1.xml")
+--   -- game:print_game()
+--   -- game.aggregation_value("tau_1", 0.1, 1, 8)
+--   saa.computeSAA(game, "tau_1", 0.1, 1, 8)
+--   -- rules.mindChanged(game, {
+--   --   fun = "tau_1",
+--   --   val_question = 1,
+--   --   precision = 8,
+--   --   log_details = "all",
+--   --   log_file = "test.log",
+--   --   dynamique    = "random",
+--   -- })
+--   game:print_game()
+--   print(game.graphs.general.LM[1].value)
+--
+--   --export_game(game,"output.xml")
+--   --game.plot("output.png", true)
+--   --export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/output.tex")
+--
+-- end

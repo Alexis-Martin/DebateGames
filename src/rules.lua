@@ -293,7 +293,12 @@ end
 
 random = function()
   if current_vote.player and not current_vote.arg then
-    table.remove(players_in, current_vote.player)
+    for i,v in ipairs(players_in) do
+      if v == current_vote.player then
+        table.remove(players_in, i)
+        break
+      end
+    end
   elseif #players_in ~= #rules.game.players then
     players_in = tools.deepcopy(rules.game.players)
   end

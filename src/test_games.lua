@@ -150,77 +150,79 @@ end
 -- end
 
 
-do
-  local players      = 4
-  local vertices     = 15
-  local precision    = 8
-  local dynamique    = "round_robin"
-  local type_vote    = "better"
-  local compute_agg  = false
-  local compute_mean = false
-  local log_details  = "all"
-  local check_cycle  = true
-
-  local options      = {
-    xlabel = "round",
-    ylabel = "value",
-    title  = nil
-  }
-
-  local parameters = {
-    val_question = 1,
-    precision    = precision,
-    type_vote    = type_vote,
-    dynamique    = dynamique,
-    log_details  = log_details,
-    compute_agg  = compute_agg,
-    compute_mean = compute_mean,
-    rule         = "mindChanged",
-    check_cycle  = check_cycle
-  }
-  parameters.fun      = "tau_1"
-  parameters.log_file = "output_log.log"
-
-  rules.setParameters(parameters)
-
-  local cycle = false
-  local game
-  local compt = 1
-
-  while not cycle do
-    print(compt)
-    compt = compt + 1
-    local graph    = graph_generator(vertices)
-    game     = game_generator(players, graph)
-
-    rules.setGame(game)
-    rules.apply()
-    cycle = game.cycle
-  end
-
-  game.plot  ("output.png", false, options)
-  export_game(game, "output.xml")
-  export_tex(game, "output.tex")
-end
-
 -- do
---   local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/game_1.xml")
---   -- game:print_game()
---   -- game.aggregation_value("tau_1", 0.1, 1, 8)
---   saa.computeSAA(game, "tau_1", 0.1, 1, 8)
---   -- rules.mindChanged(game, {
---   --   fun = "tau_1",
---   --   val_question = 1,
---   --   precision = 8,
---   --   log_details = "all",
---   --   log_file = "test.log",
---   --   dynamique    = "random",
---   -- })
---   game:print_game()
---   print(game.graphs.general.LM[1].value)
+--   local players      = 4
+--   local vertices     = 15
+--   local precision    = 8
+--   local dynamique    = "random"
+--   local type_vote    = "better"
+--   local compute_agg  = false
+--   local compute_mean = false
+--   local log_details  = "all"
+--   local check_cycle  = true
 --
---   --export_game(game,"output.xml")
---   --game.plot("output.png", true)
---   --export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/output.tex")
+--   local options      = {
+--     xlabel = "round",
+--     ylabel = "value",
+--     title  = nil
+--   }
 --
+--   local parameters = {
+--     val_question = 1,
+--     precision    = precision,
+--     type_vote    = type_vote,
+--     dynamique    = dynamique,
+--     log_details  = log_details,
+--     compute_agg  = compute_agg,
+--     compute_mean = compute_mean,
+--     rule         = "mindChanged",
+--     check_cycle  = check_cycle
+--   }
+--   parameters.fun      = "tau_1"
+--   parameters.log_file = "output_log.log"
+--
+--   rules.setParameters(parameters)
+--
+--   local cycle = false
+--   local game
+--   local compt = 1
+--
+--   while not cycle do
+--     print(compt)
+--     compt = compt + 1
+--     local graph    = graph_generator(vertices)
+--     game     = game_generator(players, graph)
+--
+--     rules.setGame(game)
+--     rules.apply()
+--     cycle = game.cycle
+--   end
+--
+--   game.plot  ("output.png", false, options)
+--   export_game(game, "output.xml")
+--   export_tex(game, "output.tex")
 -- end
+
+do
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/check_game.xml")
+  -- game:print_game()
+  -- game.aggregation_value("tau_1", 0.1, 1, 8)
+  rules.setGame(game)
+  -- rules.setParameters{precision = 10}
+  rules.computeSAA()
+  -- rules.mindChanged(game, {
+  --   fun = "tau_1",
+  --   val_question = 1,
+  --   precision = 8,
+  --   log_details = "all",
+  --   log_file = "test.log",
+  --   dynamique    = "random",
+  -- })
+  game:print_game()
+  -- print(game.graphs.general.LM[1].value)
+
+  --export_game(game,"output.xml")
+  --game.plot("output.png", true)
+  --export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/output.tex")
+
+end

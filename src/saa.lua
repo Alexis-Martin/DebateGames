@@ -4,6 +4,7 @@ local SAA = {}
 local function round(num, idp)
   return tonumber(string.format("%." .. (idp or 0) .. "f", num))
 end
+
 function SAA.computeGraphSAA(nb_players, graph, fun, epsilon, val_question, precision)
   local tho = {}
   epsilon = epsilon or 0
@@ -49,7 +50,7 @@ function SAA.computeGraphSAA(nb_players, graph, fun, epsilon, val_question, prec
 
       v.LM = tho[k] * (1 - conorm)
       v.LM = round(v.LM, precision)
-      if math.abs(v.LM - last_LM[k]) > 10^-precision then
+      if v.LM ~= last_LM[k] then
 
         loop = true
       end

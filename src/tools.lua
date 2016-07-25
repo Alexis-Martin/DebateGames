@@ -48,4 +48,12 @@ function tools.equals(o1, o2, ignore_mt)
     return true
 end
 
+function tools.split(str, del)
+  local s = {}
+  for k1 in string.gmatch(str, del) do
+    table.insert(s, k1)
+  end
+  return s
+end
+
 return tools

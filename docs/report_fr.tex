@@ -391,10 +391,7 @@
           A priori, on n'atteint pas la valeur des agents.
 
           Sur l'exemple de la figure \ref{fig:dif_pref} on atteint la valeur des agents, en revanche sur la figure \ref{fig:trivial}, on ne l'atteint pas ($LM_1(q) = LM_2(q) = LM_3(q) = 0.009604$ alors que $LM_g(q) = 0.00731$).
-\color{red}
-          \subparagraph{remarque\\} Je me demande si cela n'est pas dû à une précision machine car le système se stabilise dans une position ou un coup est très proche d'être meilleur.
-            Je ferais le détail des calculs la semaine prochaine pour être sur.
-\color{black}
+
       \subsubsection{Question: Notre définition de $\tau$ change t'elle radicalement les résultats obtenus sur les exemples de Leite et Martins?}
 
         \paragraph{Le premier exemple\\}
@@ -464,40 +461,7 @@
 
           Avec la défintion de Leite et Martins on a : $a \prec c \prec b \prec d \prec e$ alors qu'avec notre définition on a : $c \prec b \prec a \prec e \prec d$
 
-
-  \section{Résultats}
-  \color{red}
-    \subsection{Atteint-on l'équilibre avec la première définition de $\tau$ dans l'exemple de la figure \ref{fig:trivial}?}
-
-      \paragraph{remarque :}
-        Je viens de me rendre compte que j'ai peut être mal interprété le terme équilibre.
-        J'entend par équilibre le fait d'atteindre la valeur exact souhaité par les 3 joueurs (dans le cadre de l'exemple de la figure \ref{fig:trivial}).
-        C'est à dire 0.009604.
-
-        La réponse est non, j'ai refait le calcul exact à la main et on atteint pas 0.009604 avec ce point de départ.\\
-
-    En revanche cet objectif existe, si on prend :
-    \begin{itemize}
-      \item a1 : $likes = 3, dislikes = 0$
-      \item a2 : $likes = 0, dislikes = 3$
-      \item a3 : $likes = 0, dislikes = 3$
-    \end{itemize}
-
-    Alors $LM(q) = 0.009604$\\
-
-    En changeant le nombre de vote au départ, par exemple si on prend :
-    \begin{itemize}
-      \item a1 : $likes = 1, dislikes = 2$
-      \item a2 : $likes = 1, dislikes = 2$
-      \item a3 : $likes = 1, dislikes = 2$
-    \end{itemize}
-
-    on atteint pas non plus l'équilibre, on reste bloqué comme avant à environ $0.00731$.
-  \color{black}
   \section{Nouveaux résultats sur les arbres}
-  \color{red}
-    Suite à une analyse un peu plus appronfondie des exemples qui ne convergeaient pas la semaine dernière j'ai remarqué que cela était dû à une erreur dans mon code...
-  \color{black}
     Après une double correction voici quelques exemples d'arbres qui sont intéressant:\\
 
     \begin{itemize}
@@ -663,11 +627,7 @@
       \caption{De gauche à droite: préférences du joueur 1, préférences du joueur 2, graphe avec la fonction $\tau_1$, courbe avec la fonction $\tau_1$}
       \label{fig:not_in_range}
     \end{figure}
-    \color{red}
-    \paragraph{remarque/intuition}
-      Pour montrer la convergence, c'est suffisant de traiter chacun des joueurs séparement dans l'évolution du système.
-      J'entend par là qu'il est suffisant de montrer que pour chaque joueur (et quelque soit les votes des autres joueurs) on arrive à une situation d'équilibre pour ce joueur.
-\color{blue}
+
     \subsection{quelques résultats observés sur les exemples}
       \paragraph{jeux à plus de deux joueurs}
       \begin{itemize}
@@ -679,7 +639,118 @@
       Le problème est que le nombre de cas à traiter est plus conséquent et que je n'ai pas encore trouver une généralisation de ces cas afin de tous les traiter en même temps.
 
       Dans les exemples, les joueurs extrêmes ont l'air de s'opposer leur votes et, dans le cas d'un nombre impair de joueurs, seul le joueur du milieu aurait un impact sur l'évolution de la valeur du jeu.
+
 \color{blue}
+    \subsection{Analyse du petit exemple}
+      Ce jeu est un jeu à 2 joueurs avec 3 arguments + la question.
+      Il est présenté figure \ref{fig:petit_ex}.
+
+      \begin{figure}
+        \centering
+        \begin{tikzpicture}[>=stealth]
+          \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+            "a1\\ (0,0)" -> "q\\ (0,0)";
+            "a2\\ (0,0)" -> "a1\\ (0,0)";
+            "a3\\ (0,0)" -> "q\\ (0,0)";
+          };
+        \end{tikzpicture}
+        \caption{petit exemple à 2 joueurs}
+        \label{fig:petit_ex}
+      \end{figure}
+
+      Sur cet exemple on peut conclure qu'il n'y a pas forcément d'équilibre compris strictement entre la valeur des deux joueurs.
+
+      En revanche, il y a toujours au moins une valeur entre la valeur des deux joueurs.
+
+      % TODO mettre un exemple
+
+      \subsubsection{Détection de cycle}
+        J'ai lancé des expériences afin de savoir si on peut avoir 2 configurations identiques dans un jeu.
+
+        Après environ 2 millions de tests il a trouvé un jeu ayant un cycle. La dynamique utilisée est random sur le prochain joueur en better response.
+
+        Il s'agit d'un jeu à 5 joueurs avec 17 arguments plus la question. Ce jeu est représenté figure \ref{fig:cycle_r_r_r}
+
+        \begin{figure}
+          \centering
+          \begin{tikzpicture}[>=stealth]
+            \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+            "a1" -> "q";
+            "a2" -> "a1";
+            "a3" -> "a1";
+            "a4" -> "a1";
+            "a5" -> "a1";
+            "a6" -> "a1";
+            "a7" -> "a6";
+            "a8" -> "q";
+            "a9" -> "a2";
+            "a10" -> "a6";
+            "a11" -> "a8";
+            "a12" -> "a3";
+            "a13" -> "a8";
+            "a14" -> "a4";
+            "a15" -> "a8";
+            "a16" -> "a12";
+            "a17" -> "a11";
+            };
+          \end{tikzpicture}
+          \caption{Jeu ayant un cycle en random - better response}
+          \label{fig:cycle_r_r_r}
+        \end{figure}
+
+        Voici le cycle :
+
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+          \hline
+          & joueur 1 & joueur 2 & joueur 3 & joueur 4 & joueur 5 & general \\
+          \hline
+          tour 107 & \_ & a7 dislike & \_ & \_ & \_ & 0.75586167 \\
+          \hline
+          tour 108 & \_ & \_ & a7 dislike & \_ & \_ & 0.75667651 \\
+          \hline
+          tour 109 & \_ & \_ & a6 like & \_ & \_ & 0.7621542 \\
+          \hline
+          tour 110 & \_ & \_ & a7 like & \_ & \_ & 0.7586651 \\
+          \hline
+          tour 111 & \_ & a7 annule & \_ & \_ & \_ & 0.75431051 \\
+          \hline
+          tour 112 & \_ & a6 annule & \_ & \_ & \_ & 0.75586167 \\
+          \hline
+          tour 113 & \_ & \_ & a7 annule & \_ & \_ & 0.76095258 \\
+          \hline
+          tour 114 & \_ & \_ & a6 annule & \_ & \_ & 0.7586651 \\
+          \hline
+          tour 115 & \_ & a6 dislike & \_ & \_ & \_ & 0.75431051 \\
+          \hline
+        \end{tabular}
+
+        La situation des joueurs sur les arguments a6 et a7 avant le cycle est :
+
+        \begin{tabular}{|c|c|c|}
+          \hline
+          arg & joueur 2 &  joueur 3\\
+          \hline
+          a6 & dislike & none \\
+          \hline
+          a7 & none & none \\
+          \hline
+        \end{tabular}
+
+        Les coups du joueur 2 sont:
+
+        $$(a7 dislike) \rightarrow (a7, annule) \rightarrow (a6, annule) \rightarrow (a6, dislike)$$
+
+        Les coups du joueur 3 sont :
+
+        $$(a7, dislike) \rightarrow (a6, like) \rightarrow (a7, like) \rightarrow (a7, annule) \rightarrow (a6, annule)$$
+
+        \paragraph{Remarque}
+          Pour le moment en round robin les expériences continuent de tourner depuis maintenant 5 jours. Je pense donc que cela ne peut pas se produire.
+
+          Je vais encore attendre quelques jours avant de les arrêter.
+
+
+\color{black}
   \section{Convergence des jeux à 2 joueurs sur les arbres}
     \subsection{Rappel des questions qu'on se pose}
       \begin{enumerate}
@@ -869,15 +940,11 @@
           \end{enumerate}
       \end{proof}
 
-\color{black}
   \section{Questions}
-  \color{red}
-  Question sur les fonction potentielles, avec les conditions qu'elle doit respecter.
-\color{black}
   \section{Ce qu'il faut que je fasse}
 
     \begin{itemize}
-      \color{blue}
+      \color{red}
       \item regarder, sur le petit jeu à 2 joueurs, si entre chaque valeur possible pour 1 joueur il y a toujours une valeur du jeu. Si non alors il n'existe pas forcement d'équilibre entre $j_{min}$ et $j_{max}$. Je peut également tester si c'est un équilibre.
       \item coder la detection de situations identiques afin de savoir si en better response et/ou en random on repasse plusieurs fois par une situation connu.
       \item Continuer la recherche d'une fonction potentielle?

@@ -121,16 +121,17 @@ function normal_game.isValueInside(game, normal_form, stability_check)
 
   if stability_check then rules.setGame(game) end
   local b_s_t = true
+  local check_bst = {}
   for q, lm1 in ipairs(players_value) do
     for w, lm2 in ipairs(players_value) do
       if lm1 ~= lm2 then
-        local b = false
+        local b   = false
         local b_s = false
         for k, lm in pairs(normal_form) do
           if (lm1 < lm and lm < lm2) or (lm2 < lm and lm < lm1) then
             b = true
 
-            if stability_check and not b_s_t then
+            if stability_check and b_s_t then
               -- for both players we check if it is an equilibrium
               local b_l = true
               local s = tools.split(k, "[-,%w]+")
@@ -163,17 +164,28 @@ function normal_game.isValueInside(game, normal_form, stability_check)
 
                     -- if the value is nearest it's not an equilibrium
                     if j == 1 and math.abs(lm1 - l) < math.abs(lm1 - lm) then
-                      if check_1[q] == "-1,-1,1|-1,-1,1" and check_1[w] == "1,1,0|-1,1,0" and lm1 == 0.019608 and lm2 == 0.0198 then
-                        print(str_v, k, lm1, l, lm, lm2)
-                      end
+                      check_bst.player    = 1
+                      check_bst.lm_player = lm1
+                      check_bst.lm_other  = lm2
+                      check_bst.lm        = lm
+                      check_bst.better_lm = l
+                      check_bst.votes1    = check_1[q]
+                      check_bst.votes2    = check_1[w]
+                      check_bst.last_vote = k
+                      check_bst.new_vote  = str_v
                       b_l = false
                     elseif j == 2 and math.abs(lm2 - l) < math.abs(lm2 - lm) then
-                      if check_1[q] == "-1,-1,1|-1,-1,1" and check_1[w] == "1,1,0|-1,1,0" and lm1 == 0.019608 and lm2 == 0.0198 then
-                        print(str_v, k, lm2, l, lm, lm1)
-                      end
+                      check_bst.player    = 2
+                      check_bst.lm_player = lm2
+                      check_bst.lm_other  = lm1
+                      check_bst.lm        = lm
+                      check_bst.better_lm = l
+                      check_bst.votes1    = check_1[q]
+                      check_bst.votes2    = check_1[w]
+                      check_bst.last_vote = k
+                      check_bst.new_vote  = str_v
                       b_l = false
                     end
-                    if b_l == false then break end
                   end
                   comb[i] = comb[i] + 1
                   comb[i] = ((comb[i] + 1)%3) - 1
@@ -191,8 +203,12 @@ function normal_game.isValueInside(game, normal_form, stability_check)
           if b == true and b_s then break end
         end
         if b == false then return false, false end
-        if not b_s then
+        if not b_s and b_s_t then
           b_s_t = false
+          print("b_s_t = " .. tostring(b_s_t))
+          for k, v in pairs(check_bst) do
+            print(k .. " = " .. tostring(v))
+          end
         end
       end
     end

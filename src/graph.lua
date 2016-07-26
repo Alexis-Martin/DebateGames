@@ -72,6 +72,10 @@ local function create_graph(class, tags)
     print(yaml.dump(self))
   end
 
+  graph.export_tex = function(self, with_header)
+
+  end
+
   return graph
 end
 return create_graph

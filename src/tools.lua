@@ -1,4 +1,13 @@
 local tools = {}
+local_random_seed = false
+
+function tools.randomseed()
+  if not local_random_seed then
+    math.randomseed(os.time())
+    local_random_seed = true
+    print("pass")
+  end
+end
 
 function tools.deepcopy(orig)
   local orig_type = type(orig)

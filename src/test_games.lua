@@ -272,29 +272,29 @@ end
 --   export_tex(game, "output.tex")
 -- end
 
-do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/check_game.xml")
-  -- game:print_game()
-  -- game.aggregation_value("tau_1", 0.1, 1, 8)
-
-  rules.setGame(game)
-  -- rules.setParameters{precision = 10}
-  rules.computeSAA()
-  -- rules.mindChanged(game, {
-  --   fun = "tau_1",
-  --   val_question = 1,
-  --   precision = 8,
-  --   log_details = "all",
-  --   log_file = "output_log.log",
-  --   dynamique    = "round_robin",
-  --   type_vote    = "best",
-  -- })
-
-  game:print_game()
-  -- print(game.graphs.general.LM[1].value)
-
-  -- export_game(game,"output.xml")
-  -- game.plot("output.png", true)
-  export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/game_1.tex")
-
-end
+-- do
+--   local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/check_game.xml")
+--   -- game:print_game()
+--   -- game.aggregation_value("tau_1", 0.1, 1, 8)
+--
+--   rules.setGame(game)
+--   -- rules.setParameters{precision = 10}
+--   rules.computeSAA()
+--   -- rules.mindChanged(game, {
+--   --   fun = "tau_1",
+--   --   val_question = 1,
+--   --   precision = 8,
+--   --   log_details = "all",
+--   --   log_file = "output_log.log",
+--   --   dynamique    = "round_robin",
+--   --   type_vote    = "best",
+--   -- })
+--
+--   game:print_game()
+--   -- print(game.graphs.general.LM[1].value)
+--
+--   -- export_game(game,"output.xml")
+--   -- game.plot("output.png", true)
+--   export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/game_1.tex")
+--
+-- end

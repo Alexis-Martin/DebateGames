@@ -1,5 +1,5 @@
 local create_graph = require "graph"
-
+local tools        = require "tools"
 -- local function generate_graph(n_vertices,
 --                               n_edges,
 --                               min_vertices,
@@ -24,6 +24,7 @@ local create_graph = require "graph"
 -- if n_vertices = nil or 0 then the number of vertices is generate uniformaly between min_vertices and max_vertices.
 -- The default value for min_vertices is 1 and the default value for max_vertices is 100.
 local function generate_tree(n_vertices, min_vertices, max_vertices)
+  tools.randomseed()
   if n_vertices == (nil or 0) then
     if min_vertices == (nil or 0) then min_vertices = 1 end
     if max_vertices == (nil or 0) then max_vertices = 100 end

@@ -1,29 +1,87 @@
 local create_graph = require "graph"
 local tools        = require "tools"
--- local function generate_graph(n_vertices,
---                               n_edges,
---                               min_vertices,
---                               max_vertices,
---                               min_edges,
---                               max_edges,
---                               connex,
---                               directed)
---
---   if n_vertices == (nil or 0) then
---     n_vertices = rand() * max_vertices + min_vertices -- FIXME
---   end
---   if n_edges == (nil or 0) then
---     n_edges = rand() * max_edges + min_edges -- FIXME
---   end
---   connex   = connex   or false
---   directed = directed or false
---
--- end
+
+local generate_graph = {}
+
+function generate_graph.generateGraph(p)
+  tools.randomseed()
+  if p.n_vertices == (0 or nil) then
+    p.max_vertices = p.max_vertices or 20
+    p.min_vertices = p.min_vertices or 2
+    assert(p.max_vertices >= p.min_vertices)
+    assert(p.min_vertices >= 0)
+    p.n_vertices = math.random(p.min_vertices, p.max_vertices)
+  end
+
+  if (not p.n_edges) or p.n_edges == 0  then
+    p.max_edges = p.max_edges or (p.n_vertices * (p.n_vertices - 1) + p.n_vertices)
+
+    if p.max_edges > (p.n_vertices * (p.n_vertices - 1) + p.n_vertices) then
+      p.max_edges = (p.n_vertices * (p.n_vertices - 1) + p.n_vertices)
+    end
+
+    p.min_edges = p.min_edges or (p.n_vertices - 1)
+    assert(p.max_edges >= p.min_edges)
+    assert(p.min_edges >= 0)
+    p.n_edges = math.random(p.min_edges, p.max_edges)
+  end
+
+  local graph = create_graph("graph")
+  graph.addVertex("q", {tag = "question"})
+
+  for i=1, p.n_vertices do
+    graph.addVertex("a" .. i)
+  end
+
+  while p.n_edges > 0 do
+    local b = false
+
+    local input  = math.random(1, p.n_vertices)
+    local output = math.random(0, p.n_vertices)
+
+    if input ~= output then
+      if output == 0 then
+        if not graph.vertices["a" .. input].attack["q"] then
+          graph.addEdge("a" .. input, "q")
+          b = true
+        end
+      else
+        if not graph.vertices["a" .. input].attack["a" .. output] then
+          graph.addEdge("a" .. input, "a" .. output)
+          b = true
+        end
+      end
+    end
+
+    if b then p.n_edges = p.n_edges - 1 end
+  end
+
+  local is_connex, non_connex = graph.isConnex()
+  while not is_connex do
+    for k, _ in pairs(non_connex) do
+      local output = math.random(0, p.n_vertices)
+
+      if k ~= output then
+        if output == 0 then
+          if not graph.vertices[k].attack["q"] then
+            graph.addEdge(k, "q")
+          end
+        else
+          if not graph.vertices[k].attack["a" .. output] then
+            graph.addEdge(k, "a" .. output)
+          end
+        end
+      end
+    end
+    is_connex, non_connex = graph.isConnex()
+  end
+  return graph
+end
 
 -- generate tree with n_vertices nodes.
 -- if n_vertices = nil or 0 then the number of vertices is generate uniformaly between min_vertices and max_vertices.
 -- The default value for min_vertices is 1 and the default value for max_vertices is 100.
-local function generate_tree(n_vertices, min_vertices, max_vertices)
+function generate_graph.generateTree(n_vertices, min_vertices, max_vertices)
   tools.randomseed()
   if n_vertices == (nil or 0) then
     if min_vertices == (nil or 0) then min_vertices = 1 end
@@ -46,4 +104,60 @@ local function generate_tree(n_vertices, min_vertices, max_vertices)
   return tree
 end
 
-return generate_tree
+
+
+--
+-- do
+--   local graph = generate_graph.generateGraph{n_vertices = 10, max_edges = 25}
+--   local fic         = io.open("bla.tex", "w")
+--   io.output(fic)
+--   io.write("\\documentclass{article}")
+--   io.write("\n\n")
+--   io.write("\\usepackage{graphicx}")
+--   io.write("\n")
+--   io.write("\\usepackage{tikz}")
+--   io.write("\n")
+--   io.write("\\usetikzlibrary{graphdrawing,graphs}")
+--   io.write("\n")
+--   io.write("\\usegdlibrary{layered}")
+--   io.write("\n")
+--   io.write("%Becareful if you use package fontenc, it might be raise an error. If it does, you have to remove it and use \\usepackage[utf8x]{luainputenc} in place of \\usepackage[utf8]{inputenc}")
+--   io.write("\n\n")
+--   io.write("\\begin{document}")
+--   io.write("\n")
+--   io.write("\\begin{figure}")
+--   io.write("\n")
+--   io.write("\\centering")
+--   io.write("\n")
+--   io.write("\\begin{tikzpicture}[>=stealth]")
+--   io.write("\n")
+--   io.write("\\graph [ layered layout, nodes = {scale=0.75, align=center} ] {")
+--   io.write("\n")
+--
+--   local list_nodes = {}
+--   for _, v1 in pairs(graph.edges) do
+--     io.write("\"" .. v1.source)
+--     io.write("\"")
+--     io.write(" -> \"" .. v1.target)
+--     io.write("\";")
+--     io.write("\n")
+--     list_nodes[v1.source] = true
+--     list_nodes[v1.target] = true
+--   end
+--   for k2,_ in pairs(graph.vertices) do
+--     if list_nodes[k2] ~= true then
+--       io.write("\"" .. k2 .. "\"")
+--       io.write("\n")
+--     end
+--   end
+--
+--   io.write("};")
+--   io.write("\n")
+--   io.write("\\end{tikzpicture}")
+--   io.write("\n")
+--   io.write("\\end{figure}")
+--   io.write("\n")
+--   io.write("\\end{document}")
+-- end
+
+return generate_graph

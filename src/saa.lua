@@ -49,20 +49,24 @@ function SAA.computeGraphSAA(nb_players, graph, fun, epsilon, val_question, prec
       end
 
       v.LM = tho[k] * (1 - conorm)
-      v.LM = round(v.LM, precision)
-      if v.LM ~= last_LM[k] then
 
+      if math.abs(v.LM - last_LM[k]) >= 10^(-precision) then
         loop = true
       end
     end
 
-    if loop then
-      iter()
-    end
+    return loop
   end
 
-  iter()
+  local cont = iter()
+  while cont do
+    cont = iter()
+  end
 
+
+  for _,v in pairs(graph.vertices) do
+    v.LM = round(v.LM, precision)
+  end
   for _,v in pairs(graph.vertices) do
     if v.tag == "question" then
       return v.LM

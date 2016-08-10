@@ -48,7 +48,7 @@ def dif_b(B):
 
 
 #tab = dif_b([2, 4, 10, 25, 50, 100, 250, 500, 750, 1000, 10000])
-print 0.5 + repart_laplace(150, -200/math.log(0.04)) - repart_laplace(75, -200/math.log(0.04))
+# print 0.5 + repart_laplace(150, -200/math.log(0.04)) - repart_laplace(75, -200/math.log(0.04))
 
 import matplotlib.pyplot as plt
 import numpy as np

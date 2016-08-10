@@ -1,0 +1,603 @@
+\documentclass[11pt]{article}
+
+\usepackage[francais]{babel} %
+\usepackage{amssymb}
+% \usepackage[T1]{fontenc} %
+\usepackage[utf8x]{luainputenc} %
+\usepackage{enumitem}
+\usepackage{amsthm}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing,graphs}
+\usegdlibrary{layered}
+% \usepackage[applemac]{inputenc} %
+% \usepackage{a4wide} %
+
+% \setlength{\parskip}{0.3\baselineskip}
+
+\title{Etude de dynamiques d'argumentation}
+\author{Martin Alexis, Maudet Nicolas, équipe SMA/LIP6}
+\date{02 août 2016}
+
+\newtheoremstyle{not}
+{\topsep}
+{\topsep}
+{}
+{}
+{\bfseries}
+{.}
+{\newline}
+{}
+
+\newtheoremstyle{defi}
+{\topsep}
+{\topsep}
+{\itshape}
+{}
+{\bfseries}
+{.}
+{\newline}
+{}
+
+\newtheoremstyle{prob}
+{\topsep}
+{\topsep}
+{}
+{}
+{\bfseries}
+{.}
+{\newline}
+{}
+
+\newtheorem{proposition}{Proposition}[section]
+\theoremstyle{defi}
+\newtheorem{definition}{Définition}[section]
+\theoremstyle{not}
+\newtheorem{notation}{Notation}[section]
+\theoremstyle{prob}
+\newtheorem{exemple}{Exemple}[section]
+
+
+\begin{document}
+\renewcommand{\proofname}{Démonstration}
+\maketitle
+%
+% \pagestyle{empty} %
+% \thispagestyle{empty}
+
+%% Attention: pas plus d'un recto-verso!
+% Ne conservez pas les questions
+
+
+\subsection*{Le contexte général}
+  Depuis la croissance du Web 2.0 plusieurs site de communication et d'intéractions sociales ont vu le jour. On peut ainsi citer les sites Twitter et Facebook.
+
+  D'autres plate-forme tel que debategraph.org ou debate.org sont également apparues sur la toile. Ces plate-forme proposent aux utilisateurs de participer à des débats.
+
+  La recherche c'est donc intéressée à des méthodes d'analyse afin de quantifier l'issue d'un débat, connaitre les arguments les plus importants ou encore détecter les trolls.
+
+  C'est le cas de Leite et Martins [ref] qui ont trouvé un algorithme permettant de calculer un score sur chacun des arguments en fonction de la topologie du graphe d'argumentation, de votes qui sont donnés à chacun des arguments ou encore de votes sur les attaques.
+
+% De quoi s'agit-il ?
+% D'où vient-il ?
+% Quels sont les travaux déjà accomplis dans ce domaine dans le monde ?
+
+\subsection*{Le problème étudié}
+  Actuellement, lorsque un débat en ligne est clos, il est souvent laissé sans conclusion.
+  On peut évidemment se fonder notre propre avis à l'aide de notre propre connaissance et en lisant les arguments qui ont été avancé au cours du débat.
+  En revanche, il est difficile, voire impossible de déterminer l'avis général qui en ressort.
+
+  Il peut être donc intéressant de donner une conclusion à ce débat.
+  Une approche dynamique mettant en jeu plusieurs personnes est à priori une bonne solution pour tenter de répondre à cette question.
+
+  Aujourd'hui, le manque de littérature et l'unique existence d'algorithmes statiques est dûs au récent intérêt des chercheurs pour l'argumentation.
+
+  Tout ces facteurs font de cette question un sujet intéressant et important à étudier. L'objectif est donc de construire un système dynamique et d'analyser les propriétés que ce système possède.
+
+% Quelle est la question que vous avez abordée ?
+% Pourquoi est-elle importante, à quoi cela sert-il d'y répondre ?
+% Est-ce un nouveau problème ?
+% Si oui, pourquoi êtes-vous le premier chercheur de l'univers à l'avoir posée ?
+% Si non, pourquoi pensiez-vous pouvoir apporter une contribution originale ?
+
+\subsection*{La contribution proposée}
+  On a donc imaginé un jeu qui, étant donné un débat terminé, permet à un certain nombre d'agents (réels ou bots) de voter sur chacun des arguments afin d'établir un avis général sur l'issue du débat. Cet avis est donné sous la forme d'un score attribué à la question initialement posé. Ce score est calculé grâce à l'algorithme de Leite et Martins [ref].
+
+  Ce jeu se déroule en deux étapes :
+  \begin{description}
+    \item[Etape 1] chaque agent se fait son propre avis.
+    \item[Etape 2] L'ensemble des agents se regroupent et vote, au tour par tour, sur chacun des arguments. Le score de la question est mise à jour à chaque tour.
+  \end{description}
+
+% Qu'avez vous proposé comme solution à cette question ?
+% Attention, pas de technique, seulement les grandes idées !
+% Soignez particulièrement la description de la démarche \emph{scientifique}.
+
+\subsection*{Les arguments en faveur de sa validité}
+  Le fait de faire un jeu post débat permet de faire intervenir des personnes qui n'aurait potentiellement pas participer au débat.
+  Cela permet à ces joueurs d'avoir un certain recul sur le débat.
+  De plus ce jeu permet de faire intervenir un nombre important de joueurs aillant chacun un avis différent.
+
+  Ces deux arguments permettent d'augmenter la probabilité de s'approcher de l'avis général.
+
+  Enfin la facilité d'implémentation de ce jeu sur une plate-forme et la possibilité d'utiliser exclusivement des bots pour analyser le débat ajoute des atouts à cette solution.
+
+  Toutefois, afin que ce jeu soit réellement implémentable il faut assurer sa terminaison.
+
+% Qu'est-ce qui montre que cette solution est une bonne solution ?
+% Des expériences, des corollaires ?
+% Commentez la \emph{robustesse} de votre proposition :
+% comment la validité de la solution dépend-elle des hypothèses de travail ?
+
+\subsection*{Le bilan et les perspectives}
+  Une des difficulté dans l'analyse des débats est la subjectivité entrainée par ces débats.
+  Il est donc difficile d'évaluer notre méthode par rapport à des débats réels.
+
+  L'étude de ce système permet d'avoir une approche nouvelle dans l'évaluation de graphes d'argumentation.
+  C'est une direction qui n'a pas encore été traitée et qui peut se révéler utile et cohérente dans l'analyse de ces débats.
+
+  On pourrait étendre ce système en rajoutant la possibilité de voter sur les attaques de la même façon que Leite et Martins le font dans [ref].
+
+%   Et après ? En quoi votre approche est-elle générale ?
+% Qu'est-ce que votre contribution a apporté au domaine ?
+% Que faudrait-il faire maintenant ?
+% Quelle est la bonne \emph{prochaine} question ?
+
+\section{Introduction et présentation}
+  On va commencer par définir formellement comment on représente un débat et un algorithme de Leite et Martins permettant de mettre un poids sur chaque argument.
+
+  \subsection{Le contexte}
+    Un débat peut être interprété comme un graphe, les noeuds sont les arguments annoncés par les différentes parties et les arêtes correspondent à une relation d'attaque entre les arguments. On ajoute à chaque argument deux entiers qui correspondent aux votes positifs et aux votes négatifs. De plus on intègre la question dans le graphe sous la forme d'un noeud qui n'a pas de vote.
+
+    \begin{definition}
+      Formellement un graphe d'argumentation est un triplet :
+
+      $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ avec :
+      \begin{itemize}
+        \item $\mathcal{A}$ : L'ensemble des arguments et la question $q$.
+        \item $\mathcal{R} \subseteq \mathcal{A} \times \mathcal{A}$ : Une relation binaire entre arguments tels que : $(a,b) \in \mathcal{R}$ si $a$ "attaque" $b$.
+        \item $V: \mathcal{A}\backslash \{q\} \rightarrow \mathbb{N} \times \mathbb{N} :$ La fonction qui associe, à chaque argument, le nombre de "like" et de "dislike", $V(a) = (v^+, v^-)$ signifie que $a$ à $v^+$ "like" et $v^-$ "dislike".
+      \end{itemize}
+    \end{definition}
+
+    Dans la suite on notera $v^+(a)$ (resp. $v^-(a)$) pour désigner le nombre de "like" (resp. "dislike") de l'argument $a$. Pour plus de lisibilité, si il n'y a pas d'ambigüité sur l'argument on notera simplement $v^+$ et $v^-$.
+
+    \begin{exemple}
+      Un retour en arrière nous porte à l'époque où les romains était maître de toute la gaulle, excepté dans un petit village de notre Bretagne actuelle, en Armorique.
+      Dans ce village, un débat d'une importance capitale éclate, "doit-on garder Assurancetourix dans le village?". [note Assurancetourix est le barde]
+
+      L'ensemble des villageois participent au débat et on recueille l'ensemble des arguments dans l'ordre d'apparition :
+      \begin{enumerate}[label=$a_\arabic*$.]
+        \item Il est inutile, ça fait une bouche de plus à nourrir.
+        \item Ce n'est pas vrai, il nous a aidé dans certain cas critique, lors de la construction, par les romains, du domaine des dieux par exemple.
+        \item Il chante faux et nous casse les oreilles en permanence.
+        \item Rien nous empèche de continuer à l'en empêcher, en plus ça nous défoule.
+        \item Vous n'allez tout de même pas créer un apatride!
+        \item On est pas obligé de créer un apatride, je propose de l'envoyer à Lutèce, il sera bien là-bas.
+        \item Il est au contraire essentiel, il apporte un minimum de culture dans notre village qui en est dépourvu.
+        \item On a pas besoin de culture, on a besoin de nourriture et que le ciel ne nous tombe pas sur la tête.
+        \item En revanche il dispense des cours à nos jeunes du village.
+      \end{enumerate}
+      Après ces quelques arguments ennoncés, les gaulois se sont ennervés et une bagarre a commencé. La figure \ref{fig:asterix} montre le graphe construit à l'aide de ces arguments.
+
+      \begin{figure}
+      \centering
+      \begin{tikzpicture}[>=stealth]
+      \graph [ layered layout, nodes = {scale=1, align=center} ] {
+      "$a_1$" -> "$q$";
+      "$a_2$" -> "$a_1$";
+      "$a_3$" -> "$q$";
+      "$a_5$" -> "$a_1$";
+      "$a_5$" -> "$a_3$";
+      "$a_4$" -> "$a_3$";
+      "$a_7$" -> "$a_3$";
+      "$a_6$" -> "$a_5$";
+      "$a_8$" -> "$a_7$";
+      "$a_9$" -> "$a_8$";
+      };
+      \end{tikzpicture}
+      \caption{Graphe représentant le débat sur l'expulsion d'Assurancetourix.}
+      \label{fig:asterix}
+      \end{figure}
+
+      Sur ce graphe, la question est le noeuds $q$ et les arguments $a_1, \cdots, a_9$ sont les arguments cités ci-dessus.
+      De plus on considère qu'il n'y a eu aucun vote, on n'a donc pas représenté les votes ici.
+
+      On remarque dans un premier temps que la question n'attaque aucun argument.
+      Ce sera vrai pour tous les graphes d'argumentation traités dans ce stage.
+      Dans un second temps on peut remarquer, par exemple, que l'argument $a_4$ attaque l'argument $a_3$ qui lui même attaque la question.
+      On peut donc considérer $a_4$ comme un argument défenseur de la question.
+
+    \end{exemple}
+
+    \begin{notation}
+      On note $Att(a)$ l'ensemble des arguments directs qui attaquent $a$ :
+      $Att(a) = \{b\ |\ (b, a)\in \mathcal{R}\}$
+    \end{notation}
+
+    Sur l'exemple précédent $Att(a_3) = \{a_4, a_5, a_7\}$.
+
+    \subsection{L'algorithme de Leite et Martins}
+      Afin de juger chacun des arguments de leur importance dans le débat, Leite et Martins [ref] on proposé un algorithme qui calcule une valeur comprise entre $[0; 1]$ pour chacun des arguments. Plus la valeur d'un argument sera proche de $1$, plus son poids dans le débat sera important.
+
+      Cet algorithme se fait en 2 étapes :
+
+      \paragraph{Prise en compte des votes}
+      Dans un premier temps on défini une fonction $\tau$ qui, pour chaque argument, calcule une valeur dans l'intervalle $[0, 1]$.
+
+        \begin{definition}[Simple Vote Aggregation]
+          Etant donné un graphe d'argumentation $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$, on défini la fonction $\tau_\varepsilon : \mathcal{A} \rightarrow [0, 1]$ par :
+
+          $$\tau_\varepsilon(a) = \left\{
+            \begin{array}{lll}
+              0 & \mbox{si } & v^+ = v^- = 0\\
+              \frac{v^+}{v^+ + v^- + \varepsilon} & \mbox{sinon} & \\
+            \end{array}\right.$$
+
+          Avec $\varepsilon \geq 0$.
+        \end{definition}
+
+      \paragraph{Utilisation de la topologie du graphe}
+
+        On peut ensuite définir une sémantique d'argumentation qui permettra de calculer l'importance d'un argument dans le graphe.
+
+        \begin{definition}[Simple Product Semantics]
+          On défini une sémantique de produit simple par un tuple $\mathcal{S}_\varepsilon = \langle [0, 1], \tau_\varepsilon, \curlywedge, \curlyvee, \neg  \rangle$ tel que :
+          \begin{enumerate}
+            \item $x_1 \curlywedge x_2 = x_1 \cdot x_2$
+            \item $x_1 \curlyvee x_2 = x_1 + x_2 - x_1 \cdot x_2$
+            \item $\neg x_1 = 1 - x_1$
+            \item $\varepsilon \geq 0$
+          \end{enumerate}
+        \end{definition}
+
+
+        Enfin, il reste à utiliser cette sémantique afin de déterminer le poids de chaque argument.
+
+        \begin{definition}[Social Model]
+          Soit $F= \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation et $\mathcal{S} = \langle [0, 1], \tau, \curlywedge, \curlyvee, \neg  \rangle$.
+        La fonction $LM : \mathcal{A} \rightarrow [0, 1]$ est un $\mathcal{S}$-Model pour $F$ si :
+
+        $LM(a) = \tau(a) \curlywedge \neg$ {\Large $\curlyvee$} $\{LM(a_i)\ |\ a_i \in Att(a)\}$
+        \end{definition}
+
+      On est maintenant capable, en fonction des votes et de la topologie du graphe de qualifier l'importance des arguments dans le graphe.
+
+      La méthode de Leite et Martins à plusieurs avantages par rapport à d'autres algorithmes tel que [ref].
+
+      En effet L'algorithme de Leite et Martins possède trois propriétés importantes. Soit $F$ un graphe d'argumentation et $\mathcal{S}$ une simple product sémantique.
+
+      \begin{enumerate}
+        \item Si $\varepsilon > 0$ alors il existe un unique $\mathcal{S}$-Model. Cela a pour conséquence de n'avoir qu'une seule valeur possible pour $LM(a)$ pour tout $a$.
+        \item Il existe une suite qui converge vers ce modèle. % TODO Si j'ai la place, mettre la suite sinon cité.
+        Ainsi quel que soit la topologie du graphe on pourra calculer la valeur de chaque argument.
+        \item La généralité de leur modèle permet de modifier, entre autre, la fonction $\tau_\varepsilon$ et de garder vrai les deux premières propriétés.
+      \end{enumerate}
+
+      En revanche il est difficile de savoir si cette méthode permet réellement d'extraire les arguments les plus importants. En effet, à aucun moment on utilise le contenu des arguments et la préférence d'un argument par rapport à un autre est une question très subjective.
+
+  \section{Le jeu}
+    On va définir un jeu multi-joueurs dont l'objectif est d'avoir un aperçu de la conclusion qu'on pourrait donner au débat.
+
+    Dans notre exemple \ref{fig:asterix} elle permettrait de dire si le village est plutôt pour garder Assurancetourix ou au contraire contre.
+
+    L'intérêt d'avoir plusieurs agents dans le jeu nous permet de créer une conclusion utilisant plusieurs avis différents et donc, en théorie, d'être plus objectif.
+
+    Afin de rendre plus clair le fonctionnement du jeu on le présentera de façon informelle sur l'exemple précédent avant de le présenter formellement.
+
+    \subsection{Initialisation}
+
+      Asterix, Panoramix et Abraracourcix on été désigné par leur sagesse ou leur rang pour délibérer de l'issue du débat qui encours dans le village.\\
+
+      On note $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation, $\mathcal{J} = \{1, \ldots, n\}$ $n$ agents ($=$ joueurs) et $\mathcal{S}$ la sémantique utilisée.
+      Chaque agent connait le graphe $F$.\\
+
+      Chacun d'eux commence par analyser le débat et, de manière personnelle, vote sur chacun des arguments en fonction de leur préférence.
+      Ainsi Abraracourcix, qui a une vision de guerrier vote positivement sur tous les arguments en faveur de l'expulsion et contre tous les autres.
+      A l'inverse, Panoramix, qui est le plus sage, voit dans l'expulsion d'Assurancetourix une brèche pour les romains de les conquérir. Il vote donc exactement l'inverse d'Abraracourcix.
+      Quant à Asterix, il préfère simplement voter pour les arguments avec lesquels il est d'accord et contre ceux qu'il rejète sans tenir compte du résultat.
+
+      A la suite de cette première étape, ils calculent chacun leur valeur personnelle grâce à une formule établie par Archéoptérix.
+
+      La figure~\ref{fig:votes_asterix} référence les votes et la valeur calculée pour les trois participants.
+
+      \begin{figure}
+        \centering
+        \begin{subfigure}{.3\linewidth}
+          \begin{tikzpicture}[>=stealth]
+            \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+              "a1\\ (1,0)" -> "q\\ (0,0)\\lm = 0.00162913";
+              "a2\\ (0,1)" -> "a1\\ (1,0)";
+              "a3\\ (1,0)" -> "q\\ (0,0)\\lm = 0.00162913";
+              "a5\\ (0,1)" -> "a1\\ (1,0)";
+              "a5\\ (0,1)" -> "a3\\ (1,0)";
+              "a4\\ (0,1)" -> "a3\\ (1,0)";
+              "a7\\ (0,1)" -> "a3\\ (1,0)";
+              "a6\\ (1,0)" -> "a5\\ (0,1)";
+              "a8\\ (1,0)" -> "a7\\ (0,1)";
+              "a9\\ (0,1)" -> "a8\\ (1,0)";
+            };
+          \end{tikzpicture}
+          \caption{Abraracourcix}
+        \end{subfigure}
+        \hskip1.32em
+        \begin{subfigure}{.3\linewidth}
+          \begin{tikzpicture}[>=stealth]
+            \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+              "a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.99998384";
+              "a2\\ (1,0)" -> "a1\\ (0,1)";
+              "a3\\ (0,1)" -> "q\\ (0,0)\\lm = 0.99998384";
+              "a5\\ (1,0)" -> "a1\\ (0,1)";
+              "a5\\ (1,0)" -> "a3\\ (0,1)";
+              "a4\\ (1,0)" -> "a3\\ (0,1)";
+              "a7\\ (1,0)" -> "a3\\ (0,1)";
+              "a6\\ (0,1)" -> "a5\\ (1,0)";
+              "a8\\ (0,1)" -> "a7\\ (1,0)";
+              "a9\\ (1,0)" -> "a8\\ (0,1)";
+            };
+          \end{tikzpicture}
+          \caption{Panoramix}
+        \end{subfigure}
+        \hskip1.32em
+        \begin{subfigure}{.3\linewidth}
+          \begin{tikzpicture}[>=stealth]
+            \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+              "a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.75472551";
+              "a2\\ (1,0)" -> "a1\\ (0,1)";
+              "a3\\ (1,0)" -> "q\\ (0,0)\\lm = 0.75472551";
+              "a5\\ (0,0)" -> "a1\\ (0,1)";
+              "a5\\ (0,0)" -> "a3\\ (1,0)";
+              "a4\\ (0,0)" -> "a3\\ (1,0)";
+              "a7\\ (0,0)" -> "a3\\ (1,0)";
+              "a6\\ (1,0)" -> "a5\\ (0,0)";
+              "a8\\ (0,0)" -> "a7\\ (0,0)";
+              "a9\\ (1,0)" -> "a8\\ (0,0)";
+            };
+          \end{tikzpicture}
+          \caption{Asterix}
+        \end{subfigure}
+        \caption{Votes et valeur de chaque joueur}
+        \label{fig:votes_asterix}
+      \end{figure}
+      Astérix et Panoramix sont donc plutôt pour garder Assurancetourix alors qu'Abraracourcix est plutôt contre.
+
+      \begin{definition}
+        Soit $F_k = \langle \mathcal{A}, \mathcal{R}, V_k \rangle$ le graphe d'argumentation du joueur $k$.
+        La fonction $V_k$ définie donc la préférence du joueur $k$ sur chacun des arguments de $\mathcal{A}$.
+      \end{definition}
+      \begin{definition}
+        Soit $LM_k$ un $\mathcal{S}$-Model pour le graphe $F_k$.
+
+        On appelle la valeur du jeu pour le joueur $k$ (ou valeur du joueur $k$) la valeur de $LM_k(q)$. dans la suite, on notera cette valeur simplement $LM_k$.
+      \end{definition}
+
+    \subsection{Déroulement du jeu}
+      Les trois membres du village se regroupe ensuite pour conclure l'issue du débat.
+      Au début, le débat est dépourvu de vote et la valeur du débat est calculé également grâce à la formule d'Archeoptérix.
+      Cette formule étant connu par les 3 participants ils peuvent connaître l'impact d'un vote sur le débat.
+      Chacun leur tour, ils vont voter sur un argument. Le tour d'un joueur ce déroule de cette façon :
+      \begin{enumerate}
+        \item Le joueur choisi un argument.
+        \item Il vote pour ou contre cet argument.
+        \item La valeur du débat est recalculer.
+      \end{enumerate}
+
+
+      Sachant qu'un joueur ne peux avoir, au maximum, qu'un seul vote par argument.
+      En revanche, un joueur a le droit de changer d'avis.
+      Il peut donc commencer par voter pour l'argument $a_1$ par exemple, puis plus tard changer son vote pour voter contre ou le retirer, etc.
+
+      \begin{definition}
+        Soit $LM$ un $\mathcal{S}$-Model pour le graphe $F$.
+        on appelle valeur du jeu la valeur de $LM(q)$. On la notera $LM$ dans la suite.
+      \end{definition}
+
+      Formellement, les joueurs vont tour à tour modifier la fonction $V$.
+      Le coup d'un joueur est un triplet $(k, a, v)$ ou :
+      \begin{description}
+        \item[$k$] est le joueur.
+        \item[$a$] $\in \mathcal{A}\backslash \{q\}$ est l'argument sur lequel le joueur $k$ a voté.
+        \item[$v$] $\in \{-, 0, +\}$ indique le vote du joueur. $-$ signifie que le joueur a voté contre, $0$ qu'il n'a pas voté ou retirer son vote et $+$ qu'il a voté pour l'argument $a$.
+      \end{description}
+
+      Une partie est un ensemble de coups ordonnés.
+
+      \subsubsection{La dynamique du jeu}
+        La dynamique d'un jeu se fait en deux phases :
+        \begin{enumerate}
+          \item L'enchainement entre les joueurs
+          \item Le comportement de chacun des joueurs.
+        \end{enumerate}
+
+        \paragraph{L'enchaînement entre les joueurs}
+          Dans ce stage on s'intéressera à deux enchaînement différent.
+          La plus connu, notamment utilisé dans la plus part des jeux de plateaux, est \emph{Round\_Robin}.
+          Les agents joueront toujours selon un ordre précis. C'est également le choix fait par nos gaulois.
+          La deuxième qu'on utilisera est appelé \emph{Random}. Elle consiste à choisir aléatoirement le prochain joueur.
+
+        \paragraph{Le comportement des joueurs}
+          Le deuxième point de la dynamique permet de définir comment vont se comporter les joueurs. Là encore on va considérer deux comportements différents.
+          Le premier, appelé \emph{best response} impose aux joueurs, à chaque coups, de toujours choisir le meilleur coups.
+          Le deuxième, appelé \emph{better response} est plus souple, les joueurs sont obligés de choisir un coups améliorant.
+          Mais pas forcément le meilleur.
+
+        \begin{definition}
+          Un coup améliorant pour le joueur $k$ est un coups qui va le rapprocher de son objectif.
+        \end{definition}
+
+    \subsection{L'objectif}
+      L'objectif pour chaque joueur est que la valeur du jeu soit le plus proche possible de sa valeur.
+
+
+  \section{Les problèmes liés au modèle}
+    Il y a plusieurs problèmes liés à la définitions de l'aggrégation des votes $\tau_\varepsilon$.
+    \begin{itemize}
+      \item Dans notre cas, on considère que la question ne reçoit aucun vote. Mais si on prend cette définition pour la sémantique alors $LM(q) = 0$ quelques soit les attaquants car $\tau_\varepsilon(q) = 0$.
+      \item D'après la définition de Leite et Martins un argument qui n'a pas de vote a un poids à 0 (car $\tau_\varepsilon (a) = 0$) et un vote qui n'a que des votes négatif a également un poids à 0.
+    \end{itemize}
+
+    Il existe d'autres problèmes tout aussi contraignant. Afin de résoudre tous ces problèmes on a changer la définition de la fonction d'aggrégation des votes.
+
+    \begin{definition}[Laplace Vote Aggregation]
+      Soit $\tau : \mathcal{A} \rightarrow [0, 1]$ la fonction défini par :
+      $$
+        \left\{\begin{array}{llll}
+          \tau(q) & = & 1 & \\
+          \tau(a) & = & \frac{1}{2} \cdot \left(1 + sgn(v^+ - v^-) \cdot \left(1 - e^{\frac{-|v^+ - v^-|}{\varepsilon}}\right)\right) & (\forall a \in \mathcal{A} \backslash \{q\})
+        \end{array}\right.
+      $$
+
+      où
+      $sgn(x) = \left\{
+        \begin{array}{ll}
+          -1  & \mbox{si } x < 0 \\
+          1 & \mbox{sinon} \\
+        \end{array}
+      \right.$
+      et $\varepsilon = - \frac{\#joueurs}{ln(0.04)}$
+
+    \end{definition}
+
+    En utilisant la fonction de répartition de la loi de Laplace, un vote qui à un nombre équivalent de votes positifs et de votes négatifs est égale à $0.5$. Un nombre de votes positifs important fait croitre la valeur de l'argument. À l'inverse, un nombre de votes négatifs important fait décroitre la valeur de l'argument.
+    on répond donc bien deux problèmes précédents.
+
+    La figure~\ref{fig:Laplace} représente l'évolution du poids d'un argument en fonction de la différence du nombre de votes positifs moins négatifs.
+    On remarque bien qu'une différence égale à 0 implique une valeur $\tau(a) = 0.5$ et que plus le nombre de votes positifs augmente, plus la valeur du jeu augmente et inversement.
+    On remarque également que la valeur max est égale à $0.98$ et que la valeur min est égale à 0.02.
+
+    \begin{figure}
+      \center
+      \includegraphics[scale=0.6]{Laplace.png}
+      \label{fig:Laplace}
+      \caption{Poids d'un argument en fonction du nombre de votes, avec 10 joueurs}
+    \end{figure}
+
+
+    Afin de garder les propriétés de convergence de l'algorithme de Leite et Martins, il faut que la fonction $\tau$ soit croissante selon $v^+(a)$ et décroissante selon $v^-(a)$.
+
+    \begin{proposition}
+      La fonction $\tau$ est croissante selon $v^+(a)$ et décroissante selon $v^-(a)$.
+    \end{proposition}
+    \begin{proof}
+      On va montrer la croissance (resp. décroissance) selon $v^+(a)$ (resp. $v^-(a)$) pour la fonction $\tau$.
+
+      Commençons par remarquer que :
+      $$tau(a) = \left\{
+        \begin{array}{ll}
+          \frac{1}{2} \cdot \exp(\frac{v^+ - v^-}{\varepsilon})  & \mbox{si } v^+ - v^- < 0 \\
+          1 - \frac{1}{2} \cdot \exp(\frac{v^- - v^+}{\varepsilon}) & \mbox{sinon} \\
+        \end{array}
+      \right.$$
+
+      Soit $a_1, a_2 \in \mathcal{A}\backslash \{q\}$ tel que $v^-(a_1) = v^-(a_2)$ et $v^+(a_1) < v^+(a_2)$. Montrons que $tau(a_1) < tau(a_2)$
+
+      3 cas possibles :
+      \begin{itemize}
+        \item si $v^+(a_1) - v^- < 0$ et $v^+(a_2) - v^- < 0$
+        $$tau(v^+(a_1), v^-) - tau(v^+(a_2), v^-) = \frac{1}{2} \cdot \exp(\frac{- v^-}{\varepsilon})(\exp(\frac{v^+(a_1)}{\varepsilon}) - \exp(\frac{v^+(a_2)}{\varepsilon}))$$
+
+        $\exp$ est une fonction croissante donc $tau(v^+(a_1), v^-) < tau(v^+(a_2), v^-)$
+
+        \item si $v^+(a_1) - v^- < 0$ et $v^+(a_2) - v^- \geq 0$
+        $$tau(v^+(a_1), v^-) - tau(v^+(a_2), v^-) = \frac{1}{2} \cdot \exp(\frac{v^+(a_1) - v^-}{\varepsilon}) - 1 + \frac{1}{2} \cdot \exp(\frac{v^- - v^+(a_2)}{\varepsilon})$$
+
+        En remarquant que $\exp(\frac{v^+(a_1) - v^-}{\varepsilon}) < 1$ et que $\exp(\frac{v^- - v^+(a_2)}{\varepsilon}) \leq 1$ on en conclut que $tau(v^+(a_1), v^-) < tau(v^+(a_2), v^-)$
+
+        \item si $v^+(a_1) - v^- \geq 0$ et $v^+(a_2) - v^- \geq 0$
+        $$tau(v^+(a_1), v^-) - tau(v^+(a_2), v^-) = \frac{1}{2} \cdot \exp(\frac{v^-}{\varepsilon})(\exp(\frac{- v^+(a_2)}{\varepsilon}) - \exp(\frac{- v^+(a_1)}{\varepsilon}))$$
+
+        $\exp(\frac{- v^+(a_2)}{\varepsilon}) < \exp(\frac{- v^+(a_1)}{\varepsilon})$ donc $tau(v^+(a_1), v^-) < tau(v^+(a_2), v^-)$
+      \end{itemize}
+
+      La preuve est similaire pour la décroissance selon $v^-(a)$.
+    \end{proof}
+
+    À la fin de la réunion entre les trois gaulois, la valeur du débat est $LM(q) = 0.86950214$. le détail des votes, à la fin du jeu, est donnée sur la figure~\ref{fig:votes_gaulois}. Le détail des votes est donnée en annexe
+
+    \begin{figure}
+      \centering
+      \begin{tikzpicture}[>=stealth]
+        \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+          "a1\\ (0,1)\\ (1,0)\\ (0,0)" -> "q\\ (0,0)\\lm = 0.75487625";
+          "a2\\ (1,0)\\ (0,1)\\ (0,0)" -> "a1\\ (0,1)\\ (1,0)\\ (0,0)";
+          "a3\\ (0,1)\\ (1,0)\\ (0,0)" -> "q\\ (0,0)\\lm = 0.75487625";
+          "a5\\ (1,0)\\ (0,1)\\ (0,0)" -> "a1\\ (0,1)\\ (1,0)\\ (0,0)";
+          "a5\\ (1,0)\\ (0,1)\\ (0,0)" -> "a3\\ (0,1)\\ (1,0)\\ (0,0)";
+          "a4\\ (1,0)\\ (0,1)\\ (0,0)" -> "a3\\ (0,1)\\ (1,0)\\ (0,0)";
+          "a7\\ (1,0)\\ (0,1)\\ (1,0)" -> "a3\\ (0,1)\\ (1,0)\\ (0,0)";
+          "a6\\ (0,1)\\ (1,0)\\ (0,0)" -> "a5\\ (1,0)\\ (0,1)\\ (0,0)";
+          "a8\\ (0,1)\\ (1,0)\\ (0,0)" -> "a7\\ (1,0)\\ (0,1)\\ (1,0)";
+          "a9\\ (1,0)\\ (0,1)\\ (0,0)" -> "a8\\ (0,1)\\ (1,0)\\ (0,0)";
+        };
+      \end{tikzpicture}
+      \caption{Votes des trois gaulois}
+      \label{fig:votes_gaulois}
+    \end{figure}
+
+    Sur ce graphe, les votes des trois joueurs sont écrits en dessous de chaque argument. le premier couple est le vote de Panoramix, le second celui d'Abraracourcix et enfin le dernier est celui d'Astérix.
+
+    On remarque que Panoramix à voter de manière à faire augmenter la valeur au maximum et Abraracourcix de façon à la faire descendre au maximum. Seul Astérix à des votes mitigés. Ce qui est cohérent avec leurs choix personnels.
+    On remarque également que la valeur est plutôt en faveur du maintien d'Assurancetourix dans le village. Cela est dût à la présence de deux personnes plutôt pour le maintien.\newpage
+
+
+
+
+  \appendix
+    \section{Détail des votes pour le jeu présenté Figure~\ref{fig:votes_gaulois}}
+    \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    & Panoramix & Abraracourcix & Asterix & general \\
+    \hline
+    tour 1 & \_ & \_ & \_ & 0.71728516 \\
+    \hline
+    tour 2 & a2 like & \_ & \_ & 0.82620294 \\
+    \hline
+    tour 3 & \_ & a2 dislike & \_ & 0.71728516 \\
+    \hline
+    tour 4 & \_ & \_ & a7 like & 0.75487625 \\
+    \hline
+    tour 5 & a1 dislike & \_ & \_ & 0.86950214 \\
+    \hline
+    tour 6 & \_ & a1 like & \_ & 0.75487625 \\
+    \hline
+    tour 7 & a5 like & \_ & \_ & 0.80636351 \\
+    \hline
+    tour 8 & \_ & a6 like & \_ & 0.72169531 \\
+    \hline
+    tour 9 & \_ & \_ & a4 like & 0.7636392 \\
+    \hline
+    tour 10 & a6 dislike & \_ & \_ & 0.837462 \\
+    \hline
+    tour 11 & \_ & a5 dislike & \_ & 0.79279296 \\
+    \hline
+    tour 12 & \_ & \_ & a4 annule & 0.75487625 \\
+    \hline
+    tour 13 & a4 like & \_ & \_ & 0.79279296 \\
+    \hline
+    tour 14 & \_ & a4 dislike & \_ & 0.75487625 \\
+    \hline
+    tour 15 & a3 dislike & \_ & \_ & 0.79279296 \\
+    \hline
+    tour 16 & \_ & a3 like & \_ & 0.75487625 \\
+    \hline
+    tour 17 & a9 like & \_ & \_ & 0.77565166 \\
+    \hline
+    tour 18 & \_ & a7 dislike & \_ & 0.72981552 \\
+    \hline
+    tour 19 & \_ & \_ & a9 like & 0.73410085 \\
+    \hline
+    tour 20 & a7 like & \_ & \_ & 0.78275675 \\
+    \hline
+    tour 21 & \_ & a9 dislike & \_ & 0.77565166 \\
+    \hline
+    tour 22 & \_ & \_ & a9 annule & 0.75487625 \\
+    \hline
+    tour 23 & a8 dislike & \_ & \_ & 0.77565166 \\
+    \hline
+    tour 24 & \_ & a8 like & \_ & 0.75487625 \\
+    \hline
+    \end{tabular}
+
+    % clarification des termes, dynamique, statiques
+\end{document}

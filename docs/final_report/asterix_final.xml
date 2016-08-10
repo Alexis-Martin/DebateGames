@@ -1,0 +1,98 @@
+<game players="3">
+	<graph view="general">
+		<vertex name="a2" likes="1" dislikes="1" LM="0.5" />
+		<vertex name="a1" likes="1" dislikes="1" LM="0.1875" />
+		<vertex name="a4" likes="1" dislikes="1" LM="0.5" />
+		<vertex name="a5" likes="1" dislikes="1" LM="0.25" />
+		<vertex name="a3" likes="1" dislikes="1" LM="0.07092154" />
+		<vertex name="a6" likes="1" dislikes="1" LM="0.5" />
+		<vertex name="q" tag="question" likes="0" LM="0.75487625" dislikes="0" />
+		<vertex name="a9" likes="1" dislikes="1" LM="0.5" />
+		<vertex name="a8" likes="1" dislikes="1" LM="0.25" />
+		<vertex name="a7" likes="2" dislikes="1" LM="0.6217518" />
+		<edge source="a1" target="q" />
+		<edge source="a2" target="a1" />
+		<edge source="a3" target="q" />
+		<edge source="a5" target="a1" />
+		<edge source="a5" target="a3" />
+		<edge source="a4" target="a3" />
+		<edge source="a7" target="a3" />
+		<edge source="a6" target="a5" />
+		<edge source="a8" target="a7" />
+		<edge source="a9" target="a8" />
+		<LM>
+			<LM run="1" >0.71728516</LM>
+			<LM player="Panoramix" run="2" vote="1" arg_vote="a2" >0.82620294</LM>
+			<LM player="Abraracourcix" run="3" vote="-1" arg_vote="a2" >0.71728516</LM>
+			<LM player="Asterix" run="4" vote="1" arg_vote="a7" >0.75487625</LM>
+			<LM player="Panoramix" run="5" vote="-1" arg_vote="a1" >0.86950214</LM>
+			<LM player="Abraracourcix" run="6" vote="1" arg_vote="a1" >0.75487625</LM>
+			<LM player="Panoramix" run="7" vote="1" arg_vote="a5" >0.80636351</LM>
+			<LM player="Abraracourcix" run="8" vote="1" arg_vote="a6" >0.72169531</LM>
+			<LM player="Asterix" run="9" vote="1" arg_vote="a4" >0.7636392</LM>
+			<LM player="Panoramix" run="10" vote="-1" arg_vote="a6" >0.837462</LM>
+			<LM player="Abraracourcix" run="11" vote="-1" arg_vote="a5" >0.79279296</LM>
+			<LM player="Asterix" run="12" vote="0" arg_vote="a4" >0.75487625</LM>
+			<LM player="Panoramix" run="13" vote="1" arg_vote="a4" >0.79279296</LM>
+			<LM player="Abraracourcix" run="14" vote="-1" arg_vote="a4" >0.75487625</LM>
+			<LM player="Panoramix" run="15" vote="-1" arg_vote="a3" >0.79279296</LM>
+			<LM player="Abraracourcix" run="16" vote="1" arg_vote="a3" >0.75487625</LM>
+			<LM player="Panoramix" run="17" vote="1" arg_vote="a9" >0.77565166</LM>
+			<LM player="Abraracourcix" run="18" vote="-1" arg_vote="a7" >0.72981552</LM>
+			<LM player="Asterix" run="19" vote="1" arg_vote="a9" >0.73410085</LM>
+			<LM player="Panoramix" run="20" vote="1" arg_vote="a7" >0.78275675</LM>
+			<LM player="Abraracourcix" run="21" vote="-1" arg_vote="a9" >0.77565166</LM>
+			<LM player="Asterix" run="22" vote="0" arg_vote="a9" >0.75487625</LM>
+			<LM player="Panoramix" run="23" vote="-1" arg_vote="a8" >0.77565166</LM>
+			<LM player="Abraracourcix" run="24" vote="1" arg_vote="a8" >0.75487625</LM>
+		</LM>
+	</graph>
+
+	<graph view="Panoramix">
+		<vertex name="a2" likes="1" dislikes="0" LM="0.98" />
+		<vertex name="a1" likes="0" dislikes="1" LM="1.584e-05" />
+		<vertex name="a7" likes="1" dislikes="0" LM="0.979608" />
+		<vertex name="a8" likes="0" dislikes="1" LM="0.0004" />
+		<vertex name="a9" likes="1" dislikes="0" LM="0.98" />
+		<vertex name="q" tag="question" likes="0" LM="0.99998384" dislikes="0" />
+		<vertex name="a5" likes="1" dislikes="0" LM="0.9604" />
+		<vertex name="a6" likes="0" dislikes="1" LM="0.02" />
+		<vertex name="a3" likes="0" dislikes="1" LM="3.2e-07" />
+		<vertex name="a4" likes="1" dislikes="0" LM="0.98" />
+		<LM>
+			<LM run="1" >0.99998384</LM>
+		</LM>
+	</graph>
+
+	<graph view="Abraracourcix">
+		<vertex name="a2" likes="0" dislikes="1" LM="0.02" />
+		<vertex name="a1" likes="1" dislikes="0" LM="0.96001584" />
+		<vertex name="a7" likes="0" dislikes="1" LM="0.000792" />
+		<vertex name="a8" likes="1" dislikes="0" LM="0.9604" />
+		<vertex name="a9" likes="0" dislikes="1" LM="0.02" />
+		<vertex name="q" tag="question" likes="0" LM="0.00162913" dislikes="0" />
+		<vertex name="a5" likes="0" dislikes="1" LM="0.0004" />
+		<vertex name="a6" likes="1" dislikes="0" LM="0.98" />
+		<vertex name="a3" likes="1" dislikes="0" LM="0.95925551" />
+		<vertex name="a4" likes="0" dislikes="1" LM="0.02" />
+		<LM>
+			<LM run="1" >0.00162913</LM>
+		</LM>
+	</graph>
+
+	<graph view="Asterix">
+		<vertex name="a2" likes="1" dislikes="0" LM="0.98" />
+		<vertex name="a1" likes="0" dislikes="1" LM="0.000396" />
+		<vertex name="a7" likes="0" dislikes="0" LM="0.495" />
+		<vertex name="a8" likes="0" dislikes="0" LM="0.01" />
+		<vertex name="a9" likes="1" dislikes="0" LM="0.98" />
+		<vertex name="q" tag="question" likes="0" LM="0.75472551" dislikes="0" />
+		<vertex name="a5" likes="0" dislikes="0" LM="0.01" />
+		<vertex name="a6" likes="1" dislikes="0" LM="0.98" />
+		<vertex name="a3" likes="1" dislikes="0" LM="0.2449755" />
+		<vertex name="a4" likes="0" dislikes="0" LM="0.5" />
+		<LM>
+			<LM run="1" >0.75472551</LM>
+		</LM>
+	</graph>
+</game>

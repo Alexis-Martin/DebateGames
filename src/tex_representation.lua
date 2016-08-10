@@ -93,8 +93,8 @@ local function show_tex (game, output)
     for k2,_ in pairs(game.graphs.general.vertices) do
       if list_nodes[k2] ~= true then
         io.write("\"" .. k2 .. "\\\\ ("
-          .. v.vertices[k2].likes or 0 .. ","
-          .. v.vertices[k2].dislikes or 0 .. ")\"")
+          .. (v.vertices[k2].likes or 0) .. ","
+          .. (v.vertices[k2].dislikes or 0) .. ")\"")
         io.write("\n")
       end
     end

@@ -80,12 +80,4 @@ local function export_game(game, dest)
   return xml
 end
 
--- do
---   local game_generator  = require "game_generator"
---   local graph_generator = require "graph_generator"
---   local graph           = graph_generator(10)
---   local game            = game_generator(2, graph)
---   print(export_game(game))
---
--- end
 return export_game

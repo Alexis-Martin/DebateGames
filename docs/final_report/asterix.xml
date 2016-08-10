@@ -1,0 +1,63 @@
+<game players="3">
+	<graph view="Panoramix">
+		<vertex name="a8" likes="0" dislikes="1" />
+		<vertex name="a9" likes="1" dislikes="0" />
+		<vertex name="a6" likes="0" dislikes="1" />
+		<vertex name="a7" likes="1" dislikes="0" />
+		<vertex name="a4" likes="1" dislikes="0" />
+		<vertex name="q" tag="question" dislikes="0" likes="0" />
+		<vertex name="a3" likes="0" dislikes="1" />
+		<vertex name="a2" likes="1" dislikes="0" />
+		<vertex name="a5" likes="1" dislikes="0" />
+		<vertex name="a1" likes="0" dislikes="1" />
+	</graph>
+
+	<graph view="Abraracourcix">
+		<vertex name="a8" likes="1" dislikes="0" />
+		<vertex name="a9" likes="0" dislikes="1" />
+		<vertex name="a6" likes="1" dislikes="0" />
+		<vertex name="a7" likes="0" dislikes="1" />
+		<vertex name="a4" likes="0" dislikes="1" />
+		<vertex name="q" tag="question" dislikes="0" likes="0" />
+		<vertex name="a3" likes="1" dislikes="0" />
+		<vertex name="a2" likes="0" dislikes="1" />
+		<vertex name="a5" likes="0" dislikes="1" />
+		<vertex name="a1" likes="1" dislikes="0" />
+	</graph>
+
+  <graph view="Asterix">
+    <vertex name="a8" likes="0" dislikes="0" />
+    <vertex name="a9" likes="1" dislikes="0" />
+    <vertex name="a6" likes="1" dislikes="0" />
+    <vertex name="a7" likes="0" dislikes="0" />
+    <vertex name="a4" likes="0" dislikes="0" />
+    <vertex name="q" tag="question" dislikes="0" likes="0" />
+    <vertex name="a3" likes="1" dislikes="0" />
+    <vertex name="a2" likes="1" dislikes="0" />
+    <vertex name="a5" likes="0" dislikes="0" />
+    <vertex name="a1" likes="0" dislikes="1" />
+  </graph>
+
+	<graph view="general">
+		<vertex name="a8" likes="0" dislikes="0" />
+		<vertex name="a9" likes="0" dislikes="0" />
+		<vertex name="a6" likes="0" dislikes="0" />
+		<vertex name="a7" likes="0" dislikes="0" />
+		<vertex name="q" tag="question" dislikes="0" likes="0" />
+		<vertex name="a1" likes="0" dislikes="0" />
+		<vertex name="a3" likes="0" dislikes="0" />
+		<vertex name="a2" likes="0" dislikes="0" />
+		<vertex name="a5" likes="0" dislikes="0" />
+		<vertex name="a4" likes="0" dislikes="0" />
+		<edge source="a1" target="q" />
+		<edge source="a2" target="a1" />
+		<edge source="a3" target="q" />
+		<edge source="a5" target="a1" />
+		<edge source="a5" target="a3" />
+		<edge source="a4" target="a3" />
+		<edge source="a7" target="a3" />
+		<edge source="a6" target="a5" />
+		<edge source="a8" target="a7" />
+		<edge source="a9" target="a8" />
+	</graph>
+</game>

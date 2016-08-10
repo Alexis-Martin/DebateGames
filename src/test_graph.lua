@@ -21,7 +21,7 @@ end
 print(math.random(0, 0))
 
 
-local generate_tree = require "graph_generator"
-local tree = generate_tree(15)
+local generate_graph = require "graph_generator"
+local tree = generate_graph.generateTree(15)
 
 tree.print_graph()

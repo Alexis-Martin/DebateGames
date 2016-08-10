@@ -5,7 +5,7 @@ local rules = {}
 
 -- default values for the parameters
 local default_p = {
-  rule         = "mind_changed",
+  rule         = "mindChanged",
   type_vote    = "best",
   dynamique    = "round_robin",
   compute_mean = true,
@@ -185,6 +185,8 @@ mindChanged = function ()
     -- search the vote to do
     fun_p.typeVote()
 
+    local graph = rules.game.graphs.general
+    rules.computeSAA(graph)
     -- Application of the vote
     if current_vote.arg == nil then
       nb_nil = nb_nil + 1
@@ -192,9 +194,7 @@ mindChanged = function ()
     else
       nb_nil      = 0
       changed     = changed + doMove()
-      local graph = rules.game.graphs.general
       local lm    = rules.computeSAA(graph)
-
       -- save vote
       if not graph.LM then
         graph.LM = {}
@@ -253,6 +253,7 @@ mindChanged = function ()
       if cycle then
         print("there is one here!!!!")
         rules.game.cycle = true
+        return
       end
     end
 

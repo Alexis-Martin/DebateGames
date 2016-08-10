@@ -1,4 +1,5 @@
-local yaml = require 'yaml'
+local yaml  = require 'yaml'
+local tools = require 'tools'
 
 local function create_graph(class, tags)
   local graph = {
@@ -73,7 +74,34 @@ local function create_graph(class, tags)
   end
 
   graph.export_tex = function(self, with_header)
+    
+  end
 
+  graph.isConnex = function()
+    local exists = {}
+    for k, _ in pairs(graph.vertices) do
+      exists[k] = true
+    end
+
+    local function explore(s)
+      exists[s] = nil
+      for k, _ in pairs(graph.vertices[s].attack) do
+        if exists[k] then
+          explore(k)
+        end
+      end
+      for k, _ in pairs(graph.vertices[s].attackers) do
+        if exists[k] then
+          explore(k)
+        end
+      end
+    end
+    explore("q")
+
+    if #exists == 0 then
+      return true
+    end
+    return false, exists
   end
 
   return graph

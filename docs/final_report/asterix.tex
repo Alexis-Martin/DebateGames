@@ -1,0 +1,138 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing,graphs}
+\usegdlibrary{layered}
+%Becareful if you use package fontenc, it might be raise an error. If it does, you have to remove it and use \usepackage[utf8x]{luainputenc} in place of \usepackage[utf8]{inputenc}
+
+\begin{document}
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (0,1)\\ (1,0)\\ (0,0)" -> "q\\ (0,0)\\lm = 0.75487625";
+"a2\\ (1,0)\\ (0,1)\\ (0,0)" -> "a1\\ (0,1)\\ (1,0)\\ (0,0)";
+"a3\\ (0,1)\\ (1,0)\\ (0,0)" -> "q\\ (0,0)\\lm = 0.75487625";
+"a5\\ (1,0)\\ (0,1)\\ (0,0)" -> "a1\\ (0,1)\\ (1,0)\\ (0,0)";
+"a5\\ (1,0)\\ (0,1)\\ (0,0)" -> "a3\\ (0,1)\\ (1,0)\\ (0,0)";
+"a4\\ (1,0)\\ (0,1)\\ (0,0)" -> "a3\\ (0,1)\\ (1,0)\\ (0,0)";
+"a7\\ (1,0)\\ (0,1)\\ (1,0)" -> "a3\\ (0,1)\\ (1,0)\\ (0,0)";
+"a6\\ (0,1)\\ (1,0)\\ (0,0)" -> "a5\\ (1,0)\\ (0,1)\\ (0,0)";
+"a8\\ (0,1)\\ (1,0)\\ (0,0)" -> "a7\\ (1,0)\\ (0,1)\\ (1,0)";
+"a9\\ (1,0)\\ (0,1)\\ (0,0)" -> "a8\\ (0,1)\\ (1,0)\\ (0,0)";
+};
+\end{tikzpicture}
+\caption{general}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.99998384";
+"a2\\ (1,0)" -> "a1\\ (0,1)";
+"a3\\ (0,1)" -> "q\\ (0,0)\\lm = 0.99998384";
+"a5\\ (1,0)" -> "a1\\ (0,1)";
+"a5\\ (1,0)" -> "a3\\ (0,1)";
+"a4\\ (1,0)" -> "a3\\ (0,1)";
+"a7\\ (1,0)" -> "a3\\ (0,1)";
+"a6\\ (0,1)" -> "a5\\ (1,0)";
+"a8\\ (0,1)" -> "a7\\ (1,0)";
+"a9\\ (1,0)" -> "a8\\ (0,1)";
+};
+\end{tikzpicture}
+\caption{Panoramix}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (1,0)" -> "q\\ (0,0)\\lm = 0.00162913";
+"a2\\ (0,1)" -> "a1\\ (1,0)";
+"a3\\ (1,0)" -> "q\\ (0,0)\\lm = 0.00162913";
+"a5\\ (0,1)" -> "a1\\ (1,0)";
+"a5\\ (0,1)" -> "a3\\ (1,0)";
+"a4\\ (0,1)" -> "a3\\ (1,0)";
+"a7\\ (0,1)" -> "a3\\ (1,0)";
+"a6\\ (1,0)" -> "a5\\ (0,1)";
+"a8\\ (1,0)" -> "a7\\ (0,1)";
+"a9\\ (0,1)" -> "a8\\ (1,0)";
+};
+\end{tikzpicture}
+\caption{Abraracourcix}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.75472551";
+"a2\\ (1,0)" -> "a1\\ (0,1)";
+"a3\\ (1,0)" -> "q\\ (0,0)\\lm = 0.75472551";
+"a5\\ (0,0)" -> "a1\\ (0,1)";
+"a5\\ (0,0)" -> "a3\\ (1,0)";
+"a4\\ (0,0)" -> "a3\\ (1,0)";
+"a7\\ (0,0)" -> "a3\\ (1,0)";
+"a6\\ (1,0)" -> "a5\\ (0,0)";
+"a8\\ (0,0)" -> "a7\\ (0,0)";
+"a9\\ (1,0)" -> "a8\\ (0,0)";
+};
+\end{tikzpicture}
+\caption{Asterix}
+\end{figure}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+& Panoramix & Abraracourcix & Asterix & general \\
+\hline
+tour 1 & \_ & \_ & \_ & 0.71728516 \\
+\hline
+tour 2 & a2 like & \_ & \_ & 0.82620294 \\
+\hline
+tour 3 & \_ & a2 dislike & \_ & 0.71728516 \\
+\hline
+tour 4 & \_ & \_ & a7 like & 0.75487625 \\
+\hline
+tour 5 & a1 dislike & \_ & \_ & 0.86950214 \\
+\hline
+tour 6 & \_ & a1 like & \_ & 0.75487625 \\
+\hline
+tour 7 & a5 like & \_ & \_ & 0.80636351 \\
+\hline
+tour 8 & \_ & a6 like & \_ & 0.72169531 \\
+\hline
+tour 9 & \_ & \_ & a4 like & 0.7636392 \\
+\hline
+tour 10 & a6 dislike & \_ & \_ & 0.837462 \\
+\hline
+tour 11 & \_ & a5 dislike & \_ & 0.79279296 \\
+\hline
+tour 12 & \_ & \_ & a4 annule & 0.75487625 \\
+\hline
+tour 13 & a4 like & \_ & \_ & 0.79279296 \\
+\hline
+tour 14 & \_ & a4 dislike & \_ & 0.75487625 \\
+\hline
+tour 15 & a3 dislike & \_ & \_ & 0.79279296 \\
+\hline
+tour 16 & \_ & a3 like & \_ & 0.75487625 \\
+\hline
+tour 17 & a9 like & \_ & \_ & 0.77565166 \\
+\hline
+tour 18 & \_ & a7 dislike & \_ & 0.72981552 \\
+\hline
+tour 19 & \_ & \_ & a9 like & 0.73410085 \\
+\hline
+tour 20 & a7 like & \_ & \_ & 0.78275675 \\
+\hline
+tour 21 & \_ & a9 dislike & \_ & 0.77565166 \\
+\hline
+tour 22 & \_ & \_ & a9 annule & 0.75487625 \\
+\hline
+tour 23 & a8 dislike & \_ & \_ & 0.77565166 \\
+\hline
+tour 24 & \_ & a8 like & \_ & 0.75487625 \\
+\hline
+\end{tabular}
+\end{document}

@@ -13,11 +13,12 @@ local function test_random_games(val_question)
   local max_vertices = 15
   local precision    = 8
   local dynamique    = "round_robin"
-  local type_vote    = "better"
+  local type_vote    = "best"
   local compute_agg  = true
   local compute_mean = false
   local log_details  = "strokes"
   local check_cycle  = true
+  local graphGen     = graph_generator.generateGraph
 
   local nb_tests     = max_vertices * max_games * (max_players)
   local options      = {
@@ -48,9 +49,11 @@ local function test_random_games(val_question)
       local dest_v = dest_p .. nb_vertices .. "_vertices/"
       lfs.mkdir(dest_v)
       for j = 1, max_games do
-        print((players-1) * max_vertices * max_games + (nb_vertices-1) * max_games + j .. "/" .. nb_tests)
+        io.stderr:write((players-1) * max_vertices * max_games + (nb_vertices-1) * max_games + j .. "/" .. nb_tests)
 
-        local graph    = graph_generator(nb_vertices)
+        local graph    = graphGen {
+                          n_vertices = nb_vertices, max_edges  = 2*nb_vertices
+                        }
         local dest_j   = dest_v .. "game_" .. j .. ".xml"
         local dest_tex = dest_v .. "game_" .. j .. ".tex"
         local game     = game_generator(players, graph)
@@ -58,7 +61,7 @@ local function test_random_games(val_question)
         export_tex(game, dest_tex)
 
         -- test tau_1 with best
-        parameters.type_vote = "better"
+        parameters.type_vote = "best"
         local dest_log      = dest_v .. "best_"
                            .. j .. "_tau_1_log.log"
         parameters.fun      = "tau_1"
@@ -149,7 +152,7 @@ end
 --   test_random_games(1)
 -- end
 
---
+
 -- do
 -- local c = 0
 -- print (c)
@@ -173,7 +176,7 @@ end
 -- }
 -- parameters.fun      = "tau_1"
 -- parameters.log_file = "best_different_value_log1.log"
--- local graph    = graph_generator(vertices)
+-- local graph    = graph_generator.generateTree(vertices)
 -- local game     = game_generator(players, graph)
 -- export_game(game, "best_different_value_init1.xml")
 -- game.aggregation_value("tau_1", nil, 1, precision)
@@ -191,7 +194,7 @@ end
 -- end
 -- while (not different) do
 --   print(c)
---   graph    = graph_generator(vertices)
+--   graph    = graph_generator.generateTree(vertices)
 --   game     = game_generator(players, graph)
 --   export_game(game, "best_different_value_init1.xml")
 --
@@ -216,8 +219,6 @@ end
 -- export_tex(game, "best_different_value1.tex")
 --
 -- end
-
-
 
 -- do
 --   local players      = 4
@@ -259,7 +260,7 @@ end
 --   while not cycle do
 --     print(compt)
 --     compt = compt + 1
---     local graph    = graph_generator(vertices)
+--     local graph    = graph_generator.generateTree(vertices)
 --     game     = game_generator(players, graph)
 --
 --     rules.setGame(game)
@@ -272,29 +273,20 @@ end
 --   export_tex(game, "output.tex")
 -- end
 
--- do
---   local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/check_game.xml")
---   -- game:print_game()
---   -- game.aggregation_value("tau_1", 0.1, 1, 8)
---
---   rules.setGame(game)
---   -- rules.setParameters{precision = 10}
---   rules.computeSAA()
---   -- rules.mindChanged(game, {
---   --   fun = "tau_1",
---   --   val_question = 1,
---   --   precision = 8,
---   --   log_details = "all",
---   --   log_file = "output_log.log",
---   --   dynamique    = "round_robin",
---   --   type_vote    = "best",
---   -- })
---
---   game:print_game()
---   -- print(game.graphs.general.LM[1].value)
---
---   -- export_game(game,"output.xml")
---   -- game.plot("output.png", true)
---   export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/game_1.tex")
---
--- end
+do
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/docs/final_report/asterix.xml")
+  -- game:print_game()
+  -- game.aggregation_value("tau_1", 0.1, 1, 8)
+
+  rules.setGame(game)
+  rules.setParameters {compute_agg = false, compute_mean = false, log_file = "../docs/final_report/asterix_log.log"}
+  -- rules.computeSAA()
+  rules.apply()
+  -- game:print_game()
+  -- print(game.graphs.general.LM[1].value)
+
+  export_game(game,"/home/talkie/Documents/Stage/DebateGames/docs/final_report/asterix_final.xml")
+  -- game.plot("output.png", true)
+  export_tex(game, "/home/talkie/Documents/Stage/DebateGames/docs/final_report/asterix.tex")
+
+end

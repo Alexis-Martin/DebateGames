@@ -51,12 +51,15 @@
 {}
 
 \newtheorem{proposition}{Proposition}[section]
+\newtheorem{conjoncture}{Conjoncture}[section]
 \theoremstyle{defi}
 \newtheorem{definition}{Définition}[section]
+\newtheorem{propriete}{Propriétés}[section]
 \theoremstyle{not}
 \newtheorem{notation}{Notation}[section]
 \theoremstyle{prob}
-\newtheorem{exemple}{Exemple}[section]
+\newtheorem{example}{Exemple}[section]
+\newtheorem{remarque}{Remarque}[section]
 
 
 \begin{document}
@@ -163,7 +166,7 @@
 
     Dans la suite on notera $v^+(a)$ (resp. $v^-(a)$) pour désigner le nombre de "like" (resp. "dislike") de l'argument $a$. Pour plus de lisibilité, si il n'y a pas d'ambigüité sur l'argument on notera simplement $v^+$ et $v^-$.
 
-    \begin{exemple}
+    \begin{example}
       Un retour en arrière nous porte à l'époque où les romains était maître de toute la gaulle, excepté dans un petit village de notre Bretagne actuelle, en Armorique.
       Dans ce village, un débat d'une importance capitale éclate, "doit-on garder Assurancetourix dans le village?". [note Assurancetourix est le barde]
 
@@ -209,7 +212,7 @@
       Dans un second temps on peut remarquer, par exemple, que l'argument $a_4$ attaque l'argument $a_3$ qui lui même attaque la question.
       On peut donc considérer $a_4$ comme un argument défenseur de la question.
 
-    \end{exemple}
+    \end{example}
 
     \begin{notation}
       On note $Att(a)$ l'ensemble des arguments directs qui attaquent $a$ :
@@ -286,17 +289,36 @@
 
     Afin de rendre plus clair le fonctionnement du jeu on le présentera de façon informelle sur l'exemple précédent avant de le présenter formellement.
 
+    \begin{definition}[Jeu d'argumentation]
+      Soit $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$, un jeu d'argumentation sur le graphe $F$ est un tuple $G = \langle \mathcal{J}, \mathcal{F}, \mathcal{F_\mathcal{J}} , \mathcal{S}, \mathcal{U} \rangle$ où :
+      \begin{itemize}
+        \item $\mathcal{J} = \{1, \ldots, n\}$ est un ensemble agents ($=$ joueurs)
+        \item $\mathcal{F}$ est un ensemble d'états tel que $F_i \in \mathcal{F}$ si $F_i = \langle \mathcal{A}, \mathcal{R}, V_i \rangle$.
+        \item $\mathcal{F_\mathcal{J}} = (F_1, \cdots, F_n)$ un ensemble de graphe d'argumentation ou $F_k$ est un graphe associé au joueur $k$.
+        \item $\mathcal{S}$ est la sémantique utilisée.
+        \item $\mathcal{U} = (u_1, \cdots, u_n)$ tel que $u_k$ est la fonction d'utilité du joueur $k$.
+      \end{itemize}
+    \end{definition}
     \subsection{Initialisation}
 
       Asterix, Panoramix et Abraracourcix on été désigné par leur sagesse ou leur rang pour délibérer de l'issue du débat qui encours dans le village.\\
 
-      On note $F = \langle \mathcal{A}, \mathcal{R}, V \rangle$ un graphe d'argumentation, $\mathcal{J} = \{1, \ldots, n\}$ $n$ agents ($=$ joueurs) et $\mathcal{S}$ la sémantique utilisée.
-      Chaque agent connait le graphe $F$.\\
-
       Chacun d'eux commence par analyser le débat et, de manière personnelle, vote sur chacun des arguments en fonction de leur préférence.
-      Ainsi Abraracourcix, qui a une vision de guerrier vote positivement sur tous les arguments en faveur de l'expulsion et contre tous les autres.
-      A l'inverse, Panoramix, qui est le plus sage, voit dans l'expulsion d'Assurancetourix une brèche pour les romains de les conquérir. Il vote donc exactement l'inverse d'Abraracourcix.
+      Ainsi Abraracourcix, vote positivement sur tous les arguments en faveur de l'expulsion et contre tous les autres.
+      A l'inverse, Panoramix vote exactement l'inverse d'Abraracourcix.
       Quant à Asterix, il préfère simplement voter pour les arguments avec lesquels il est d'accord et contre ceux qu'il rejète sans tenir compte du résultat.
+
+      \begin{definition}
+        $F_k = \langle \mathcal{A}, \mathcal{R}, V_k \rangle$ est le graphe d'argumentation associé au joueur $k$.
+        La fonction $V_k$ définie donc la préférence du joueur $k$ sur chacun des arguments de $\mathcal{A}$.
+
+        En particulier, $F_k$ est équivalent à au moins un état de $\mathcal{F}$.
+      \end{definition}
+      \begin{definition}
+        Soit $LM_k$ un $\mathcal{S}$-Model pour le graphe $F_k$.
+
+        On appelle la valeur du jeu pour le joueur $k$ (ou valeur du joueur $k$) la valeur de $LM_k(q)$. dans la suite, on notera cette valeur simplement $LM_k$.
+      \end{definition}
 
       A la suite de cette première étape, ils calculent chacun leur valeur personnelle grâce à une formule établie par Archéoptérix.
 
@@ -307,9 +329,9 @@
         \begin{subfigure}{.3\linewidth}
           \begin{tikzpicture}[>=stealth]
             \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-              "a1\\ (1,0)" -> "q\\ (0,0)\\lm = 0.00162913";
+              "a1\\ (1,0)" -> "q\\ (0,0)\\LM = 0.00162913";
               "a2\\ (0,1)" -> "a1\\ (1,0)";
-              "a3\\ (1,0)" -> "q\\ (0,0)\\lm = 0.00162913";
+              "a3\\ (1,0)" -> "q\\ (0,0)\\LM = 0.00162913";
               "a5\\ (0,1)" -> "a1\\ (1,0)";
               "a5\\ (0,1)" -> "a3\\ (1,0)";
               "a4\\ (0,1)" -> "a3\\ (1,0)";
@@ -319,15 +341,15 @@
               "a9\\ (0,1)" -> "a8\\ (1,0)";
             };
           \end{tikzpicture}
-          \caption{Abraracourcix}
+          \caption{$F_{Abraracourcix}$}
         \end{subfigure}
         \hskip1.32em
         \begin{subfigure}{.3\linewidth}
           \begin{tikzpicture}[>=stealth]
             \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-              "a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.99998384";
+              "a1\\ (0,1)" -> "q\\ (0,0)\\LM = 0.99998384";
               "a2\\ (1,0)" -> "a1\\ (0,1)";
-              "a3\\ (0,1)" -> "q\\ (0,0)\\lm = 0.99998384";
+              "a3\\ (0,1)" -> "q\\ (0,0)\\LM = 0.99998384";
               "a5\\ (1,0)" -> "a1\\ (0,1)";
               "a5\\ (1,0)" -> "a3\\ (0,1)";
               "a4\\ (1,0)" -> "a3\\ (0,1)";
@@ -337,15 +359,15 @@
               "a9\\ (1,0)" -> "a8\\ (0,1)";
             };
           \end{tikzpicture}
-          \caption{Panoramix}
+          \caption{$F_{Panoramix}$}
         \end{subfigure}
         \hskip1.32em
         \begin{subfigure}{.3\linewidth}
           \begin{tikzpicture}[>=stealth]
             \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-              "a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.75472551";
+              "a1\\ (0,1)" -> "q\\ (0,0)\\LM = 0.75472551";
               "a2\\ (1,0)" -> "a1\\ (0,1)";
-              "a3\\ (1,0)" -> "q\\ (0,0)\\lm = 0.75472551";
+              "a3\\ (1,0)" -> "q\\ (0,0)\\LM = 0.75472551";
               "a5\\ (0,0)" -> "a1\\ (0,1)";
               "a5\\ (0,0)" -> "a3\\ (1,0)";
               "a4\\ (0,0)" -> "a3\\ (1,0)";
@@ -355,22 +377,14 @@
               "a9\\ (1,0)" -> "a8\\ (0,0)";
             };
           \end{tikzpicture}
-          \caption{Asterix}
+          \caption{$F_{Asterix}$}
         \end{subfigure}
         \caption{Votes et valeur de chaque joueur}
         \label{fig:votes_asterix}
       \end{figure}
       Astérix et Panoramix sont donc plutôt pour garder Assurancetourix alors qu'Abraracourcix est plutôt contre.
 
-      \begin{definition}
-        Soit $F_k = \langle \mathcal{A}, \mathcal{R}, V_k \rangle$ le graphe d'argumentation du joueur $k$.
-        La fonction $V_k$ définie donc la préférence du joueur $k$ sur chacun des arguments de $\mathcal{A}$.
-      \end{definition}
-      \begin{definition}
-        Soit $LM_k$ un $\mathcal{S}$-Model pour le graphe $F_k$.
 
-        On appelle la valeur du jeu pour le joueur $k$ (ou valeur du joueur $k$) la valeur de $LM_k(q)$. dans la suite, on notera cette valeur simplement $LM_k$.
-      \end{definition}
 
     \subsection{Déroulement du jeu}
       Les trois membres du village se regroupe ensuite pour conclure l'issue du débat.
@@ -386,52 +400,128 @@
 
       Sachant qu'un joueur ne peux avoir, au maximum, qu'un seul vote par argument.
       En revanche, un joueur a le droit de changer d'avis.
-      Il peut donc commencer par voter pour l'argument $a_1$ par exemple, puis plus tard changer son vote pour voter contre ou le retirer, etc.
+      Il peut donc commencer par voter pour l'argument $a_1$, puis plus tard changer son vote pour voter contre ou le retirer, etc.
 
       \begin{definition}
-        Soit $LM$ un $\mathcal{S}$-Model pour le graphe $F$.
-        on appelle valeur du jeu la valeur de $LM(q)$. On la notera $LM$ dans la suite.
+        Soit $F_i$ l'état courant de $G$ et $LM_{F_i}$ un $\mathcal{S}$-Model pour le graphe $F_i$.
+        on appelle valeur du jeu la valeur de $LM_{F_i}(q)$. On la notera $LM$ ou $LM_{F_i}$ dans la suite.
       \end{definition}
 
-      Formellement, les joueurs vont tour à tour modifier la fonction $V$.
-      Le coup d'un joueur est un triplet $(k, a, v)$ ou :
+      On appelle $F_0 \in \mathcal{F}$ l'état initial.
+      $F_0$ est le graphe d'argumentation $F_0 = \langle \mathcal{A}, \mathcal{R}, V_0 \rangle$ tel que $V_0(a) = (0, 0)$ pour tout $a \in \mathcal{A}$.\\
+
+      Le coup d'un joueur est un tuple $(F_i, k, a, v, F_j)$ tel que :
       \begin{description}
+        \item[$F_i$] est l'état courant
         \item[$k$] est le joueur.
         \item[$a$] $\in \mathcal{A}\backslash \{q\}$ est l'argument sur lequel le joueur $k$ a voté.
         \item[$v$] $\in \{-, 0, +\}$ indique le vote du joueur. $-$ signifie que le joueur a voté contre, $0$ qu'il n'a pas voté ou retirer son vote et $+$ qu'il a voté pour l'argument $a$.
+        \item[$F_j$] est l'état d'arrivé tel que $V_j(a') = V_i(a')$ pour tout $a' \in \mathcal{A}\backslash\{a\}$ et
+        $$
+        v_j(a) = \left\{
+          \begin{array}{ll}
+            (v_i^+(a) + 1, v_i^-(a)) & \mbox{si } v = + \mbox{ et } k \mbox{ n'a pas de vote sur } a \\
+            (v_i^+(a) + 1, v_i^-(a) - 1) & \mbox{si } v = + \mbox{ et } k \mbox{ a un vote négatif sur } a \\
+            (v_i^+(a) - 1, v_i^-(a)) & \mbox{si } v = 0 \mbox{ et } k \mbox{ a un vote positif sur } a \\
+            (v_i^+(a), v_i^-(a) - 1) & \mbox{si } v = 0 \mbox{ et } k \mbox{ a un vote négatif sur } a \\
+            (v_i^+(a), v_i^-(a) + 1) & \mbox{si } v = - \mbox{ et } k \mbox{ n'a pas de vote sur } a \\
+            (v_i^+(a) - 1, v_i^-(a) + 1) & \mbox{si } v = - \mbox{ et } k \mbox{ a un vote positif sur } a \\
+          \end{array}
+        \right.
+        $$
       \end{description}
 
+      Dans toutes les autres situations le coups est impossible et n'existe pas.
+
       Une partie est un ensemble de coups ordonnés.
-
-      \subsubsection{La dynamique du jeu}
-        La dynamique d'un jeu se fait en deux phases :
-        \begin{enumerate}
-          \item L'enchainement entre les joueurs
-          \item Le comportement de chacun des joueurs.
-        \end{enumerate}
-
-        \paragraph{L'enchaînement entre les joueurs}
-          Dans ce stage on s'intéressera à deux enchaînement différent.
-          La plus connu, notamment utilisé dans la plus part des jeux de plateaux, est \emph{Round\_Robin}.
-          Les agents joueront toujours selon un ordre précis. C'est également le choix fait par nos gaulois.
-          La deuxième qu'on utilisera est appelé \emph{Random}. Elle consiste à choisir aléatoirement le prochain joueur.
-
-        \paragraph{Le comportement des joueurs}
-          Le deuxième point de la dynamique permet de définir comment vont se comporter les joueurs. Là encore on va considérer deux comportements différents.
-          Le premier, appelé \emph{best response} impose aux joueurs, à chaque coups, de toujours choisir le meilleur coups.
-          Le deuxième, appelé \emph{better response} est plus souple, les joueurs sont obligés de choisir un coups améliorant.
-          Mais pas forcément le meilleur.
-
-        \begin{definition}
-          Un coup améliorant pour le joueur $k$ est un coups qui va le rapprocher de son objectif.
-        \end{definition}
 
     \subsection{L'objectif}
       L'objectif pour chaque joueur est que la valeur du jeu soit le plus proche possible de sa valeur.
 
+      \begin{definition}[Stratégie]
+        Une stratégie pour le joueur $k$ est une fonction $\sigma_k : \mathcal{F} \longrightarrow \mathcal{F}\cup \emptyset$ tel que:
+        \begin{itemize}
+          \item Si $\sigma_k(F) = \emptyset$ alors le joueur $k$ ne joue pas.
+          \item Si $\sigma_k(F) = F'$ alors il existe un coups $(F, k, a, v, F')$ valide.
+        \end{itemize}
+
+        On note $\Sigma_k$ l'ensemble des stratégies du joueur $k$.
+      \end{definition}
+
+      \begin{definition}
+        $u_k$ est la fonction d'utilité du joueur $k$, elle est défini par :
+        $$
+        \begin{array}{rclc}
+          u_k :  & \mathcal{F} & \longrightarrow & \Re \\
+          & F & \longmapsto & 1 - |LM_F - LM_k|\\
+        \end{array}
+        $$
+      \end{definition}
+
+      \begin{definition}
+        Un coup $(F, k, a, v, F')$ est dit améliorant pour le joueur $k$ si $u_k(F') > u_k(F)$.
+      \end{definition}
+
+      Autrement dit, l'objectif pour le joueur $k$ est de maximiser $u_k$.
+
+    \subsection{La dynamique du jeu}
+      La dynamique d'un jeu se fait en deux phases :
+      \begin{enumerate}
+        \item L'enchainement entre les joueurs
+        \item Le comportement de chacun des joueurs.
+      \end{enumerate}
+
+      \paragraph{L'enchaînement entre les joueurs}
+        Dans ce stage on s'intéressera à deux enchaînement différent.
+        La plus connu, notamment utilisé dans la plus part des jeux de plateaux, est \emph{Round\_Robin}.
+        Les agents joueront toujours selon un ordre précis.
+        La deuxième qu'on utilisera est appelé \emph{Random}. Elle consiste à choisir le prochain joueur selon une loi de probabilité uniforme.
+
+      \paragraph{Le comportement des joueurs}
+        Le deuxième point de la dynamique permet de définir comment vont se comporter les joueurs. Cela va avoir un impact direct sur le nombre de stratégies possibles. Là encore on va considérer deux comportements différents.
+
+        \begin{description}
+          \item[best response] Les joueurs vont toujours choisir le meilleur coup possible.
+          Donc ils n'ont qu'une seule stratégie qui est
+
+          $\sigma_k(F) = argmax\{u_k(F') | (F, k, a, v, F') \mbox{ est un coup valide}\}$.
+
+          \item[better response] Les joueurs vont choisir un coup améliorant. Les stratégies possibles sont donc de la forme
+
+          $\sigma_k(F) \in \{F' | (F, k, a, v, F') \mbox{ est un coup valide et } u_k(F') > u_k(F)\}$.
+        \end{description}
+
+
+    Durant le jeu entre les trois gaulois, ils ont décidé de choisir une dynamique \emph{Round\_Robin} et \emph{best response}. La valeur du débat à la fin du jeu est $LM = 0.86950214$. le détail des votes finaux est donné sur la figure~\ref{fig:votes_gaulois}. La liste des coups joués est donnée en annexe.
+
+    \begin{figure}
+      \centering
+      \begin{tikzpicture}[>=stealth]
+        \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+          "a1\\ (0,1)\\ (1,0)\\ (0,0)" -> "q\\ (0,0)\\lm = 0.75487625";
+          "a2\\ (1,0)\\ (0,1)\\ (0,0)" -> "a1\\ (0,1)\\ (1,0)\\ (0,0)";
+          "a3\\ (0,1)\\ (1,0)\\ (0,0)" -> "q\\ (0,0)\\lm = 0.75487625";
+          "a5\\ (1,0)\\ (0,1)\\ (0,0)" -> "a1\\ (0,1)\\ (1,0)\\ (0,0)";
+          "a5\\ (1,0)\\ (0,1)\\ (0,0)" -> "a3\\ (0,1)\\ (1,0)\\ (0,0)";
+          "a4\\ (1,0)\\ (0,1)\\ (0,0)" -> "a3\\ (0,1)\\ (1,0)\\ (0,0)";
+          "a7\\ (1,0)\\ (0,1)\\ (1,0)" -> "a3\\ (0,1)\\ (1,0)\\ (0,0)";
+          "a6\\ (0,1)\\ (1,0)\\ (0,0)" -> "a5\\ (1,0)\\ (0,1)\\ (0,0)";
+          "a8\\ (0,1)\\ (1,0)\\ (0,0)" -> "a7\\ (1,0)\\ (0,1)\\ (1,0)";
+          "a9\\ (1,0)\\ (0,1)\\ (0,0)" -> "a8\\ (0,1)\\ (1,0)\\ (0,0)";
+        };
+      \end{tikzpicture}
+      \caption{Votes des trois gaulois}
+      \label{fig:votes_gaulois}
+    \end{figure}
+
+    Sur ce graphe, les votes des trois joueurs sont écrits en dessous de chaque argument. le premier couple est le vote de Panoramix, le second celui d'Abraracourcix et enfin le dernier est celui d'Astérix.
+
+    On remarque que Panoramix à voter de manière à faire augmenter la valeur au maximum et Abraracourcix de façon à la faire descendre au maximum. Seul Astérix à des votes mitigés. Ce qui est cohérent avec leurs choix personnels.
+    On remarque également que la valeur est plutôt en faveur du maintien d'Assurancetourix dans le village. Cela est dût à la présence de deux personnes plutôt pour le maintien.
+
 
   \section{Les problèmes liés au modèle}
-    Il y a plusieurs problèmes liés à la définitions de l'aggrégation des votes $\tau_\varepsilon$.
+    Il y a plusieurs problèmes liés à la définition de l'aggrégation des votes $\tau_\varepsilon$.
     \begin{itemize}
       \item Dans notre cas, on considère que la question ne reçoit aucun vote. Mais si on prend cette définition pour la sémantique alors $LM(q) = 0$ quelques soit les attaquants car $\tau_\varepsilon(q) = 0$.
       \item D'après la définition de Leite et Martins un argument qui n'a pas de vote a un poids à 0 (car $\tau_\varepsilon (a) = 0$) et un vote qui n'a que des votes négatif a également un poids à 0.
@@ -513,38 +603,208 @@
       La preuve est similaire pour la décroissance selon $v^-(a)$.
     \end{proof}
 
-    À la fin de la réunion entre les trois gaulois, la valeur du débat est $LM(q) = 0.86950214$. le détail des votes, à la fin du jeu, est donnée sur la figure~\ref{fig:votes_gaulois}. Le détail des votes est donnée en annexe
 
-    \begin{figure}
-      \centering
-      \begin{tikzpicture}[>=stealth]
-        \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
-          "a1\\ (0,1)\\ (1,0)\\ (0,0)" -> "q\\ (0,0)\\lm = 0.75487625";
-          "a2\\ (1,0)\\ (0,1)\\ (0,0)" -> "a1\\ (0,1)\\ (1,0)\\ (0,0)";
-          "a3\\ (0,1)\\ (1,0)\\ (0,0)" -> "q\\ (0,0)\\lm = 0.75487625";
-          "a5\\ (1,0)\\ (0,1)\\ (0,0)" -> "a1\\ (0,1)\\ (1,0)\\ (0,0)";
-          "a5\\ (1,0)\\ (0,1)\\ (0,0)" -> "a3\\ (0,1)\\ (1,0)\\ (0,0)";
-          "a4\\ (1,0)\\ (0,1)\\ (0,0)" -> "a3\\ (0,1)\\ (1,0)\\ (0,0)";
-          "a7\\ (1,0)\\ (0,1)\\ (1,0)" -> "a3\\ (0,1)\\ (1,0)\\ (0,0)";
-          "a6\\ (0,1)\\ (1,0)\\ (0,0)" -> "a5\\ (1,0)\\ (0,1)\\ (0,0)";
-          "a8\\ (0,1)\\ (1,0)\\ (0,0)" -> "a7\\ (1,0)\\ (0,1)\\ (1,0)";
-          "a9\\ (1,0)\\ (0,1)\\ (0,0)" -> "a8\\ (0,1)\\ (1,0)\\ (0,0)";
-        };
-      \end{tikzpicture}
-      \caption{Votes des trois gaulois}
-      \label{fig:votes_gaulois}
-    \end{figure}
 
-    Sur ce graphe, les votes des trois joueurs sont écrits en dessous de chaque argument. le premier couple est le vote de Panoramix, le second celui d'Abraracourcix et enfin le dernier est celui d'Astérix.
+  \section{Les résultats}
+    Dans cette section on va analyser notre système pour determiner les propriétés qu'il possède.
+    Une des propriétés recherchée est la convergence.
 
-    On remarque que Panoramix à voter de manière à faire augmenter la valeur au maximum et Abraracourcix de façon à la faire descendre au maximum. Seul Astérix à des votes mitigés. Ce qui est cohérent avec leurs choix personnels.
-    On remarque également que la valeur est plutôt en faveur du maintien d'Assurancetourix dans le village. Cela est dût à la présence de deux personnes plutôt pour le maintien.\newpage
+    \begin{definition}
+      on dit qu'un jeu est convergent si, depuis tout état atteignable depuis la situation initiale on peut atteindre un équilibre.
+    \end{definition}
+
+    \subsection{Le cas des arbres}
+      Afin de voir si un cycle pouvait arriver sur les arbres j'ai réalisé un grand nombre de tests.
+      Le résultat de ces tests montre, à priori, qu'on converge toujours et ce quelle que soit la dynamique.
+
+      On va essayer de caractériser ces jeux et voir quels sont leurs propriétés.
+
+      Soit $F$ un arbre d'argumentation et $G$ un jeu d'argumentation avec $n$ joueurs sur $F$.
+      On rappelle que $\Sigma = \Sigma_1 \times \Sigma_2 \times \cdots \times \Sigma_n$ est l'ensemble des stratégies de tous les joueurs.
+      Pour le joueur $i$, on note $\Sigma_{-i}$ l'ensemble des stratégies des autres joueurs. $\Sigma_{-i} = \Sigma_1 \times \cdots \times \Sigma_{i-1} \times \Sigma_{i+1} \times \cdots \times \Sigma_n$.
+
+      \subsubsection{Quelques propriétés}
+        \begin{definition}
+          Un joueur extrème est un joueur dont la valeur est maximale (resp. minimale) dans le jeu. i.e, il a décidé de voter pour (resp. contre) tous les arguments défendant la question et contre (resp. pour) tous les autres.
+        \end{definition}
+
+        On note $j_{min}$ (resp. $j_{max}$) le joueur ayant la plus petite (resp. grande) valeur entre tous les joueurs.
+
+        \begin{propriete}
+          \begin{enumerate}
+            \item A 1 joueur, la valeur finale du jeu peut être différente de la valeur du joueur.
+            \item Un joueur extrême ne peux jamais changer un de ses votes.
+            \item Il existe des états d'équilibres qui ne sont pas entre $j_{min}$ et $j_{max}$.
+            \item Il n'existe pas forcément d'équilibre entre $j_{min}$ et $j_{max}$.
+            \item A deux joueurs, si la dynamique est  \emph{Round\_Robin} et \emph{best response} et si la valeur initiale du jeu est entre $j_{min}$ et $j_{max}$ alors on converge vers cette valeur.
+            \item soit $d_i$ la distance à la valeur initiale pour l'agent $i$. A deux joueurs, si la dynamique est  \emph{Round\_Robin} et \emph{best response}, tout équilibre doit être à une distance inférieure à $d_i$ pour l'agent $i$, $\forall i$.
+          \end{enumerate}
+        \end{propriete}
+
+        \begin{proof}
+
+          \begin{enumerate}
+            \item un exemple est donnée dans l'annexe~\ref{ann:player_1_diff_val}
+            \item Soit $j$ un joueur extrème dont la valeur est maximale.
+            Son objectif va être de monter la valeur au maximum, il va donc toujours vouloir voter contre les argument attaquant la question et pour les arguments défendant.
+            Il ne changera donc jamais d'avis.
+            \item un exemple est donnée dans l'annexe~\ref{ann:equi_outside_min_max}
+            \item un exemple est donnée dans l'annexe~\ref{ann:mini_jeu}
+          \end{enumerate}
+        \end{proof}
+
+        \begin{proof}[Preuve du point 5]
+          Soit $G$ un jeu à deux joueurs sur un arbre d'argumentation $F$.
+
+          Notons que la situation ou le joueur $j_{min}$ à voter de manière à faire descendre la valeur du jeu au maximum et $j_{max}$ à jouer pour faire monter la valeur au maximum à une valeur égale à la situation initiale.
+          Cela est dû au fait que les joueurs auront opposé tous leurs votes et donc on aura autant de votes positifs que de votes négatifs sur chaque argument.
+
+          Notons de plus que cette situation est une situation d'équilibre. En effet, aucun joueur n'a intérêt à changer d'avis.
+
+          Montrons que si la dynamique est \emph{Round\_Robin} et \emph{best response}, alors on atteint ce point d'équilibre.
+
+          Supposons, quitte à réordonner les joueurs, que le joueur $j_{min}$ commence à jouer. Notons $LM_0$ la valeur initiale du jeu et $LM_s$ la valeur du jeu dans l'état $s$.
+
+          Remarquons en premier lieu que la dynamique \emph{best response} nous assure qu'a chaque coup du joueur $j$, $|LM_s - LM_j| \geq |LM_0 - LM_j|$.
+
+          soit $s$ une situation dans la partie et soit $\alpha_s = \{\alpha_{min}^1, \ldots, \alpha_{min}^k, \alpha_{max}^1, \ldots, \alpha_{max}^{k'}\}$ la liste des arguments n'ayant qu'un seul vote avec :
+          \begin{itemize}
+            \item $\{\alpha_{min}^1, \ldots, \alpha_{min}^k\}$ les arguments où seul $j_{min}$ a voté.
+            \item $\{\alpha_{max}^1, \ldots, \alpha_{max}^k\}$ les arguments où seul $j_{max}$ a voté.
+          \end{itemize}
+
+          Si $\alpha_s = \emptyset$ alors $LM_s = LM_0$.
+
+          Comme la dynamique est \emph{Round\_Robin} on a $k = k'$ ou $k = k' + 1$.
+
+          Lorsque le joueur $j$ joue dans l'état $s$ il a deux possibilités,
+          \begin{itemize}
+            \item Voter sur un argument de $\alpha_s$. En votant contre le dernier vote de son adversaire il s'assure $|LM_s - LM_j| \geq |LM_0 - LM_j|$. (La valeur obtenu sera une valeur déjà obtenu précédemment).
+            \item Il existe un argument $a \not \in \alpha_s$ tel que voter sur cet argument est meilleur que tous les contres des arguments de $\alpha_s$.
+          \end{itemize}
+
+          Dans le premier cas, $|\alpha_{s+1} < \alpha_s|$. Dans le second cas on diminue le nombre d'arguments qui n'ont pas encore de vote.
+
+          Tant que $alpha_s$ ne sera pas vide on aura pas une situation d'équilibre.
+        \end{proof}
+
+
+      Commençons par donner quelques propriétés qui vont nous permettre de mieux caractériser ces systèmes.
+
+
+      \begin{definition}[Chemin d'amélioration]
+        Un chemin dans $\Sigma$ est une suite $s = (s^0, s^1, \cdots)$ tel que $\forall k > 0,\ \exists i \in \mathcal{J}$ et  $s^k = (s_{-i}^{k-1}, x)$ avec $x \in \Sigma_i$ et $x \neq s_i^{k-1}$. $s^0$ est appelé le point initial.
+
+        $\sigma$ est un chemin d'amélioration si pour tout $k > 0$ on a $u_i(s^k) > u_i(s^{k-1})$
+      \end{definition}
+
+      \begin{example}
+        Soit $G$ le jeu sur l'arbre à trois noeuds et 2 joueurs présenté si dessous :
+
+        \begin{figure}[h]
+          \centering
+          \begin{tabular}{ccc}
+
+            \begin{tikzpicture}[>=stealth]
+              \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+                "a1\\ (1,0)" -> "q\\ (0,0)\\lm = 0.01";
+                "a2\\ (0,0)" -> "q\\ (0,0)\\lm = 0.01";
+              };
+            \end{tikzpicture}
+            &
+            \begin{tikzpicture}[>=stealth]
+              \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+                "a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.0196";
+                "a2\\ (1,0)" -> "q\\ (0,0)\\lm = 0.0196";
+              };
+            \end{tikzpicture}
+            &
+            \begin{tikzpicture}[>=stealth]
+              \graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+                "a1\\ (1,0)\\ (0,1)" -> "q\\ (0,0)\\lm = 0.01";
+                "a2\\ (1,0)\\ (1,0)" -> "q\\ (0,0)\\lm = 0.01";
+              };
+            \end{tikzpicture}
+          \end{tabular}
+          \caption{de gauche à droite, graphe du joueur 1, graphe du joueur 2, situation finale.}
+        \end{figure}
+
+        Sur ce jeu, la partie :
+
+        \scriptsize$[0.25]$\normalsize$(1, a_2, +)$\scriptsize$[0.05]$\normalsize$ \rightarrow (2, a_2, +)$\scriptsize$[0.01]$\normalsize$ \rightarrow (2, a_1, -)$\scriptsize$[0.018]$\normalsize$ \rightarrow (1, a_1, +)$\scriptsize$[0.01]$ \normalsize est un chemin améliorant.
+        On a indiqué la valeur du jeu au départ et après chaque coup.
+
+        Ce qui est important de noté dans ce chemin c'est que le troisième coup, coup du joueur 2 fait éloigner le joueur 1 de son objectif. En effet $u_1$ passe de 1 à 0.992. Mais étant donnée que c'est le joueur 2 qui joue seule l'évolution de $u_2$ nous intéresse.
+
+      \end{example}
+
+      Soit le graphe orienté $G_\Sigma$ à l'aide de tous chemins d'amélioration.
+
+      \begin{definition}[Weak Finite Improvement Property]
+        On dit que le jeu possède la Weak FIP si, dans le graphe $G_\Sigma$, depuis tout état $s$ il existe un chemin qui mène à un sommet puit.
+      \end{definition}
+
+      \begin{definition}[Finite Improvement Property]
+        On dit que le jeu possède la FIP si le graphe $G_\Sigma$ est acyclique.
+      \end{definition}
+
+      Il est clair qu'un jeu qui possède la FIP où la Weak FIP converge.
+
+      \begin{remarque}
+        Un jeu qui ne possède que la Weak FIP peut continuer indéfiniment dans un cycle, en revanche, sous des conditions raisonnable [ref], on peut dire que cela est improbable.
+      \end{remarque}
+
+      Dans notre cas, $G$ est un jeu fini, quelque soit la dynamique. En effet, le nombre d'état possible est fini, donc le nombre de stratégie l'est aussi.
+      En revanche, $G$ ne possède pas forcément la FIP. Si on considère la dynamique \emph{Random} en \emph{better response}, le jeux présenté dans l'annexe~\ref{ann:counter_example} en est un contre exemple.
+
+      \begin{conjoncture}
+        Soit $F$ un arbre et $G$ un jeu d'argumentation sur $F$. Si on munit $G$ de l'une des trois dynamiques :
+        \begin{enumerate}
+          \item \emph{Round\_Robin} et \emph{best response}.
+          \item \emph{Round\_Robin} et \emph{better response}.
+          \item \emph{Random} et \emph{best response}.
+        \end{enumerate}
+        Alors $G$ possède la FIP.
+      \end{conjoncture}
+
+      L'exemple donné dans l'annexe~\ref{ann:counter_example} permet de conclure qu'un jeu d'argumentation munit de la dynamique \emph{Random} et \emph{better response} ne possède pas la FIP.
+
+      \begin{conjoncture}
+        Soit $F$ un arbre et $G$ un jeu d'argumentation sur $F$. Si on munit $G$ de la dynamique \emph{Random} et \emph{better response}.
+        Alors $G$ possède la Weak FIP.
+      \end{conjoncture}
+
+
+      \begin{definition}[fonction de potentiel]
+        Soit $F$ un graphe d'argumentation et $\mathcal{J} = \{1, \cdots, n\}$ $n$ joueurs.
+        Soit $\Sigma_i$ l'ensemble des stratégies du joueur $i$ et $\Sigma = \Sigma_1 \times \Sigma_2 \times \cdots \times \Sigma_n$.
+        De plus, on note $u_i : \Sigma \longrightarrow \mathcal{R}$ la fonction de paiement du joueur $i$.
+
+        $P : \Sigma \longrightarrow \mathcal{R}$ est un potentiel pour le jeu si pour tout $i \in \mathcal{J}$ et pour tout $s_{-i} \in \Sigma_{-i}$ on a :
+        $$
+          u_i(s_{-i}, x) - u_i(s_{-i}, z) = P(s_{-i}, x) - P(s_{-i}, z)
+        $$
+
+        Pour tout $x, z \in \Sigma_i$
+      \end{definition}
+
+
+
+      \begin{definition}[Jeu de potentiel]
+
+      \end{definition}
+
+
+
+
+
+    \newpage
 
 
 
 
   \appendix
-    \section{Détail des votes pour le jeu présenté Figure~\ref{fig:votes_gaulois}}
+    \section{Détail des coups joués pour le jeu présenté Figure~\ref{fig:votes_gaulois}}
     \begin{tabular}{|c|c|c|c|c|}
     \hline
     & Panoramix & Abraracourcix & Asterix & general \\

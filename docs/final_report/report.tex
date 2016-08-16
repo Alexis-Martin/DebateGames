@@ -74,13 +74,13 @@
 
 
 \subsection*{Le contexte général}
-  Depuis la croissance du Web 2.0 plusieurs site de communication et d'intéractions sociales ont vu le jour. On peut ainsi citer les sites Twitter et Facebook.
+  Depuis la croissance du Web 2.0 plusieurs sites de communication et d'intéraction sociale ont vu le jour. On peut ainsi citer les sites Twitter et Facebook.
 
-  D'autres plate-forme tel que debategraph.org ou debate.org sont également apparues sur la toile. Ces plate-forme proposent aux utilisateurs de participer à des débats.
+  D'autres plateformes tel que \emph{debategraph.org} ou \emph{debate.org} sont également apparues sur la toile. Ces plate-forme proposent aux utilisateurs de participer à des débats.
 
   La recherche c'est donc intéressée à des méthodes d'analyse afin de quantifier l'issue d'un débat, connaitre les arguments les plus importants ou encore détecter les trolls.
 
-  C'est le cas de Leite et Martins [ref] qui ont trouvé un algorithme permettant de calculer un score sur chacun des arguments en fonction de la topologie du graphe d'argumentation, de votes qui sont donnés à chacun des arguments ou encore de votes sur les attaques.
+  C'est le cas de Leite et Martins [ref] qui ont trouvé un algorithme permettant de calculer un score sur chacun des arguments en fonction de la topologie du graphe d'argumentation, des votes qui sont donnés à chacun des arguments ou encore des votes sur les attaques.
 
 % De quoi s'agit-il ?
 % D'où vient-il ?
@@ -94,7 +94,7 @@
   Il peut être donc intéressant de donner une conclusion à ce débat.
   Une approche dynamique mettant en jeu plusieurs personnes est à priori une bonne solution pour tenter de répondre à cette question.
 
-  Aujourd'hui, le manque de littérature et l'unique existence d'algorithmes statiques est dûs au récent intérêt des chercheurs pour l'argumentation.
+  Aujourd'hui, le manque de littérature et l'unique existence d'algorithmes statiques est dû au récent intérêt des chercheurs pour l'argumentation.
 
   Tout ces facteurs font de cette question un sujet intéressant et important à étudier. L'objectif est donc de construire un système dynamique et d'analyser les propriétés que ce système possède.
 
@@ -182,7 +182,7 @@
         \item On a pas besoin de culture, on a besoin de nourriture et que le ciel ne nous tombe pas sur la tête.
         \item En revanche il dispense des cours à nos jeunes du village.
       \end{enumerate}
-      Après ces quelques arguments ennoncés, les gaulois se sont ennervés et une bagarre a commencé. La figure \ref{fig:asterix} montre le graphe construit à l'aide de ces arguments.
+      Après ces quelques arguments ennoncés, les gaulois se sont énervés et une bagarre a commencé. La figure \ref{fig:asterix} montre le graphe construit à l'aide de ces arguments.
 
       \begin{figure}
       \centering
@@ -204,7 +204,7 @@
       \label{fig:asterix}
       \end{figure}
 
-      Sur ce graphe, la question est le noeuds $q$ et les arguments $a_1, \cdots, a_9$ sont les arguments cités ci-dessus.
+      Sur ce graphe, la question est le noeuds $q$ et les arguments $\{a_1, \cdots, a_9\}$ sont les arguments cités ci-dessus.
       De plus on considère qu'il n'y a eu aucun vote, on n'a donc pas représenté les votes ici.
 
       On remarque dans un premier temps que la question n'attaque aucun argument.
@@ -301,11 +301,10 @@
     \end{definition}
     \subsection{Initialisation}
 
-      Asterix, Panoramix et Abraracourcix on été désigné par leur sagesse ou leur rang pour délibérer de l'issue du débat qui encours dans le village.\\
+      Asterix, Panoramix et Abraracourcix ont été désignés par leur sagesse ou leur rang pour délibérer de l'issue du débat qui encours dans le village.\\
 
       Chacun d'eux commence par analyser le débat et, de manière personnelle, vote sur chacun des arguments en fonction de leur préférence.
-      Ainsi Abraracourcix, vote positivement sur tous les arguments en faveur de l'expulsion et contre tous les autres.
-      A l'inverse, Panoramix vote exactement l'inverse d'Abraracourcix.
+      Ainsi Abraracourcix, vote positivement sur tous les arguments en faveur de l'expulsion et contre tous les autres. Panoramix vote exactement l'inverse d'Abraracourcix.
       Quant à Asterix, il préfère simplement voter pour les arguments avec lesquels il est d'accord et contre ceux qu'il rejète sans tenir compte du résultat.
 
       \begin{definition}
@@ -552,16 +551,18 @@
     En utilisant la fonction de répartition de la loi de Laplace, un vote qui à un nombre équivalent de votes positifs et de votes négatifs est égale à $0.5$. Un nombre de votes positifs important fait croitre la valeur de l'argument. À l'inverse, un nombre de votes négatifs important fait décroitre la valeur de l'argument.
     on répond donc bien deux problèmes précédents.
 
+    \begin{figure}
+      \center
+      \includegraphics[scale=0.6]{Laplace.png}
+      \caption{Poids d'un argument en fonction du nombre de votes, avec 10 joueurs}
+      \label{fig:Laplace}
+    \end{figure}
+
     La figure~\ref{fig:Laplace} représente l'évolution du poids d'un argument en fonction de la différence du nombre de votes positifs moins négatifs.
     On remarque bien qu'une différence égale à 0 implique une valeur $\tau(a) = 0.5$ et que plus le nombre de votes positifs augmente, plus la valeur du jeu augmente et inversement.
     On remarque également que la valeur max est égale à $0.98$ et que la valeur min est égale à 0.02.
 
-    \begin{figure}
-      \center
-      \includegraphics[scale=0.6]{Laplace.png}
-      \label{fig:Laplace}
-      \caption{Poids d'un argument en fonction du nombre de votes, avec 10 joueurs}
-    \end{figure}
+
 
 
     Afin de garder les propriétés de convergence de l'algorithme de Leite et Martins, il faut que la fonction $\tau$ soit croissante selon $v^+(a)$ et décroissante selon $v^-(a)$.
@@ -573,31 +574,31 @@
       On va montrer la croissance (resp. décroissance) selon $v^+(a)$ (resp. $v^-(a)$) pour la fonction $\tau$.
 
       Commençons par remarquer que :
-      $$tau(a) = \left\{
+      $$\tau(a) = \left\{
         \begin{array}{ll}
           \frac{1}{2} \cdot \exp(\frac{v^+ - v^-}{\varepsilon})  & \mbox{si } v^+ - v^- < 0 \\
           1 - \frac{1}{2} \cdot \exp(\frac{v^- - v^+}{\varepsilon}) & \mbox{sinon} \\
         \end{array}
       \right.$$
 
-      Soit $a_1, a_2 \in \mathcal{A}\backslash \{q\}$ tel que $v^-(a_1) = v^-(a_2)$ et $v^+(a_1) < v^+(a_2)$. Montrons que $tau(a_1) < tau(a_2)$
+      Soit $a_1, a_2 \in \mathcal{A}\backslash \{q\}$ tel que $v^-(a_1) = v^-(a_2)$ et $v^+(a_1) < v^+(a_2)$. Montrons que $\tau(a_1) < \tau(a_2)$
 
       3 cas possibles :
       \begin{itemize}
         \item si $v^+(a_1) - v^- < 0$ et $v^+(a_2) - v^- < 0$
-        $$tau(v^+(a_1), v^-) - tau(v^+(a_2), v^-) = \frac{1}{2} \cdot \exp(\frac{- v^-}{\varepsilon})(\exp(\frac{v^+(a_1)}{\varepsilon}) - \exp(\frac{v^+(a_2)}{\varepsilon}))$$
+        $$\tau(v^+(a_1), v^-) - \tau(v^+(a_2), v^-) = \frac{1}{2} \cdot \exp(\frac{- v^-}{\varepsilon})(\exp(\frac{v^+(a_1)}{\varepsilon}) - \exp(\frac{v^+(a_2)}{\varepsilon}))$$
 
-        $\exp$ est une fonction croissante donc $tau(v^+(a_1), v^-) < tau(v^+(a_2), v^-)$
+        $\exp$ est une fonction croissante donc $\tau(v^+(a_1), v^-) < \tau(v^+(a_2), v^-)$
 
         \item si $v^+(a_1) - v^- < 0$ et $v^+(a_2) - v^- \geq 0$
-        $$tau(v^+(a_1), v^-) - tau(v^+(a_2), v^-) = \frac{1}{2} \cdot \exp(\frac{v^+(a_1) - v^-}{\varepsilon}) - 1 + \frac{1}{2} \cdot \exp(\frac{v^- - v^+(a_2)}{\varepsilon})$$
+        $$\tau(v^+(a_1), v^-) - \tau(v^+(a_2), v^-) = \frac{1}{2} \cdot \exp(\frac{v^+(a_1) - v^-}{\varepsilon}) - 1 + \frac{1}{2} \cdot \exp(\frac{v^- - v^+(a_2)}{\varepsilon})$$
 
-        En remarquant que $\exp(\frac{v^+(a_1) - v^-}{\varepsilon}) < 1$ et que $\exp(\frac{v^- - v^+(a_2)}{\varepsilon}) \leq 1$ on en conclut que $tau(v^+(a_1), v^-) < tau(v^+(a_2), v^-)$
+        En remarquant que $\exp(\frac{v^+(a_1) - v^-}{\varepsilon}) < 1$ et que $\exp(\frac{v^- - v^+(a_2)}{\varepsilon}) \leq 1$ on en conclut que $\tau(v^+(a_1), v^-) < \tau(v^+(a_2), v^-)$
 
         \item si $v^+(a_1) - v^- \geq 0$ et $v^+(a_2) - v^- \geq 0$
-        $$tau(v^+(a_1), v^-) - tau(v^+(a_2), v^-) = \frac{1}{2} \cdot \exp(\frac{v^-}{\varepsilon})(\exp(\frac{- v^+(a_2)}{\varepsilon}) - \exp(\frac{- v^+(a_1)}{\varepsilon}))$$
+        $$\tau(v^+(a_1), v^-) - \tau(v^+(a_2), v^-) = \frac{1}{2} \cdot \exp(\frac{v^-}{\varepsilon})(\exp(\frac{- v^+(a_2)}{\varepsilon}) - \exp(\frac{- v^+(a_1)}{\varepsilon}))$$
 
-        $\exp(\frac{- v^+(a_2)}{\varepsilon}) < \exp(\frac{- v^+(a_1)}{\varepsilon})$ donc $tau(v^+(a_1), v^-) < tau(v^+(a_2), v^-)$
+        $\exp(\frac{- v^+(a_2)}{\varepsilon}) < \exp(\frac{- v^+(a_1)}{\varepsilon})$ donc $\tau(v^+(a_1), v^-) < \tau(v^+(a_2), v^-)$
       \end{itemize}
 
       La preuve est similaire pour la décroissance selon $v^-(a)$.
@@ -606,8 +607,8 @@
 
 
   \section{Les résultats}
-    Dans cette section on va analyser notre système pour determiner les propriétés qu'il possède.
-    Une des propriétés recherchée est la convergence.
+    Dans cette section on va analyser notre système pour déterminer les propriétés qu'il possède.
+    Une des propriété recherchée est la convergence.
 
     \begin{definition}
       on dit qu'un jeu est convergent si, depuis tout état atteignable depuis la situation initiale on peut atteindre un équilibre.
@@ -637,7 +638,7 @@
             \item Il existe des états d'équilibres qui ne sont pas entre $j_{min}$ et $j_{max}$.
             \item Il n'existe pas forcément d'équilibre entre $j_{min}$ et $j_{max}$.
             \item A deux joueurs, si la dynamique est  \emph{Round\_Robin} et \emph{best response} et si la valeur initiale du jeu est entre $j_{min}$ et $j_{max}$ alors on converge vers cette valeur.
-            \item soit $d_i$ la distance à la valeur initiale pour l'agent $i$. A deux joueurs, si la dynamique est  \emph{Round\_Robin} et \emph{best response}, tout équilibre doit être à une distance inférieure à $d_i$ pour l'agent $i$, $\forall i$.
+            % \item soit $d_i$ la distance à la valeur initiale pour l'agent $i$. A deux joueurs, si la dynamique est  \emph{Round\_Robin} et \emph{best response}, tout équilibre doit être à une distance inférieure à $d_i$ pour l'agent $i$, $\forall i$.
           \end{enumerate}
         \end{propriete}
 
@@ -688,14 +689,10 @@
           Tant que $alpha_s$ ne sera pas vide on aura pas une situation d'équilibre.
         \end{proof}
 
-
-      Commençons par donner quelques propriétés qui vont nous permettre de mieux caractériser ces systèmes.
-
-
       \begin{definition}[Chemin d'amélioration]
         Un chemin dans $\Sigma$ est une suite $s = (s^0, s^1, \cdots)$ tel que $\forall k > 0,\ \exists i \in \mathcal{J}$ et  $s^k = (s_{-i}^{k-1}, x)$ avec $x \in \Sigma_i$ et $x \neq s_i^{k-1}$. $s^0$ est appelé le point initial.
 
-        $\sigma$ est un chemin d'amélioration si pour tout $k > 0$ on a $u_i(s^k) > u_i(s^{k-1})$
+        $s$ est un chemin d'amélioration si pour tout $k > 0$ on a $u_i(s^k) > u_i(s^{k-1})$
       \end{definition}
 
       \begin{example}
@@ -734,7 +731,7 @@
         \scriptsize$[0.25]$\normalsize$(1, a_2, +)$\scriptsize$[0.05]$\normalsize$ \rightarrow (2, a_2, +)$\scriptsize$[0.01]$\normalsize$ \rightarrow (2, a_1, -)$\scriptsize$[0.018]$\normalsize$ \rightarrow (1, a_1, +)$\scriptsize$[0.01]$ \normalsize est un chemin améliorant.
         On a indiqué la valeur du jeu au départ et après chaque coup.
 
-        Ce qui est important de noté dans ce chemin c'est que le troisième coup, coup du joueur 2 fait éloigner le joueur 1 de son objectif. En effet $u_1$ passe de 1 à 0.992. Mais étant donnée que c'est le joueur 2 qui joue seule l'évolution de $u_2$ nous intéresse.
+        Ce qui est important de noter dans ce chemin c'est que le troisième coup, coup du joueur 2 fait éloigner le joueur 1 de son objectif. En effet $u_1$ passe de 1 à 0.992. Mais étant donnée que c'est le joueur 2 qui joue seule l'évolution de $u_2$ nous intéresse.
 
       \end{example}
 
@@ -766,8 +763,6 @@
         \end{enumerate}
         Alors $G$ possède la FIP.
       \end{conjoncture}
-
-      L'exemple donné dans l'annexe~\ref{ann:counter_example} permet de conclure qu'un jeu d'argumentation munit de la dynamique \emph{Random} et \emph{better response} ne possède pas la FIP.
 
       \begin{conjoncture}
         Soit $F$ un arbre et $G$ un jeu d'argumentation sur $F$. Si on munit $G$ de la dynamique \emph{Random} et \emph{better response}.

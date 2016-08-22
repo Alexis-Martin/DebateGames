@@ -4,15 +4,15 @@ local vertex   = {}
 vertex.__index = vertex
 
 -- constructor
-function vertex.create(name, parameters)
+function vertex.create(name, tags)
   assert(name)
   local v = {
     attacks   = {},
     attackers = {}
   }
   setmetatable(v, vertex)
-  if type(parameters) == "table" then
-    v:setParameters(parameters)
+  if type(tags) == "table" then
+    v:setTags(tags)
   end
   v.name = name
   return v

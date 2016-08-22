@@ -73,7 +73,7 @@ end
 -- If you want to export all the tags you can just write "all" in place of the table.
 -- @return A string with the xml output.
 function vertex:exportXml(with_tags)
-  local xml = "<vertex name=\"" .. self.name .. "\" "
+  local xml = "<vertex name=\"" .. tostring(self.name) .. "\" "
 
   if with_tags == "all" then
     for k, v in pairs(self) do
@@ -108,6 +108,10 @@ function vertex:exportTex(with_votes, with_lm)
 end
 
 function vertex:__tostring()
+  return tostring(self.name)
+end
+
+function vertex:dump()
   return yaml.dump(self)
 end
 

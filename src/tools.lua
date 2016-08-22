@@ -64,4 +64,8 @@ function tools.split(str, del)
   return s
 end
 
+function tools.round(num, idp)
+  return tonumber(string.format("%." .. (idp or 0) .. "f", num))
+end
+
 return tools

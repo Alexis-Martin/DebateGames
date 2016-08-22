@@ -216,11 +216,11 @@ function normal_game.isValueInside(game, normal_form, stability_check)
   return true, b_s_t
 end
 
--- local import_game     = require "import_xml"
--- local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/game_1.xml")
---
--- local lsit = normal_game.normalForm(game)
--- local a, b = normal_game.isValueInside(game, lsit, true)
--- print(tostring(a), tostring(b))
+local import_game     = require "import_xml"
+local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/game_1.xml")
+
+local lsit = normal_game.normalForm(game)
+local a, b = normal_game.isValueInside(game, lsit, true)
+print(tostring(a), tostring(b))
 
 return normal_game

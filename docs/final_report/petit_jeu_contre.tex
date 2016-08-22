@@ -1,0 +1,110 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing,graphs}
+\usegdlibrary{layered}
+%Becareful if you use package fontenc, it might be raise an error. If it does, you have to remove it and use \usepackage[utf8x]{luainputenc} in place of \usepackage[utf8]{inputenc}
+
+\begin{document}
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9039208";
+"a2\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9039208";
+"a3\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9039208";
+"a5\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9039208";
+"a5\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9039208";
+"a4\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9039208";
+"a6\\ (0,1)"
+};
+\end{tikzpicture}
+\caption{Joueur 3}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9039208";
+"a2\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9039208";
+"a3\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9039208";
+"a5\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9039208";
+"a5\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9039208";
+"a4\\ (0,1)" -> "q\\ (0,0)\\lm = 0.9039208";
+"a6\\ (0,1)"
+};
+\end{tikzpicture}
+\caption{Joueur 2}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (1,0)" -> "q\\ (0,0)\\lm = 0.0";
+"a2\\ (1,0)" -> "q\\ (0,0)\\lm = 0.0";
+"a3\\ (1,0)" -> "q\\ (0,0)\\lm = 0.0";
+"a5\\ (1,0)" -> "q\\ (0,0)\\lm = 0.0";
+"a5\\ (1,0)" -> "q\\ (0,0)\\lm = 0.0";
+"a4\\ (1,0)" -> "q\\ (0,0)\\lm = 0.0";
+"a6\\ (1,0)"
+};
+\end{tikzpicture}
+\caption{Joueur 1}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (1,0)\\ (0,1)\\ (0,1)" -> "q\\ (0,0)\\lm = 0.39154254";
+"a2\\ (1,0)\\ (0,1)\\ (0,1)" -> "q\\ (0,0)\\lm = 0.39154254";
+"a3\\ (1,0)\\ (0,1)\\ (0,1)" -> "q\\ (0,0)\\lm = 0.39154254";
+"a5\\ (1,0)\\ (0,1)\\ (0,1)" -> "q\\ (0,0)\\lm = 0.39154254";
+"a5\\ (1,0)\\ (0,1)\\ (0,1)" -> "q\\ (0,0)\\lm = 0.39154254";
+"a4\\ (1,0)\\ (0,1)\\ (0,1)" -> "q\\ (0,0)\\lm = 0.39154254";
+"a6\\ (0,0)"
+};
+\end{tikzpicture}
+\caption{general}
+\end{figure}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+& Joueur 1 & Joueur 2 & Joueur 3 & general \\
+\hline
+tour 1 & \_ & \_ & \_ & 0.03125 \\
+\hline
+tour 2 & a5 like & \_ & \_ & 0.01068735 \\
+\hline
+tour 3 & \_ & a5 dislike & \_ & 0.03125 \\
+\hline
+tour 4 & \_ & \_ & a5 dislike & 0.05181265 \\
+\hline
+tour 5 & a4 like & \_ & \_ & 0.01771968 \\
+\hline
+tour 6 & \_ & a4 dislike & \_ & 0.05181265 \\
+\hline
+tour 7 & \_ & \_ & a4 dislike & 0.08590562 \\
+\hline
+tour 8 & a2 like & \_ & \_ & 0.02937931 \\
+\hline
+tour 9 & \_ & a2 dislike & \_ & 0.08590562 \\
+\hline
+tour 10 & \_ & \_ & a2 dislike & 0.14243194 \\
+\hline
+tour 11 & a3 like & \_ & \_ & 0.04871104 \\
+\hline
+tour 12 & \_ & a3 dislike & \_ & 0.14243194 \\
+\hline
+tour 13 & \_ & \_ & a3 dislike & 0.23615284 \\
+\hline
+tour 14 & a1 like & \_ & \_ & 0.08076313 \\
+\hline
+tour 15 & \_ & a1 dislike & \_ & 0.23615284 \\
+\hline
+tour 16 & \_ & \_ & a1 dislike & 0.39154254 \\
+\hline
+\end{tabular}
+\end{document}

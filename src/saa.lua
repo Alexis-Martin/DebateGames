@@ -37,7 +37,9 @@ function SAA.computeGraphSAA(nb_players, graph, fun, epsilon, val_question, prec
     local last_LM = {}
     for k, v in pairs(graph.vertices) do
       last_LM[k] = v.LM
+      print(k, v.LM)
     end
+    print("-------------------")
 
     for k, v in pairs(graph.vertices) do
       local conorm = 0

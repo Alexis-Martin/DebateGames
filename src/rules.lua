@@ -1,6 +1,7 @@
 local tools = require "tools"
 local saa   = require "saa"
 local yaml  = require "yaml"
+local export_tex = require "tex_representation"
 local rules = {}
 
 -- default values for the parameters
@@ -100,25 +101,110 @@ end
 -- Compute the value with the aggregation of all players' votes
 function rules.aggregationValue()
   assert(rules.game)
-  rules.game.aggregation_value(p.fun, p.epsilon, p.val_question, p.precision)
+  rules.game.aggregationValue(p.fun, p.epsilon, p.val_question, p.precision)
 end
 
 -- Compute the mean players value
 function rules.meanValue()
   assert(rules.game)
-  rules.game.mean_value(p.fun, p.epsilon, p.val_question, p.precision)
+  rules.game.meanValue(p.fun, p.epsilon, p.val_question, p.precision)
 end
 
 -- compute the social abstract argumentation algorithm on the game
 function rules.computeSAA(graph)
+  local function computeGraph(graph, nb_players)
+    local I = {}
+    nb_players = nb_players or #rules.game.players
+    local tho = {}
+
+    -- initialize I, a sequence which converge to LM
+    for k, _ in pairs(graph.vertices) do
+      I[k] = 0
+    end
+
+    -- compute the value of tau for each arg
+    for k, v in pairs(graph.vertices) do
+      local eps     = -nb_players / math.log(0.04)
+      v.likes       = v.likes    or 0
+      v.dislikes    = v.dislikes or 0
+      local int_exp = (v.likes - v.dislikes) / eps
+      if type(p.val_question) == "number" and v.tag == "question" then
+        tho[k] = p.val_question
+      elseif p.fun == "tau_2" and v.likes == 0 and v.dislikes == nb_players then
+        tho[k] = 0
+      elseif p.fun == "tau_2" and v.dislikes == 0 and v.likes == nb_players then
+        tho[k] = 1
+      elseif (p.fun == "tau_1" or p.fun == "tau_2") and v.likes - v.dislikes < 0 then
+        tho[k] = 0.5 * math.exp(int_exp)
+      elseif (p.fun == "tau_1" or p.fun == "tau_2") and v.likes - v.dislikes >= 0 then
+        tho[k] = 1 - 0.5 * math.exp(-int_exp)
+      elseif p.fun == "L_&_M" and v.likes + v.dislikes + p.epsilon == 0 then
+        tho[k] = 0
+      elseif p.fun == "L_&_M" then
+        tho[k] = v.likes / (v.likes + v.dislikes + p.epsilon)
+      end
+    end
+
+    -- compute the sequence
+    local loop = true
+    local count = 0
+
+    while loop do
+      count = count + 1
+      if count == 300 then print("======================") end
+      loop = false
+      local new_LM = {}
+      for k, v in pairs(graph.vertices) do
+        new_LM[k] = tho[k]
+        if type(v.attackers) == "table" then
+          for k1, _ in pairs(v.attackers) do
+            new_LM[k] = new_LM[k] * (1 - I[k1])
+          end
+        end
+        if math.abs(I[k] - new_LM[k]) >= 10^(-p.precision) then
+          loop = true
+        end
+      end
+      for k, _ in pairs(I) do
+        I[k] = new_LM[k]
+        if count >= 300 then print("I[" .. k .. "] = " .. I[k]) end
+      end
+      if count == 300 then export_tex(rules.game, "cycle_LM.tex") end
+      if count >= 300 then print("---------------") end
+    end
+
+    -- save the values
+    for k, v in pairs(graph.vertices) do
+      v.LM = tools.round(I[k], p.precision)
+    end
+
+    -- return graph value
+    for _, v in pairs(graph.vertices) do
+      if v.tag == "question" then
+        return v.LM
+      end
+    end
+  end
+
   if not graph then
-    saa.computeSAA(rules.game, p.fun, p.epsilon, p.val_question, p.precision)
+    for k, g in pairs(rules.game.graphs) do
+      local lm
+      if k == "general" then
+        lm = computeGraph(g)
+      else
+        lm = computeGraph(g, 1)
+      end
+      if not g.LM then
+        g.LM = {}
+      end
+      g.LM[#g.LM + 1] = {run = #g.LM + 1, value = lm}
+    end
   else
-    return saa.computeGraphSAA(#rules.game.players, graph, p.fun, p.epsilon, p.val_question, p.precision)
+    return computeGraph(graph)
   end
 end
 -------------------------------------------------------
---                 ANNEX FUNCTIONS                   --
+--                 ANNEXES FUNCTIONS                   --
 -------------------------------------------------------
 -- These functions are used by the previous one but we can't call them directly.
 
@@ -175,6 +261,7 @@ mindChanged = function ()
       io.write(current_vote.player .. " : LM = " .. rules.game.graphs[current_vote.player].LM[#rules.game.graphs[current_vote.player].LM].value .. "\n")
       io.write("general : LM = " .. rules.game.graphs.general.LM[#rules.game.graphs.general.LM].value .. "\n")
       io.write("===================================\n")
+      io.flush()
     end
 
     -- reinitialise current_vote
@@ -229,6 +316,7 @@ mindChanged = function ()
       if p.log_file and p.log_details == "all" then
         io.write("configuration : \n")
         io.write(yaml.dump(historical_shots[#historical_shots]) .. "\n")
+        io.flush()
       end
 
       -- search for cycle
@@ -246,6 +334,7 @@ mindChanged = function ()
             io.write("configuration 2 : run = " .. i .. "\n")
             io.write(yaml.dump(historical_shots[i]) .. "\n")
             io.write("-------------------------------\n")
+            io.flush()
             break
           end
         end
@@ -269,6 +358,7 @@ mindChanged = function ()
         " lm avant = " .. rules.game.graphs.general.LM[#rules.game.graphs.general.LM].value ..
         " lm après " .. (current_vote.lm or rules.game.graphs.general.LM[#rules.game.graphs.general.LM].value) .. "\n")
         io.write("============================== \n")
+        io.flush()
       end
     end
   end
@@ -371,6 +461,7 @@ betterMove = function ()
       if i < #better_votes then io.write(", ") end
     end
     io.write("] \n\n")
+    io.flush()
   end
 end
 
@@ -446,6 +537,7 @@ testMove = function (arg, vote)
       io.write("\t" .. k .. " = " .. tostring(v) .. "\n")
     end
     io.write("--------------------------\n")
+    io.flush()
   end
 
   -- restoration of the previous values

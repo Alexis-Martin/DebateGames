@@ -46,7 +46,7 @@ local function export_game(game, dest)
             xml = xml .. k .. "=\"" .. v .. "\" "
           end
         end
-        xml = xml .. ">" .. LM.value .."</LM>"
+        xml = xml .. ">" .. (LM.value or "err") .."</LM>"
       end
       xml = xml .. "\n\t\t</LM>"
     end

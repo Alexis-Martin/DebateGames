@@ -1,0 +1,28 @@
+<game players="1" aggregate_value="0.03881" changed="0" pass="0" mean="0.03881" rounds="3">
+	<tree view="joueur 1">
+		<vertex name="q" LM="0.03881" likes="0" dislikes="0" tag="question" />
+		<vertex name="a1" LM="0.9604" dislikes="0" likes="1" />
+		<vertex name="a2" LM="0.02" likes="0" dislikes="1" />
+		<vertex name="a3" LM="0.02" likes="0" dislikes="1" />
+		<LM>
+			<LM run="1" >0.03881</LM>
+		</LM>
+	</tree>
+
+	<tree view="general">
+		<vertex name="q" LM="0.01999" likes="0" dislikes="0" tag="question" />
+		<vertex name="a1" LM="0.0004" dislikes="1" likes="0" />
+		<vertex name="a3" LM="0.98" dislikes="0" likes="1" />
+		<vertex name="a2" LM="0.98" dislikes="0" likes="1" />
+		<edge source="a1" target="q" />
+		<edge source="a2" target="a1" />
+		<edge source="a3" target="q" />
+		<LM>
+			<LM run="1" >0.375</LM>
+			<LM player="joueur 1" run="2" vote="1" arg_vote="a3" >0.015</LM>
+			<LM player="joueur 1" run="3" vote="-1" arg_vote="a1" >0.0198</LM>
+			<LM player="joueur 1" run="4" vote="1" arg_vote="a2" >0.01999</LM>
+			<LM player="joueur 1" run="5" vote="0" arg_vote="none" >0.01999</LM>
+		</LM>
+	</tree>
+<game_parameters fun="tau_1" rule="mindChanged" epsilon="0.1" val_question="1" dynamique="round_robin" precision="5" /></game>

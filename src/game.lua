@@ -189,7 +189,7 @@ local function create_game(players, graph)
 
   game.graphs.general.view = "general"
 
-  game.aggregation_value = function(fun, epsilon, val_question, precision)
+  game.aggregationValue = function(fun, epsilon, val_question, precision)
     local graph = deepcopy(game.graphs.general)
     for _, v in pairs(graph.vertices) do
       v.likes    = 0
@@ -202,6 +202,19 @@ local function create_game(players, graph)
       end
     end
     game.aggregate_value = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
+  end
+
+  game.meanValue = function(fun, epsilon, val_question, precision)
+    game.mean_value = 0
+    for k, p in pairs(game.graphs) do
+      if k ~= "general" then
+        assert(type(p.LM) == "table")
+        game.mean_value = game.mean_value + p.LM[1].value
+      end
+    end
+
+    game.mean_value = game.mean_value / #game.players
+
   end
 
   game.strongest_move = function(fun, epsilon, val_question, precision)

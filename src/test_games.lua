@@ -5,16 +5,17 @@ local export_tex      = require "tex_representation"
 local import_game     = require "import_xml"
 local lfs             = require "lfs"
 local rules           = require "rules"
+local saa             = require "saa"
 
 
 local function test_random_games(val_question)
   local max_players  = 2
-  local max_games    = 30
+  local max_games    = 1
   local max_vertices = 15
   local precision    = 8
   local dynamique    = "round_robin"
   local type_vote    = "best"
-  local compute_agg  = true
+  local compute_agg  = false
   local compute_mean = false
   local log_details  = "strokes"
   local check_cycle  = true
@@ -49,7 +50,7 @@ local function test_random_games(val_question)
       local dest_v = dest_p .. nb_vertices .. "_vertices/"
       lfs.mkdir(dest_v)
       for j = 1, max_games do
-        io.stderr:write((players-1) * max_vertices * max_games + (nb_vertices-1) * max_games + j .. "/" .. nb_tests)
+        print((players-1) * max_vertices * max_games + (nb_vertices-1) * max_games + j .. "/" .. nb_tests)
 
         local graph    = graphGen {
                           n_vertices = nb_vertices, max_edges  = 2*nb_vertices
@@ -221,15 +222,16 @@ end
 -- end
 
 -- do
---   local players      = 4
---   local vertices     = 15
+--   local players      = 2
+--   local vertices     = 4
 --   local precision    = 8
---   local dynamique    = "random"
---   local type_vote    = "better"
+--   local dynamique    = "round_robin"
+--   local type_vote    = "best"
 --   local compute_agg  = false
 --   local compute_mean = false
 --   local log_details  = "all"
 --   local check_cycle  = true
+--   local epsilon      = 0.1
 --
 --   local options      = {
 --     xlabel = "round",
@@ -248,8 +250,8 @@ end
 --     rule         = "mindChanged",
 --     check_cycle  = check_cycle
 --   }
---   parameters.fun      = "tau_1"
---   parameters.log_file = "output_log.log"
+--   parameters.fun      = "L_&_M"
+--   parameters.log_file = "cycle_test_na_graph_log.log"
 --
 --   rules.setParameters(parameters)
 --
@@ -260,33 +262,41 @@ end
 --   while not cycle do
 --     print(compt)
 --     compt = compt + 1
---     local graph    = graph_generator.generateTree(vertices)
+--     local graph    = graph_generator.generateNAGraph{
+--                       n_vertices = vertices, max_edges  = 2*vertices
+--                     }
 --     game     = game_generator(players, graph)
+--     export_game(game, "cycle_test_na_graph_init.xml")
+--     export_tex(game, "cycle_test_na_graph_init.tex")
 --
 --     rules.setGame(game)
 --     rules.apply()
 --     cycle = game.cycle
 --   end
 --
---   game.plot  ("output.png", false, options)
---   export_game(game, "output.xml")
---   export_tex(game, "output.tex")
+--   game.plot  ("cycle_test_na_graph.png", false, options)
+--   export_game(game, "cycle_test_na_graph.xml")
+--   export_tex(game, "cycle_test_na_graph.tex")
 -- end
 
+
+
+
+
 do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/docs/final_report/asterix.xml")
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/game_1.xml")
   -- game:print_game()
   -- game.aggregation_value("tau_1", 0.1, 1, 8)
 
   rules.setGame(game)
-  rules.setParameters {compute_agg = false, compute_mean = false, log_file = "../docs/final_report/asterix_log.log"}
+  -- rules.setParameters {compute_agg = false, compute_mean = true, }
   -- rules.computeSAA()
   rules.apply()
   -- game:print_game()
   -- print(game.graphs.general.LM[1].value)
-
-  export_game(game,"/home/talkie/Documents/Stage/DebateGames/docs/final_report/asterix_final.xml")
-  -- game.plot("output.png", true)
-  export_tex(game, "/home/talkie/Documents/Stage/DebateGames/docs/final_report/asterix.tex")
+  -- saa.computeGraphSAA(1, game.graphs.general, "L_&_M", 0.1, 1, 8)
+  export_game(game,"/home/talkie/Documents/Stage/DebateGames/src/game_1_test.xml")
+  -- game.plot("//home/talkie/Documents/Stage/DebateGames/docs/final_report/petit_jeu_contre.png", true)
+  export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/game_1_test.tex")
 
 end

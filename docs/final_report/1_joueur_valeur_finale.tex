@@ -1,0 +1,48 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing,graphs}
+\usegdlibrary{layered}
+%Becareful if you use package fontenc, it might be raise an error. If it does, you have to remove it and use \usepackage[utf8x]{luainputenc} in place of \usepackage[utf8]{inputenc}
+
+\begin{document}
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (1,0)" -> "q\\ (0,0)\\lm = 0.03881";
+"a2\\ (0,1)" -> "a1\\ (1,0)";
+"a3\\ (0,1)" -> "q\\ (0,0)\\lm = 0.03881";
+};
+\end{tikzpicture}
+\caption{joueur 1}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.01999";
+"a2\\ (1,0)" -> "a1\\ (0,1)";
+"a3\\ (1,0)" -> "q\\ (0,0)\\lm = 0.01999";
+};
+\end{tikzpicture}
+\caption{general}
+\end{figure}
+\begin{tabular}{|c|c|c|}
+\hline
+& joueur 1 & general \\
+\hline
+tour 1 & \_ & 0.375 \\
+\hline
+tour 2 & a3 like & 0.015 \\
+\hline
+tour 3 & a1 dislike & 0.0198 \\
+\hline
+tour 4 & a2 like & 0.01999 \\
+\hline
+tour 5 & pass & 0.01999 \\
+\hline
+\end{tabular}
+\end{document}

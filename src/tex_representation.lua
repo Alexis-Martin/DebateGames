@@ -143,7 +143,7 @@ local function show_tex (game, output)
           io.write("\\_" .. " & ")
         end
       end
-      io.write(v.value .. " \\\\")
+      io.write((v.value or "err") .. " \\\\")
       io.write("\n")
       io.write("\\hline")
       io.write("\n")
@@ -151,8 +151,8 @@ local function show_tex (game, output)
     io.write("\\end{tabular}")
   end
   io.write("\n")
-
   io.write("\\end{document}")
+  io.flush()
 end
 
 return show_tex

@@ -74,7 +74,7 @@ function edge:removeTag(key)
 end
 
 --- Export the edge into an XML form.
--- @param with_tags if it true the tags will be export too. If with_tags = "all" then all tags will be print else if with_tags is a table then she should be of the form tag = true.
+-- @param with_tags If with_tags = "all" then all tags will be print else if with_tags is a table then she should be of the form tag = true.
 -- @return a string which contains the result.
 function edge:exportXml(with_tags)
   local xml = "<edge source=\"" .. tostring(self.source) .. "\""

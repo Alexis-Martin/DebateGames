@@ -12,7 +12,7 @@ graph.__index = graph
 --- Constructor
 -- @param class the class of graph you create
 -- @tags a table of tags you want add to the graph. Possibly nil.
--- Return the graph
+-- @return the graph
 function graph.create(class, tags)
   assert(class)
   local g = {
@@ -235,7 +235,7 @@ function graph:exportTex(output, with_header, with_details)
 end
 
 --- Export the graph into an XML form. Note that import need both vertices and edges.
--- @param with_tags if it true the tags will be export too. If with_tags = "all" then all tags will be print else if with_tags is a table then she should be of the form tag = true.
+-- @param with_tags If with_tags = "all" then all tags will be print else if with_tags is a table then she should be of the form tag = true.
 -- @param with_vertices indicate if the vertices will be export.
 -- @param with_edges indicate if the edges will be export.
 -- @return a string which contains the result.

@@ -1,12 +1,10 @@
----test graph
+--- A graph is a set of vertices, a set of edges and a class (tree, agraph, graph, ...).
+-- You are allow to add or delete vertices and edges.
+-- Class are not really used right now, except for the XML export.
 -- @module graph
 local yaml   = require 'yaml'
 local edge   = require 'edge'
 local vertex = require 'vertex'
-
---- A graph is a set of vertices, a set of edges and a class (tree, agraph, graph, ...).
--- You are allow to add or delete vertices and edges.
--- Class are not really used right now, except for the XML export.
 
 local graph   = {}
 graph.__index = graph
@@ -86,7 +84,6 @@ function graph:removeVertex(name)
   for _, v in pairs(self.edges) do
     print(tostring(v))
   end
-
 end
 
 --- Get a vertex

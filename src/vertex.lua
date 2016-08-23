@@ -84,7 +84,9 @@ function vertex:exportXml(with_tags)
     end
   elseif type(with_tags) == "table" then
     for k, v in pairs(with_tags) do
-      if self[k] then
+      if self[k]          and k ~= "attacks" and
+         k ~= "attackers" and k ~= "name"    and
+         k ~= "content"   then
         xml = xml .. tostring(k) .. "=\"" .. tostring(v) .. "\" "
       end
     end

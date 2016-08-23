@@ -47,7 +47,7 @@ local doMove
 
 
 -- Set the parameters of the rules
--- Add new parameters and change it if the key already exists
+-- Add new parameters and change them if the key already exists
 -- @param parameters table (key, values) of parameters
 function rules.setParameters(parameters)
   assert(type(parameters) == "table")

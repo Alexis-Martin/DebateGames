@@ -3,6 +3,7 @@ local yaml  = require 'yaml'
 local edge   = {}
 edge.__index = edge
 
+-- TODO ajouter getSource et getTarget
 function edge.create(source, target, tags)
   assert(source and target)
   local e = {
@@ -19,7 +20,7 @@ end
 function edge:setTags(t)
   assert(type(t) == "table")
   for i, v in pairs(t) do
-    assert(i ~= "attacks" and i ~= "attackers")
+    assert(i ~= "source" and i ~= "target")
     self[i] = v
   end
 end
@@ -27,20 +28,20 @@ end
 function edge:removeTags(t)
   assert(type(t) == table)
   for i, _ in pairs(t) do
-    assert(i ~= "attacks" and i ~= "attackers")
+    assert(i ~= "source" and i ~= "target")
     self[i] = nil
   end
 end
 
 function edge:setTag(key, value)
   assert(key ~= nil)
-  assert(key ~= "attacks" and key ~= "attackers")
+  assert(key ~= "source" and key ~= "target")
   self[key] = value
 end
 
 function edge:removeTag(key)
   assert(key ~= nil)
-  assert(key ~= "attacks" and key ~= "attackers")
+  assert(key ~= "source" and key ~= "target")
   self[key] = nil
 end
 
@@ -50,13 +51,13 @@ function edge:exportXml(with_tags)
 
   if with_tags == "all" then
     for k, v in pairs(self) do
-      if k ~= "source"   and k ~= "target" then
+      if k ~= "source" and k ~= "target" then
         xml = xml .. tostring(k) .. "=\"" .. tostring(v) .. "\" "
       end
     end
   elseif type(with_tags) == "table" then
     for k, v in pairs(with_tags) do
-      if self[k] then
+      if self[k] and k ~= "source" and k ~= "target" then
         xml = xml .. tostring(k) .. "=\"" .. tostring(v) .. "\" "
       end
     end

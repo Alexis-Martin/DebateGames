@@ -1,6 +1,16 @@
 local tools = {}
 local_random_seed = false
 
+rawtype = type
+
+type = function ( var )
+  local _m = getmetatable(var);
+  if _m and _m.__type then
+   return _m.__type;
+  end
+  return rawtype(var);
+ end
+
 function tools.randomseed()
   if not local_random_seed then
     math.randomseed(os.time())
@@ -68,4 +78,21 @@ function tools.round(num, idp)
   return tonumber(string.format("%." .. (idp or 0) .. "f", num))
 end
 
+function tools.exportXmlTable(key, table)
+  local function iter(k, t)
+    local xml = "\n<" .. tostring(k)
+    local xml_table
+    for k1, v in pairs(t) do
+      if type(v) == "table" then
+        xml_table = (xml_table or "") .. iter(k1, v)
+      else
+        xml = xml .. " " .. tostring(k1) .."=\"" .. tostring(v) .. "\""
+      end
+    end
+
+    xml = xml .. ((">\n" .. xml_table .. "\n</" .. tostring(k) .. ">") or "/>")
+    return xml
+  end
+  return iter(key, table)
+end
 return tools

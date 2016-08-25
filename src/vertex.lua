@@ -2,10 +2,11 @@
 -- He add a name, a set of vertices that attack it and a set of vertices that are attack by it.
 -- @module vertex
 local yaml  = require 'yaml'
+local tools = require 'tools'
 
 local vertex   = {}
 vertex.__index = vertex
-
+vertex.__type  = "vertex"
 --- Constructor
 -- @param name the name of the vertex.
 -- @tags a table of tags you want add to the graph. Possibly nil.
@@ -14,7 +15,8 @@ function vertex.create(name, tags)
   assert(name)
   local v = {
     attacks   = {},
-    attackers = {}
+    attackers = {},
+    tags      = {}
   }
   setmetatable(v, vertex)
   if type(tags) == "table" then
@@ -57,18 +59,22 @@ end
 function vertex:setTags(t)
   assert(type(t) == "table")
   for i, v in pairs(t) do
-    assert(i ~= "attacks" and i ~= "attackers")
-    self[i] = v
+    self.tags[i] = v
   end
+end
+
+--- Get all tags
+-- @return The table of tags
+function vertex:getTags()
+  return self.tags
 end
 
 --- remove a set of tags
 -- @param t a table of the form key = true
 function vertex:removeTags(t)
   assert(type(t) == table)
-  for i, _ in pairs(t) do
-    assert(i ~= "attacks" and i ~= "attackers")
-    self[i] = nil
+  for _, v in ipairs(t) do
+    self.tags[v] = nil
   end
 end
 
@@ -77,42 +83,49 @@ end
 -- @param value the value of the tag
 function vertex:setTag(key, value)
   assert(key ~= nil)
-  assert(key ~= "attacks" and key ~= "attackers")
-  self[key] = value
+  self.tags[key] = value
+end
+
+--- Get the value of a tag
+-- @param key The key of the tag
+-- @return The value
+function vertex:getTag(key)
+  return self.tags[key]
 end
 
 --- Delete a tag
 -- @param key the key of the tag
 function vertex:removeTag(key)
   assert(key ~= nil)
-  assert(key ~= "attacks" and key ~= "attackers")
-  self[key] = nil
+  self.tags[key] = nil
 end
 
 --- Export the graph into an XML form.
--- @param with_tags If with_tags = "all" then all tags will be print else if with_tags is a table then she should be of the form tag = true.
+-- @param with_tags If with_tags = "all" then all tags will be print else if with_tags must be a table
 -- @return A string with the xml output.
 function vertex:exportXml(with_tags)
-  local xml = "<vertex name=\"" .. tostring(self.name) .. "\" "
+  local xml = "<vertex name=\"" .. tostring(self.name) .. "\""
+  local xml_tags = nil
 
   if with_tags == "all" then
-    for k, v in pairs(self) do
-      if k ~= "attacks"   and k ~= "attackers" and
-         k ~= "name"      and k ~= "content"   then
-        xml = xml .. tostring(k) .. "=\"" .. tostring(v) .. "\" "
+    for k, v in pairs(self.tags) do
+      if type(v) == "table" then
+        xml_tags = (xml_tags or nil) .. tools.exportXmlTable(k, v)
+      else
+        xml = xml .. " " .. tostring(k) .. "=\"" .. tostring(v) .. "\""
       end
     end
   elseif type(with_tags) == "table" then
-    for k, v in pairs(with_tags) do
-      if self[k]          and k ~= "attacks" and
-         k ~= "attackers" and k ~= "name"    and
-         k ~= "content"   then
-        xml = xml .. tostring(k) .. "=\"" .. tostring(v) .. "\" "
+    for _, v in ipairs(with_tags) do
+      if type(self.tags[v]) == "table" then
+        xml_tags = (xml_tags or nil) .. tools.exportXmlTable(v, self.tags[v])
+      elseif self.tags[v] then
+        xml = xml .. " " .. tostring(v) .. "=\"" .. tostring(self.tags[v]) .. "\""
       end
     end
   end
 
-  xml = xml .. ((">" .. self.content .. "</vertex>") or "/>")
+  xml = xml .. ((">" .. xml_tags .. "</vertex>") or "/>")
   return xml
 end
 
@@ -123,11 +136,11 @@ end
 function vertex:exportTex(with_votes, with_lm)
   local tex = "\"$" .. self.name .. "$"
   if with_votes then
-    tex = tex .. "\\\\ (" .. (self.likes or 0) .. ","
-              .. (self.dislikes or 0) .. ")"
+    tex = tex .. "\\\\ (" .. (self.tags.likes or 0) .. ","
+              .. (self.tags.dislikes or 0) .. ")"
   end
   if with_lm then
-    tex = tex .. "\\\\ lm = " .. (self.LM[#self.LM].value or "unknown")
+    tex = tex .. "\\\\ lm = " .. (self.tags.LM[#self.tags.LM].value or "unknown")
   end
   tex = tex .. "\""
   return tex

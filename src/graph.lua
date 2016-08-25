@@ -5,9 +5,11 @@
 local yaml   = require 'yaml'
 local edge   = require 'edge'
 local vertex = require 'vertex'
+local tools  = require 'tools'
 
 local graph   = {}
 graph.__index = graph
+graph.__type  = "graph"
 
 --- Constructor
 -- @param class the class of graph you create
@@ -19,6 +21,7 @@ function graph.create(class, tags)
     vertices = {},
     edges    = {},
     class    = class,
+    tags     = {}
   }
   setmetatable(g, graph)
   if type(tags) == "table" then
@@ -32,18 +35,16 @@ end
 function graph:setTags(t)
   assert(type(t) == "table")
   for i, v in pairs(t) do
-    assert(i ~= "vertices" and i ~= "edges" and i ~= "class")
-    self[i] = v
+    self.tags[i] = v
   end
 end
 
 --- remove a set of tags
 -- @param t a table of the form key = true
 function graph:removeTags(t)
-  assert(type(t) == table)
-  for i, _ in pairs(t) do
-    assert(i ~= "vertices" and i ~= "edges" and i ~= "class")
-    self[i] = nil
+  assert(type(t) == "table")
+  for _, v in ipairs(t) do
+    self.tags[v] = nil
   end
 end
 
@@ -52,16 +53,21 @@ end
 -- @param value the value of the tag
 function graph:setTag(key, value)
   assert(key ~= nil)
-  assert(key ~= "vertices" and key ~= "edges" and key ~= "class")
-  self[key] = value
+  self.tags[key] = value
+end
+
+--- Get a tag
+-- @param key The tag
+-- @return The value of key
+function graph:getTag(key)
+  return self.tags[key]
 end
 
 --- Delete a tag
 -- @param key the key of the tag
 function graph:removeTag(key)
   assert(key ~= nil)
-  assert(key ~= "vertices" and key ~= "edges" and key ~= "class")
-  self[key] = nil
+  self.tags[key] = nil
 end
 
 --- Add a vertex if the vertex exist and tags is not nil the tags won't be modified
@@ -93,12 +99,26 @@ function graph:getVertex(name)
   return self.vertices[name]
 end
 
+--- Get the table vertices
+-- @return set of vertices
+function graph:getVertices()
+  return self.vertices
+end
+
 --- Add or modify a set of tags of a specific vertex
 -- @param name the name of the vertex
 -- @param tags a table
 function graph:setVertexTags(name, tags)
   assert(self.vertices[name])
   self.vertices[name]:setTags(tags)
+end
+
+--- Get vertex tags
+-- @param name The name of the vertex
+-- @return the table tags of the vertex
+function graph:getVertexTags(name)
+  assert(self:getVertex(name))
+  return self:getVertex(name):getTags()
 end
 
 --- Remove a set of tags of a specific vertex
@@ -116,6 +136,15 @@ end
 function graph:setVertexTag(name, key, value)
   assert(self.vertices[name])
   self.vertices[name]:setTag(key, value)
+end
+
+--- Get vertex tag
+-- @param name The name of the vertex
+-- @param key The key of the tag
+-- @return the value of the tag
+function graph:getVertexTag(name, key)
+  assert(self:getVertex(name))
+  return self:getVertex(name):getTag(key)
 end
 
 --- Delete a tag
@@ -176,7 +205,12 @@ end
 -- @param with_details It is a boolean. If it true some details of the vertices will be shown. In the future I would like to change it by a function.
 function graph:exportTex(output, with_header, with_details)
   if output then
-    local fic = io.open(output, "w")
+    local fic
+    if with_header then
+      fic = io.open(output, "w")
+    else
+      fic = io.open(output, "a")
+    end
     io.output(fic)
   end
 
@@ -235,28 +269,32 @@ function graph:exportTex(output, with_header, with_details)
 end
 
 --- Export the graph into an XML form. Note that import need both vertices and edges.
--- @param with_tags If with_tags = "all" then all tags will be print else if with_tags is a table then she should be of the form tag = true.
+-- @param with_tags If with_tags = "all" then all tags will be print else if with_tags must be a table.
 -- @param with_vertices indicate if the vertices will be export.
 -- @param with_edges indicate if the edges will be export.
 -- @return a string which contains the result.
 function graph:exportXml(with_tags, with_vertices, with_edges)
-  local xml = "<" .. self.class
+  local xml = "<graph class=\"" .. self.class
+  local xml_tags = ""
 
   if with_tags == "all" then
-    for k, v in pairs(self) do
-      if k ~= "edges" and k ~= "vertices" and k ~= "class" then
-        xml = xml .. tostring(k) .. "=\"" .. tostring(v) .. "\" "
+    for k, v in pairs(self.tags) do
+      if type(v) == "table" then
+        xml_tags = (xml_tags or nil) .. tools.exportXmlTable(k, v)
+      else
+        xml = xml .. " " .. tostring(k) .. "=\"" .. tostring(v) .. "\""
       end
     end
   elseif type(with_tags) == "table" then
-    for k, v in pairs(with_tags) do
-      if self[k]         and k ~= "edges" and
-         k ~= "vertices" and k ~= "class" then
-        xml = xml .. tostring(k) .. "=\"" .. tostring(v) .. "\" "
+    for _, v in ipairs(with_tags) do
+      if type(self.tags[v]) == "table" then
+        xml_tags = (xml_tags or nil) .. tools.exportXmlTable(v, self.tags[v])
+      elseif self.tags[v] then
+        xml = xml .. " " .. tostring(v) .. "=\"" .. tostring(self.tags[v]) .. "\""
       end
     end
   end
-  xml = xml .. ">\n"
+  xml = xml .. ">\n" .. xml_tags
 
   if with_vertices then
     for _, v in pairs(self.vertices) do
@@ -268,7 +306,7 @@ function graph:exportXml(with_tags, with_vertices, with_edges)
       xml = xml .. v:exportXml(with_tags) .. "\n"
     end
   end
-  xml = xml .. "</" .. self.class .. ">"
+  xml = xml .. "</graph>"
   return xml
 end
 

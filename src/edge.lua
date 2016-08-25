@@ -2,10 +2,11 @@
 -- Source and target are both vertices, w.r.t. the vertex definition.
 --@module edge
 local yaml  = require 'yaml'
+local tools = require 'tools'
 
 local edge   = {}
 edge.__index = edge
-
+edge.__type  = "edge"
 --- Constructor
 -- @param source the vertex source.
 -- @param target the vertex target.
@@ -15,7 +16,8 @@ function edge.create(source, target, tags)
   assert(source and target)
   local e = {
     source = source,
-    target = target
+    target = target,
+    tags   = {}
   }
   setmetatable(e, edge)
   if type(tags) == "table" then
@@ -41,18 +43,23 @@ end
 function edge:setTags(t)
   assert(type(t) == "table")
   for i, v in pairs(t) do
-    assert(i ~= "source" and i ~= "target")
-    self[i] = v
+    self.tags[i] = v
   end
+end
+
+--- Get all tags
+--@return the table of tags
+function edge:getTags()
+  return self.tags
 end
 
 --- remove a set of tags
 -- @param t a table of the form key = true
 function edge:removeTags(t)
   assert(type(t) == table)
-  for i, _ in pairs(t) do
-    assert(i ~= "source" and i ~= "target")
-    self[i] = nil
+  for _, v in ipairs(t) do
+    assert(v ~= "source" and v ~= "target")
+    self[v] = nil
   end
 end
 
@@ -65,6 +72,13 @@ function edge:setTag(key, value)
   self[key] = value
 end
 
+--- Get the value of a tag
+-- @param key The key of the tag
+-- @return the value of the tag
+function edge:getTag(key)
+  return self.tags[key]
+end
+
 --- Delete a tag
 -- @param key the key of the tag
 function edge:removeTag(key)
@@ -74,22 +88,27 @@ function edge:removeTag(key)
 end
 
 --- Export the edge into an XML form.
--- @param with_tags If with_tags = "all" then all tags will be print else if with_tags is a table then she should be of the form tag = true.
+-- @param with_tags If with_tags = "all" then all tags will be print else if with_tags must be a table.
 -- @return a string which contains the result.
 function edge:exportXml(with_tags)
   local xml = "<edge source=\"" .. tostring(self.source) .. "\""
               .. " target=\"" .. tostring(self.target) .. "\""
+  local xml_tags
 
   if with_tags == "all" then
-    for k, v in pairs(self) do
-      if k ~= "source" and k ~= "target" then
-        xml = xml .. tostring(k) .. "=\"" .. tostring(v) .. "\" "
+    for k, v in pairs(self.tags) do
+      if type(v) == "table" then
+        xml_tags = (xml_tags or nil) .. tools.exportXmlTable(k, v)
+      else
+        xml = xml ..' ' .. tostring(k) .. "=\"" .. tostring(v) .. "\""
       end
     end
   elseif type(with_tags) == "table" then
-    for k, v in pairs(with_tags) do
-      if self[k] and k ~= "source" and k ~= "target" then
-        xml = xml .. tostring(k) .. "=\"" .. tostring(v) .. "\" "
+    for _, v in ipairs(with_tags) do
+      if type(self.tags[v]) == "table" then
+        xml_tags = (xml_tags or nil) .. tools.exportXmlTable(v, self.tags[v])
+      elseif self.tags[v] then
+        xml = xml .. " " .. tostring(v) .. "=\"" .. tostring(self.tags[v]) .. "\""
       end
     end
   end

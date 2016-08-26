@@ -200,72 +200,66 @@ function graph:dump()
 end
 
 --- Export the graph into a LaTeX form
--- @param output a string of the output filepath
--- @param with_header it is a boolean. If it true the basic header of Latex document will be create. This header will contains the packages that are needed.
--- @param with_details It is a boolean. If it true some details of the vertices will be shown. In the future I would like to change it by a function.
-function graph:exportTex(output, with_header, with_details)
-  if output then
-    local fic
-    if with_header then
-      fic = io.open(output, "w")
-    else
-      fic = io.open(output, "a")
-    end
-    io.output(fic)
+-- @param header it is a boolean. If it true the basic header of Latex document will be create. This header will contains the packages that are needed.
+-- @param vertex_table it's a list with two parameters. The first one is the function apply to each vertex, and the second is the table's parameter of the function. if vertex_table is nil then the default function of each vertex is perform.
+-- @param edge_table same as vertex_table for each edge.
+-- @return a string which contains the Tex form.
+function graph:exportTex(header, vertex_table, edge_table)
+  local tex = ""
+
+  if header == true then
+    tex = tex .."\\documentclass{article}"
+    tex = tex .."\n\n"
+    tex = tex .."\\usepackage{graphicx}"
+    tex = tex .."\n"
+    tex = tex .."\\usepackage{tikz}"
+    tex = tex .."\n"
+    tex = tex .."\\usetikzlibrary{graphdrawing,graphs}"
+    tex = tex .."\n"
+    tex = tex .."\\usegdlibrary{layered}"
+    tex = tex .."\n"
+    tex = tex .."%Becareful if you use package fontenc, it might be raise an error. If it does, you have to remove it and use \\usepackage[utf8x]{luainputenc} in place of \\usepackage[utf8]{inputenc}"
+    tex = tex .."\n\n"
+    tex = tex .."\\begin{document}"
+    tex = tex .."\n"
   end
 
-  if with_header == true then
-    io.write("\\documentclass{article}")
-    io.write("\n\n")
-    io.write("\\usepackage{graphicx}")
-    io.write("\n")
-    io.write("\\usepackage{tikz}")
-    io.write("\n")
-    io.write("\\usetikzlibrary{graphdrawing,graphs}")
-    io.write("\n")
-    io.write("\\usegdlibrary{layered}")
-    io.write("\n")
-    io.write("%Becareful if you use package fontenc, it might be raise an error. If it does, you have to remove it and use \\usepackage[utf8x]{luainputenc} in place of \\usepackage[utf8]{inputenc}")
-    io.write("\n\n")
-    io.write("\\begin{document}")
-    io.write("\n")
-  end
-
-  io.write("\\begin{figure}")
-  io.write("\n")
-  io.write("\\centering")
-  io.write("\n")
-  io.write("\\begin{tikzpicture}[>=stealth]")
-  io.write("\n")
-  io.write("\\graph [ layered layout, nodes = {scale=0.75, align=center} ] {")
-  io.write("\n")
+  tex = tex .."\\begin{figure}"
+  tex = tex .."\n"
+  tex = tex .."\\centering"
+  tex = tex .."\n"
+  tex = tex .."\\begin{tikzpicture}[>=stealth]"
+  tex = tex .."\n"
+  tex = tex .."\\graph [ layered layout, nodes = {scale=0.75, align=center} ] {"
+  tex = tex .."\n"
 
   local list_nodes = {}
   for _, v1 in pairs(self.edges) do
-    io.write(v1:exportTex(with_details, with_details))
-    io.write("\n")
+    tex = tex ..v1:exportTex(edge_table[1], edge_table[2], vertex_table)
+    tex = tex .."\n"
     list_nodes[tostring(v1.source)] = true
     list_nodes[tostring(v1.target)] = true
   end
   for k2, v2 in pairs(self.vertices) do
     if list_nodes[k2] ~= true then
-      io.write(v2:exportTex(with_details, with_details))
-      io.write("\n")
+      tex = tex ..v2:exportTex(vertex_table[1], vertex_table[2])
+      tex = tex .."\n"
     end
   end
 
-  io.write("};")
-  io.write("\n")
-  io.write("\\end{tikzpicture}")
-  io.write("\n")
-  io.write("\\caption{graphe}")
-  io.write("\n")
-  io.write("\\end{figure}")
+  tex = tex .."};"
+  tex = tex .."\n"
+  tex = tex .."\\end{tikzpicture}"
+  tex = tex .."\n"
+  tex = tex .."\\caption{graphe}"
+  tex = tex .."\n"
+  tex = tex .."\\end{figure}"
 
-  if with_header then
-    io.write("\n")
-    io.write("\\end{document}")
+  if header then
+    tex = tex .."\n"
+    tex = tex .."\\end{document}"
   end
+  return tex
 end
 
 --- Export the graph into an XML form. Note that import need both vertices and edges.
@@ -274,7 +268,7 @@ end
 -- @param with_edges indicate if the edges will be export.
 -- @return a string which contains the result.
 function graph:exportXml(with_tags, with_vertices, with_edges)
-  local xml = "<graph class=\"" .. self.class
+  local xml = "<graph class=\"" .. self.class .. "\""
   local xml_tags = ""
 
   if with_tags == "all" then

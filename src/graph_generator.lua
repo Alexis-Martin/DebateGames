@@ -1,4 +1,4 @@
-local create_graph = require "graph"
+local graph = require "graph"
 local tools        = require "tools"
 
 local generate_graph = {}
@@ -166,15 +166,15 @@ function generate_graph.generateTree(n_vertices, min_vertices, max_vertices)
     n_vertices = math.random(min_vertices, max_vertices)
   end
 
-  local tree = create_graph("tree")
-  tree.addVertex("q", {tag = "question"})
+  local tree = graph.create("tree")
+  tree:addVertex("q", {tag = "question"})
   for i=1, n_vertices do
-    tree.addVertex("a" .. i)
+    tree:addVertex("a" .. i)
     local attack = math.random(0, i - 1)
     if attack == 0 then
-      tree.addEdge("a" .. i, "q", true)
+      tree:addEdge("a" .. i, "q", true)
     else
-      tree.addEdge("a" .. i, "a" .. attack, true)
+      tree:addEdge("a" .. i, "a" .. attack, true)
     end
   end
   return tree
@@ -205,58 +205,11 @@ function initializeP(p)
   return p
 end
 
---
--- do
---   local graph = generate_graph.generateGraph{n_vertices = 10, max_edges = 25}
---   local fic         = io.open("bla.tex", "w")
---   io.output(fic)
---   io.write("\\documentclass{article}")
---   io.write("\n\n")
---   io.write("\\usepackage{graphicx}")
---   io.write("\n")
---   io.write("\\usepackage{tikz}")
---   io.write("\n")
---   io.write("\\usetikzlibrary{graphdrawing,graphs}")
---   io.write("\n")
---   io.write("\\usegdlibrary{layered}")
---   io.write("\n")
---   io.write("%Becareful if you use package fontenc, it might be raise an error. If it does, you have to remove it and use \\usepackage[utf8x]{luainputenc} in place of \\usepackage[utf8]{inputenc}")
---   io.write("\n\n")
---   io.write("\\begin{document}")
---   io.write("\n")
---   io.write("\\begin{figure}")
---   io.write("\n")
---   io.write("\\centering")
---   io.write("\n")
---   io.write("\\begin{tikzpicture}[>=stealth]")
---   io.write("\n")
---   io.write("\\graph [ layered layout, nodes = {scale=0.75, align=center} ] {")
---   io.write("\n")
---
---   local list_nodes = {}
---   for _, v1 in pairs(graph.edges) do
---     io.write("\"" .. v1.source)
---     io.write("\"")
---     io.write(" -> \"" .. v1.target)
---     io.write("\";")
---     io.write("\n")
---     list_nodes[v1.source] = true
---     list_nodes[v1.target] = true
---   end
---   for k2,_ in pairs(graph.vertices) do
---     if list_nodes[k2] ~= true then
---       io.write("\"" .. k2 .. "\"")
---       io.write("\n")
---     end
---   end
---
---   io.write("};")
---   io.write("\n")
---   io.write("\\end{tikzpicture}")
---   io.write("\n")
---   io.write("\\end{figure}")
---   io.write("\n")
---   io.write("\\end{document}")
--- end
+do
+  local tree = generate_graph.generateTree(10)
+  print(tree:exportXml({"tag"}, true, true))
+  io.output(io.open("test_graph.tex", "w"))
+  io.write(tree:exportTex(true, true))
+end
 
 return generate_graph

@@ -61,6 +61,7 @@ function vertex:setTags(t)
   for i, v in pairs(t) do
     self.tags[i] = v
   end
+
 end
 
 --- Get all tags
@@ -124,26 +125,34 @@ function vertex:exportXml(with_tags)
       end
     end
   end
-
-  xml = xml .. ((">" .. xml_tags .. "</vertex>") or "/>")
+  if xml_tags then
+    xml = xml .. ">" .. xml_tags .. "</vertex>"
+  else
+    xml = xml .. "/>"
+  end
   return xml
 end
 
 --- Export the vertex into a LaTeX form
--- @param with_votes show the votes on the export
--- @param with_lm display the value of the vertex
+-- @param f apply and return the function f. The return must be a string and parameters of f are the vertex itself and the parameter table.By default, if f isn't a function, it return the name of the arg.
+-- @param table The extra argument of f.
 -- @return a string which contains the Tex form.
-function vertex:exportTex(with_votes, with_lm)
-  local tex = "\"$" .. self.name .. "$"
-  if with_votes then
-    tex = tex .. "\\\\ (" .. (self.tags.likes or 0) .. ","
-              .. (self.tags.dislikes or 0) .. ")"
+function vertex:exportTex(f, table)
+  if type(f) == "function" then
+    return f(self, table)
   end
-  if with_lm then
-    tex = tex .. "\\\\ lm = " .. (self.tags.LM[#self.tags.LM].value or "unknown")
-  end
-  tex = tex .. "\""
-  return tex
+  return "\"$" .. self.name .. "$"
+
+
+  -- if with_votes then
+  --   tex = tex .. "\\\\ (" .. (self.tags.likes or 0) .. ","
+  --             .. (self.tags.dislikes or 0) .. ")"
+  -- end
+  -- if with_lm then
+  --   tex = tex .. "\\\\ lm = " .. (self.tags.LM[#self.tags.LM].value or "unknown")
+  -- end
+  -- tex = tex .. "\""
+  -- return tex
 end
 
 --- Define the basic view of a vertex
@@ -152,7 +161,7 @@ function vertex:__tostring()
   return tostring(self.name)
 end
 
--- Dump an vertex into yaml form
+--- Dump an vertex into yaml form
 -- @return a string contains the yaml
 function vertex:dump()
   return yaml.dump(self)

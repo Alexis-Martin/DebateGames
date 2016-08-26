@@ -98,7 +98,7 @@ function edge:exportXml(with_tags)
   if with_tags == "all" then
     for k, v in pairs(self.tags) do
       if type(v) == "table" then
-        xml_tags = (xml_tags or nil) .. tools.exportXmlTable(k, v)
+        xml_tags = (xml_tags or "") .. tools.exportXmlTable(k, v)
       else
         xml = xml ..' ' .. tostring(k) .. "=\"" .. tostring(v) .. "\""
       end
@@ -112,32 +112,26 @@ function edge:exportXml(with_tags)
       end
     end
   end
-  xml = xml .. "/>"
+  if xml_tags then
+    xml = xml .. ">" .. xml_tags .. "</vertex>"
+  else
+    xml = xml .. "/>"
+  end
   return xml
 end
 
 --- Export the edge into a LaTeX form
--- @param with_vertex_votes If it true the votes are display
--- @param with_vertex_lm If it true the value is display
--- @return the edge in TeX form.
-function edge:exportTex(with_vertex_votes, with_vertex_lm)
+-- @param f apply and return the function f. The return must be a string and parameters of f are the edge itself, the parameter table and vertex_table. By default, if f isn't a function, it return the basic definition of edges in luaLatex and for each vertex it apply with vertex_table.
+-- @param table The extra argument of f.
+-- @param vertex_table it's a list with two parameters. The first one is the function apply to each vertex, and the second is the table's parameter of the function. If it's nil, it apply the default function of vertex.
+-- @return a string which contains the Tex form.
+function edge:exportTex(f, table, vertex_table)
+  if type(f) == "function" then return f(self, table, vertex_table) end
+
   local tex = ""
-  if type(self.source)           == table and
-     type(self.source.exportTex) == "function" then
-    tex = tex .. self.source:exportTex(with_vertex_votes, with_vertex_lm)
-  else
-      tex = tex .. "\"$" .. tostring(self.source) .. "$\""
-  end
-
+  tex = tex .. "\"$" .. self.source:exportTex(vertex_table[1], vertex_table[2]) .. "$\""
   tex = tex .. " -> "
-
-  if type(self.target)           == table and
-     type(self.target.exportTex) == "function" then
-    tex = tex .. self.target:exportTex(with_vertex_votes, with_vertex_lm)
-  else
-      tex = tex .. "\"$" .. tostring(self.target) .. "$\""
-  end
-
+  tex = tex .. "\"$" .. self.source:exportTex(vertex_table[1], vertex_table[2]) .. "$\""
   tex = tex .. ";"
   return tex
 end

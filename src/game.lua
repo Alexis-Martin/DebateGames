@@ -337,8 +337,39 @@ function game:exportXml(output, with_tags)
   end
 
   local xml = "<game players=\"" .. #self.players .. "\""
+  local xml_tags = ""
 
+  if with_tags == "all" then
+    for k, v in pairs(self.tags) do
+      if type(v) == "table" then
+        xml_tags = (xml_tags or nil) .. tools.exportXmlTable(k, v)
+      else
+        xml = xml .. " " .. tostring(k) .. "=\"" .. tostring(v) .. "\""
+      end
+    end
+  elseif type(with_tags) == "table" then
+    for _, v in ipairs(with_tags) do
+      if type(self.tags[v]) == "table" then
+        xml_tags = (xml_tags or nil) .. tools.exportXmlTable(v, self.tags[v])
+      elseif self.tags[v] then
+        xml = xml .. " " .. tostring(v) .. "=\"" .. tostring(self.tags[v]) .. "\""
+      end
+    end
+  end
+  xml = xml .. ">\n" .. xml_tags
 
+  for k,v in pairs(self.graphs) do
+    if k == "general" then
+      xml = xml .. "\n" .. v:exportXML(with_tags, true, true)
+    else
+      xml = xml .. "\n" .. v:exportXML(with_tags, true)
+    end
+  end
+  xml = xml .. "\n" .. "</game>"
+  if output then
+    io.write(xml)
+  end
+  return xml
 end
 
   --

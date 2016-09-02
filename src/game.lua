@@ -28,7 +28,7 @@ function game.create(ps, graph, tags)
 
   for player, _ in ipairs(ps) do
     g.graphs[player] = tools.deepcopy(graph)
-    g.graphs[player].view = player
+    g.graphs[player]:setTag("view", player)
   end
 
 
@@ -150,6 +150,10 @@ function game:removeLike(player, arg)
   if d < 0 then d = 0 end
   self.graphs[player]:setVertexTag(arg, "likes", d)
   return d
+end
+
+function game:getGraphs()
+  return self.graphs
 end
 
 function game:plot(t)
@@ -275,13 +279,19 @@ function game:exportTex(output)
       end
     end
   end
+  local function v_func(v)
+    local tex = "$" .. tostring(v) .. "$"
+    tex = tex .. "\\\\ $(" .. (v:getTag("likes")    or 0)
+              .. ","      .. (v:getTag("dislikes") or 0) .. ")$"
 
-  for _, v in pairs(game.graphs) do
-    if v:getTag("LM") then
-      v:exportTex(output, false, true)
-    else
-      v:exportTex(output)
+    if v:getTag("tag") and v:getTag("LM") then
+      tex = tex .. "\\\\ $LM = " .. (v:getTag("LM")[#v:getTag("LM")].value or "unknown") .. "$"
     end
+    return tex
+  end
+
+  for _, v in pairs(self.graphs) do
+      io.write(v:exportTex(false, {v_func}))
   end
 
   if self.graphs.general:getTag("LM")  then
@@ -360,9 +370,9 @@ function game:exportXml(output, with_tags)
 
   for k,v in pairs(self.graphs) do
     if k == "general" then
-      xml = xml .. "\n" .. v:exportXML(with_tags, true, true)
+      xml = xml .. "\n" .. v:exportXml(with_tags, true, true)
     else
-      xml = xml .. "\n" .. v:exportXML(with_tags, true)
+      xml = xml .. "\n" .. v:exportXml(with_tags, true)
     end
   end
   xml = xml .. "\n" .. "</game>"
@@ -437,5 +447,13 @@ end
   --   game.weakest_shot = weakest_lm - start_lm
   -- end
 
+
+-- do
+--   local generate_graph = require "graph_generator"
+--   local tree = generate_graph.generateTree(10)
+--   local g = game.create({"p1"}, tree)
+--   print(g:exportXml(nil, "all"))
+--   g:exportTex("test_game.tex")
+-- end
 
 return game

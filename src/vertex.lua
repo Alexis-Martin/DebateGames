@@ -141,18 +141,7 @@ function vertex:exportTex(f, table)
   if type(f) == "function" then
     return f(self, table)
   end
-  return "\"$" .. self.name .. "$"
-
-
-  -- if with_votes then
-  --   tex = tex .. "\\\\ (" .. (self.tags.likes or 0) .. ","
-  --             .. (self.tags.dislikes or 0) .. ")"
-  -- end
-  -- if with_lm then
-  --   tex = tex .. "\\\\ lm = " .. (self.tags.LM[#self.tags.LM].value or "unknown")
-  -- end
-  -- tex = tex .. "\""
-  -- return tex
+  return "$" .. self.name .. "$"
 end
 
 --- Define the basic view of a vertex

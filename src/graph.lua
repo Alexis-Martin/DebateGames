@@ -235,7 +235,11 @@ function graph:exportTex(header, vertex_table, edge_table)
 
   local list_nodes = {}
   for _, v1 in pairs(self.edges) do
-    tex = tex ..v1:exportTex(edge_table[1], edge_table[2], vertex_table)
+    if type(edge_table) == "table" then
+      tex = tex ..v1:exportTex(edge_table[1], edge_table[2], vertex_table)
+    else
+      tex = tex ..v1:exportTex(nil, nil, vertex_table)
+    end
     tex = tex .."\n"
     list_nodes[tostring(v1.source)] = true
     list_nodes[tostring(v1.target)] = true

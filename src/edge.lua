@@ -129,9 +129,21 @@ function edge:exportTex(f, table, vertex_table)
   if type(f) == "function" then return f(self, table, vertex_table) end
 
   local tex = ""
-  tex = tex .. "\"$" .. self.source:exportTex(vertex_table[1], vertex_table[2]) .. "$\""
+  tex = tex .. "\""
+  if type(vertex_table) == "table" then
+    tex = tex .. self.source:exportTex(vertex_table[1], vertex_table[2])
+  else
+    tex = tex .. self.source:exportTex()
+  end
+  tex = tex .. "\""
   tex = tex .. " -> "
-  tex = tex .. "\"$" .. self.source:exportTex(vertex_table[1], vertex_table[2]) .. "$\""
+  tex = tex .. "\""
+  if type(vertex_table) == "table" then
+    tex = tex .. self.target:exportTex(vertex_table[1], vertex_table[2])
+  else
+    tex = tex .. self.target:exportTex()
+  end
+  tex = tex .. "\""
   tex = tex .. ";"
   return tex
 end

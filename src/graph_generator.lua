@@ -204,12 +204,12 @@ function initializeP(p)
   end
   return p
 end
-
-do
-  local tree = generate_graph.generateTree(10)
-  print(tree:exportXml({"tag"}, true, true))
-  io.output(io.open("test_graph.tex", "w"))
-  io.write(tree:exportTex(true, true))
-end
+-- 
+-- do
+--   local tree = generate_graph.generateTree(10)
+--   print(tree:exportXml({"tag"}, true, true))
+--   io.output(io.open("test_graph.tex", "w"))
+--   io.write(tree:exportTex(true))
+-- end
 
 return generate_graph

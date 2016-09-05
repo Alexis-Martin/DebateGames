@@ -21,12 +21,12 @@ function game.create(ps, graph, tags)
     g.players = ps
   else
     g.players = players.create()
-    for _, v in pairs(ps) do
+    for _, v in ipairs(ps) do
       g.players:newPlayer(v)
     end
   end
 
-  for player, _ in ipairs(ps) do
+  for player, _ in pairs(g.players) do
     g.graphs[player] = tools.deepcopy(graph)
     g.graphs[player]:setTag("view", player)
   end
@@ -99,7 +99,7 @@ function game:setDislikes(player, arg, nb)
     player = "general"
   end
   assert(self.graphs[player])
-  self.graphs[player]:setVertexTags(arg, "dislikes", nb)
+  self.graphs[player]:setVertexTag(arg, "dislikes", nb)
 end
 
 function game:setLikes(player, arg, nb)
@@ -107,7 +107,7 @@ function game:setLikes(player, arg, nb)
     player = "general"
   end
   assert(self.graphs[player])
-  self.graphs[player]:setVertexTags(arg, "likes", nb)
+  self.graphs[player]:setVertexTag(arg, "likes", nb)
 end
 
 function game:addDislike(player, arg)
@@ -115,6 +115,9 @@ function game:addDislike(player, arg)
     player = "general"
   end
   assert(self.graphs[player])
+  if not self.graphs[player]:getVertexTag(arg, "dislikes") then
+    self:setDislikes(player, arg, 0)
+  end
   local d = self.graphs[player]:getVertexTag(arg, "dislikes") + 1
   self.graphs[player]:setVertexTag(arg, "dislikes", d)
   return d
@@ -125,6 +128,9 @@ function  game:addLike(player, arg)
     player = "general"
   end
   assert(self.graphs[player])
+  if not self.graphs[player]:getVertexTag(arg, "likes") then
+    self:setLikes(player, arg, 0)
+  end
   local d = self.graphs[player]:getVertexTag(arg, "likes") + 1
   self.graphs[player]:setVertexTag(arg, "likes", d)
   return d
@@ -154,6 +160,31 @@ end
 
 function game:getGraphs()
   return self.graphs
+end
+
+function game:getGraph(graph)
+  if graph then
+    return self.graphs[graph]
+  end
+  return self.graphs.general
+end
+
+function game:getPlayers()
+  return self.players
+end
+
+function game:getLM(graph)
+  return self.graphs[graph]:getTag("LM")
+end
+
+function game:setLM(graph, t)
+  self.graphs[graph]:setTag("LM", t)
+end
+
+function game:addLM(graph, t)
+  if type(self.graphs[graph]:getTag("LM")) == "table" then
+    table.insert(self.graphs[graph]:getTag("LM"), t)
+  end
 end
 
 function game:plot(t)
@@ -190,7 +221,7 @@ function game:plot(t)
         table.insert(values[i], tag)
       elseif type(tag) == "table" then
         for j = 1, #tag do
-          table.insert(values[i], tag[j])
+          table.insert(values[i], tag[j].value)
         end
         if #tag > max then max = #tag end
       end
@@ -285,7 +316,7 @@ function game:exportTex(output)
               .. ","      .. (v:getTag("dislikes") or 0) .. ")$"
 
     if v:getTag("tag") and v:getTag("LM") then
-      tex = tex .. "\\\\ $LM = " .. (v:getTag("LM")[#v:getTag("LM")].value or "unknown") .. "$"
+      tex = tex .. "\\\\ $LM = " .. (v:getTag("LM") or "unknown") .. "$"
     end
     return tex
   end

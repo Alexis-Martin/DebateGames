@@ -1,6 +1,4 @@
 local tools = require "tools"
-local yaml  = require "yaml"
-
 
 local rules   = {}
 rules.__index = rules
@@ -36,17 +34,6 @@ rules.parameters = {
   log_details  = "all",
   check_cycle  = false
 }
-
--- set names of the functions, you will find the definition at the end
-local mindChanged
-local bestMove
-local betterMove
-local testMove
-local initRoundRobin
-local roundRobin
-local initRandom
-local random
-local doMove
 
 
 --- Change the parameters of the rules
@@ -92,8 +79,9 @@ end
 -- apply the rule on the game. If there is no game, the function raise an error.
 function rules:apply()
   assert(self.game)
-  rules.resetAll()
-  self.apply()
+  self:reset("all")
+  self:init()
+  self:start()
 end
 
 -- apply the rule on the specific game. if game is nil, the function raise an error.
@@ -213,14 +201,14 @@ function rules:computeSAA(graph)
     end
 
     -- save the values
-    for k, _ in pairs(graph:getVertices()) do
-      self:setVertexLM(k, tools.round(I[k], self.p.precision))
+    for k, v in pairs(graph:getVertices()) do
+      v:setTag("LM", tools.round(I[k], self:getParameter("precision")))
     end
 
     -- return graph value
-    for k, v in pairs(graph.getVertices()) do
+    for _, v in pairs(graph:getVertices()) do
       if v:getTag("tag") == "question" then
-        return self:getVertexLM(k)
+        return v:getTag("LM")
       end
     end
   end
@@ -243,9 +231,18 @@ function rules:computeSAA(graph)
   end
 end
 
+function rules:getParameter(param)
+  return self.p[param]
+end
+
+function rules:getLastLM(graph)
+  local lm = self.game:getGraph(graph):getTag("LM")
+  return lm[#lm]
+end
+
 function rules:init()
-  for _, v in pairs(self.game:getPlayers()) do
-    self.players_votes[v] = {}
+  for k, _ in pairs(self.game:getPlayers()) do
+    self.temp.players_votes[k] = {}
   end
 
   self:computeSAA()
@@ -269,11 +266,10 @@ function rules:init()
 
   -- select the right function for the dynamique
   if     self:getParameter("dynamique") == "round_robin" then
-    initRoundRobin()
-    self.temp.fun_p.dynamique = roundRobin
+    self.temp.fun_p.dynamique = self.roundRobin
   elseif self:getParameter("dynamique") == "random" then
-    initRandom()
-    self.temp.fun_p.dynamique = random
+    self:initRandom()
+    self.temp.fun_p.dynamique = self.random
   end
 end
 
@@ -285,7 +281,7 @@ function rules:applyVote()
     self.temp.pass   = self.temp.pass   + 1
   else
     self.temp.nb_nil          = 0
-    self.temp.changed         = self.temp.changed + doMove()
+    self.temp.changed         = self.temp.changed + self:doMove()
     self.temp.current_vote.lm = self:computeSAA(graph)
   end
 end
@@ -317,38 +313,59 @@ function rules:saveConfiguration()
     hs[1] = shot
   end
   local shot = tools.deepcopy(hs[#hs])
-  shot[hs][self.temp.current_vote.arg] = self.temp.current_vote.vote
+  shot[self.temp.current_vote.player][self.temp.current_vote.arg] = self.temp.current_vote.vote
   table.insert(hs, shot)
 
 end
 
--------------------------------------------------------
---                 ANNEXES FUNCTIONS                   --
--------------------------------------------------------
--- These functions are used by the previous one but we can't call them directly.
+function rules:plot(t)
+  local p = {
+    graphs = {},
+    tags   = {}
+  }
+  for k,_ in pairs(self.game:getGraphs()) do
+    p.graphs[k] = {
+      name = k,
+      tags = {LM = "lm"}
+    }
+  end
+  if self:getParameter("compute_mean") then
+    p.tags.mean = "moyenne"
+  end
+  if self:getParameter("compute_agg") then
+    p.tags.aggregate_value = "aggregation"
+  end
+  for k,v in pairs(t) do
+    p[k] = v
+  end
+
+  self.game:plot(p)
+end
 
 function rules:roundRobin()
-  local player, _ = self.game:getPlayers().next(self.temp.current_vote.player)
-  if not player then player = self.game:getPlayers().next(nil) end
+  local player, _ = next(self.game:getPlayers(), self.temp.current_vote.player)
+  if not player then
+    player = next(self.game:getPlayers(), nil)
+  end
 
   return player
 end
 
 local players_in
-initRandom = function()
-  players_in = tools.deepcopy(rules.game.players)
+function rules:initRandom()
+  players_in = tools.deepcopy(self.game:getPlayers():getNames())
 end
 
-random = function()
-  if current_vote.player and not current_vote.arg then
-    for i,v in ipairs(players_in) do
-      if v == current_vote.player then
+function rules:random()
+  if self.temp.current_vote.player and not self.temp.current_vote.arg then
+    for i, v in ipairs(players_in) do
+      if v == self.temp.current_vote.player then
         table.remove(players_in, i)
         break
       end
     end
-  elseif #players_in ~= #rules.game.players then
-    players_in = tools.deepcopy(rules.game.players)
+  elseif #players_in ~= #self.temp.game.players then
+    players_in = self:initRandom()
   end
 
   if #players_in == 0 then return nil end
@@ -358,136 +375,73 @@ random = function()
   return players_in[player]
 end
 
-bestMove = function()
-  current_vote.lm = rules.game.graphs.general.LM[#rules.game.graphs.general.LM].value
-  local player_lm = rules.game.graphs[current_vote.player].LM[#rules.game.graphs[current_vote.player].LM].value
-
-  for arg, v in pairs(rules.game.graphs.general.vertices) do
-    if v.tag ~= "question" then
-      for _, type_vote in ipairs({"like", "dislike"}) do
-        local value_vote, temp_lm, applyVote = testMove(arg, type_vote)
-
-        if math.abs(temp_lm - player_lm) < math.abs(current_vote.lm - player_lm) then
-          current_vote.arg    = arg
-          current_vote.lm     = temp_lm
-          current_vote.vote   = value_vote
-          current_vote.action = applyVote
-        end
-      end
-    end
-  end
-end
-
-betterMove = function ()
-  local player_lm = rules.game.graphs[current_vote.player].LM[#rules.game.graphs[current_vote.player].LM].value
-  local gen_lm    = rules.game.graphs.general.LM[#rules.game.graphs.general.LM].value
-  local better_votes = {}
-
-  for arg, v in pairs(rules.game.graphs.general.vertices) do
-    if v.tag ~= "question" then
-      for _, type_vote in ipairs({"like", "dislike"}) do
-        local value_vote, temp_lm, applyVote = testMove(arg, type_vote)
-
-        if math.abs(temp_lm - player_lm) < math.abs(gen_lm - player_lm) then
-          local vote = {
-            arg     = arg,
-            lm      = temp_lm,
-            vote    = value_vote,
-            action = applyVote
-          }
-          table.insert(better_votes, vote)
-        end
-      end
-    end
-  end
-
-  -- choose vote if there is one.
-  if #better_votes >= 1 then
-    local i = math.random(1, #better_votes)
-    current_vote.arg    = better_votes[i].arg
-    current_vote.lm     = better_votes[i].lm
-    current_vote.vote   = better_votes[i].vote
-    current_vote.action = better_votes[i].action
-  end
-
-  if p.log_file and p.log_details == "strokes" then
-    io.write(current_vote.player .. " : votes possibles = [")
-
-    for i, v in ipairs(better_votes) do
-      io.write("(".. v.arg .. ", " .. tostring(v.vote) .. ", " .. tostring(v.lm) ..")")
-      if i < #better_votes then io.write(", ") end
-    end
-    io.write("] \n\n")
-    io.flush()
-  end
-end
-
-testMove = function (arg, vote)
-  local graph         = rules.game.graphs.general
+function rules:testMove(arg, vote)
+  local graph         = self.game:getGraph("general")
   local vote_type     = ""
   local value_vote    = nil
-  local player        = current_vote.player
+  local player        = self.temp.current_vote.player
 
   local print_log  = {}
   local applyVote  = {}
   local removeVote = {}
   -- application of the vote
-  if vote == "like" and players_votes[player][arg] == 1 then
-    applyVote[1]  = rules.game.removeLike
-    removeVote[1] = rules.game.addLike
-    vote_type  = "remove like"
-    value_vote = nil
+  if vote == "like" and self.temp.players_votes[player][arg] == 1 then
+    applyVote[1]  = self.game.removeLike
+    removeVote[1] = self.game.addLike
+    vote_type     = "remove like"
+    value_vote    = nil
 
-  elseif vote == "like"
-     and players_votes[player][arg] == -1 then
-    applyVote[1]  = rules.game.addLike
-    applyVote[2]  = rules.game.removeDislike
-    removeVote[1] = rules.game.removeLike
-    removeVote[2] = rules.game.addDislike
-    vote_type  = "change to like"
-    value_vote = 1
+  elseif vote == "like" and
+         self.temp.players_votes[player][arg] == -1 then
+    applyVote[1]  = self.game.addLike
+    applyVote[2]  = self.game.removeDislike
+    removeVote[1] = self.game.removeLike
+    removeVote[2] = self.game.addDislike
+    vote_type     = "change to like"
+    value_vote    = 1
 
   elseif vote == "like" then
-    applyVote[1]  = rules.game.addLike
-    removeVote[1] = rules.game.removeLike
-    vote_type  = "vote like"
-    value_vote = 1
+    applyVote[1]  = self.game.addLike
+    removeVote[1] = self.game.removeLike
+    vote_type     = "vote like"
+    value_vote    = 1
+
+  elseif vote == "dislike" and
+         self.temp.players_votes[player][arg] == 1 then
+    applyVote[1]  = self.game.addDislike
+    applyVote[2]  = self.game.removeLike
+    removeVote[1] = self.game.removeDislike
+    removeVote[2] = self.game.addLike
+    vote_type     = "change to dislike"
+    value_vote    = -1
 
   elseif vote == "dislike"
-     and players_votes[player][arg] == 1 then
-      applyVote[1]  = rules.game.addDislike
-      applyVote[2]  = rules.game.removeLike
-      removeVote[1] = rules.game.removeDislike
-      removeVote[2] = rules.game.addLike
-      vote_type  = "change to dislike"
-       value_vote = -1
-
-  elseif vote == "dislike"
-     and players_votes[player][arg] == -1 then
-      applyVote[1]  = rules.game.removeDislike
-      removeVote[1] = rules.game.addDislike
-       vote_type  = "remove dislike"
-       value_vote = nil
+     and self.temp.players_votes[player][arg] == -1 then
+    applyVote[1]  = self.game.removeDislike
+    removeVote[1] = self.game.addDislike
+    vote_type     = "remove dislike"
+    value_vote    = nil
 
   elseif vote == "dislike" then
-    applyVote[1]  = rules.game.addDislike
-    removeVote[1] = rules.game.removeDislike
-    vote_type  = "vote dislike"
-    value_vote = -1
+    applyVote[1]  = self.game.addDislike
+    removeVote[1] = self.game.removeDislike
+    vote_type     = "vote dislike"
+    value_vote    = -1
   end
 
   -- Application of vote
   for _,v in ipairs(applyVote) do
-    v(nil, arg)
+    v(self.game,nil, arg)
   end
   -- graph value's computation
-  local lm = rules.computeSAA(graph)
+  local lm = self:computeSAA(graph)
 
   -- write logs if it is asked
-  if p.log_file and p.log_details == "all" then
+  if self:getParameter("log_file") and
+     self:getParameter("log_details") == "all" then
     print_log.arg      = arg
-    print_log.likes    = graph.vertices[arg].likes
-    print_log.dislikes = graph.vertices[arg].dislikes
+    print_log.likes    = self.game:getlikes(arg)
+    print_log.dislikes = self.game:getDislikes(arg)
     print_log.new_lm   = lm
     io.write(vote_type .. "\n")
     for k, v in pairs(print_log) do
@@ -499,32 +453,30 @@ testMove = function (arg, vote)
 
   -- restoration of the previous values
   for _,v in ipairs(removeVote) do
-    v(nil, arg)
+    v(self.game, nil, arg)
   end
+
+  self:computeSAA(graph)
 
   return value_vote, lm, applyVote
 end
 
-doMove = function ()
-  assert(type(current_vote.action) == "table")
+function rules:doMove()
+  assert(type(self.temp.current_vote.action) == "table")
   local changed = 0
-  for _,v in ipairs(current_vote.action) do
+  for _,v in ipairs(self.temp.current_vote.action) do
     assert(type(v) == "function")
-    v(nil, current_vote.arg)
+    v(nil, self.temp.current_vote.arg)
   end
 
-  if players_votes[current_vote.player][current_vote.arg] then
+  if self.temp.players_votes[self.temp.current_vote.player][self.temp.current_vote.arg] then
     changed = 1
   end
 
   --store the vote
-  players_votes[current_vote.player][current_vote.arg] = current_vote.vote or 0
+  self.temp.players_votes[self.temp.current_vote.player][self.temp.current_vote.arg] = self.temp.current_vote.vote or 0
 
   return changed
 end
-
-
-
-
 
 return rules

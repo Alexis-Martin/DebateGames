@@ -1,3 +1,4 @@
+local yaml = require 'yaml'
 local tools = {}
 local_random_seed = false
 
@@ -19,11 +20,14 @@ function tools.randomseed()
 end
 
 function tools.deepcopy(orig)
-  local orig_type = type(orig)
+  if(type(orig) ~= rawtype(orig)) then
+    print(type(orig))
+  end
+  local orig_type = rawtype(orig)
   local copy
   if orig_type == 'table' then
     copy = {}
-    for orig_key, orig_value in next, orig, nil do
+    for orig_key, orig_value in pairs(orig) do
       copy[tools.deepcopy(orig_key)] = tools.deepcopy(orig_value)
     end
     setmetatable(copy, tools.deepcopy(getmetatable(orig)))
@@ -89,8 +93,11 @@ function tools.exportXmlTable(key, table)
         xml = xml .. " " .. tostring(k1) .."=\"" .. tostring(v) .. "\""
       end
     end
-
-    xml = xml .. ((">\n" .. xml_table .. "\n</" .. tostring(k) .. ">") or "/>")
+    if xml_table then
+      xml = xml .. ">\n" .. xml_table .. "\n</" .. tostring(k) .. ">"
+    else
+      xml = xml .. "/>"
+    end
     return xml
   end
   return iter(key, table)

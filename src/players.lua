@@ -31,8 +31,8 @@ end
 function players:newPlayer(name, tags)
   assert(name)
   if not self[name] then
-    self[name] = player.create(name, tags)
-    players.__n      = players.__n + 1
+    self[name]  = player.create(name, tags)
+    players.__n = players.__n + 1
     if players.__order then
       table.insert(players.__order, name)
       players.__reverse_order[name] = #players.__order
@@ -70,6 +70,13 @@ function players:removePlayer(name)
   end
 end
 
+function players:getNames()
+  local names = {}
+  for k, _ in pairs(self) do
+    table.insert(names, k)
+  end
+  return names
+end
 --
 -- do
 --   local proxy = players.create()

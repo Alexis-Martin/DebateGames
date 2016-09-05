@@ -4,17 +4,16 @@ local function game_generator(nb_players, graph)
   for i = 1, nb_players do
     players[i] = "joueur " .. i
   end
-  local game = create_game(players, graph)
+  local game = create_game.create(players, graph)
 
   for _, player in ipairs(players) do
-
-    for k, v in pairs(game.graphs[player].vertices) do
-      if v.tag ~= "question" then
+    for k, v in pairs(game:getGraph(player):getVertices()) do
+      if v:getTag("tag") ~= "question" then
         local vote = math.random(0, 2)
         if     vote == 1 then
-          game.addLike(player, k)
+          game:addLike(player, k)
         elseif vote == 2 then
-          game.addDislike(player, k)
+          game:addDislike(player, k)
         end
       end
     end

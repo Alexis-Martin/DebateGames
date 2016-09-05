@@ -101,6 +101,12 @@ function vertex:removeTag(key)
   self.tags[key] = nil
 end
 
+--- return the set of attackers
+-- @return the set of attackers
+function vertex:getAttackers()
+  return self.attackers
+end
+
 --- Export the graph into an XML form.
 -- @param with_tags If with_tags = "all" then all tags will be print else if with_tags must be a table
 -- @return A string with the xml output.

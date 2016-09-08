@@ -11,7 +11,7 @@ local default_p = {
   dynamique    = "round_robin",
   compute_mean = true,
   compute_agg  = true,
-  fun          = "tau_1",
+  fun          = "L_&_M",
   epsilon      = 0.1,
   val_question = 1,
   precision    = 8,
@@ -151,26 +151,19 @@ function rules.computeSAA(graph)
 
     while loop do
       count = count + 1
-      if count == 300 then print("======================") end
       loop = false
-      local new_LM = {}
       for k, v in pairs(graph.vertices) do
-        new_LM[k] = tho[k]
+        local old = I[k]
+        I[k] = tho[k]
         if type(v.attackers) == "table" then
           for k1, _ in pairs(v.attackers) do
-            new_LM[k] = new_LM[k] * (1 - I[k1])
+            I[k] = I[k] * (1 - I[k1])
           end
         end
-        if math.abs(I[k] - new_LM[k]) >= 10^(-p.precision) then
+        if math.abs(I[k] - old) >= 10^(-p.precision) then
           loop = true
         end
       end
-      for k, _ in pairs(I) do
-        I[k] = new_LM[k]
-        if count >= 300 then print("I[" .. k .. "] = " .. I[k]) end
-      end
-      if count == 300 then export_tex(rules.game, "cycle_LM.tex") end
-      if count >= 300 then print("---------------") end
     end
 
     -- save the values

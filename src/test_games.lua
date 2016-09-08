@@ -220,10 +220,10 @@ end
 -- export_tex(game, "best_different_value1.tex")
 --
 -- end
-
+--
 -- do
 --   local players      = 2
---   local vertices     = 4
+--   local vertices     = 3
 --   local precision    = 8
 --   local dynamique    = "round_robin"
 --   local type_vote    = "best"
@@ -250,8 +250,8 @@ end
 --     rule         = "mindChanged",
 --     check_cycle  = check_cycle
 --   }
---   parameters.fun      = "L_&_M"
---   parameters.log_file = "cycle_test_na_graph_log.log"
+--   parameters.fun      = "tau_1"
+--   parameters.log_file = "cycle_graph_pres_log.log"
 --
 --   rules.setParameters(parameters)
 --
@@ -262,41 +262,41 @@ end
 --   while not cycle do
 --     print(compt)
 --     compt = compt + 1
---     local graph    = graph_generator.generateNAGraph{
+--     local graph    = graph_generator.generateGraph{
 --                       n_vertices = vertices, max_edges  = 2*vertices
 --                     }
 --     game     = game_generator(players, graph)
---     export_game(game, "cycle_test_na_graph_init.xml")
---     export_tex(game, "cycle_test_na_graph_init.tex")
+--     export_game(game, "cycle_graph_pres.xml")
+--     export_tex(game, "cycle_graph_pres.tex")
 --
 --     rules.setGame(game)
 --     rules.apply()
 --     cycle = game.cycle
 --   end
 --
---   game.plot  ("cycle_test_na_graph.png", false, options)
---   export_game(game, "cycle_test_na_graph.xml")
---   export_tex(game, "cycle_test_na_graph.tex")
+--   game.plot  ("cycle_graph_pres_t.png", false, options)
+--   export_game(game, "cycle_graph_pres_t.xml")
+--   export_tex(game, "cycle_graph_pres_t.tex")
 -- end
 
-
-
-
-
+--
+--
+--
+--
 do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/src/game_1.xml")
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/02_09_15_35_round_robin_1/1_players/1_vertices/game_1.xml")
   -- game:print_game()
   -- game.aggregation_value("tau_1", 0.1, 1, 8)
 
   rules.setGame(game)
   -- rules.setParameters {compute_agg = false, compute_mean = true, }
-  -- rules.computeSAA()
-  rules.apply()
+   rules.computeSAA()
+  --rules.apply()
   -- game:print_game()
   -- print(game.graphs.general.LM[1].value)
   -- saa.computeGraphSAA(1, game.graphs.general, "L_&_M", 0.1, 1, 8)
-  export_game(game,"/home/talkie/Documents/Stage/DebateGames/src/game_1_test.xml")
+  export_game(game,"/home/talkie/Documents/Stage/DebateGames/tests/02_09_15_35_round_robin_1/1_players/1_vertices/game_1_t.xml")
   -- game.plot("//home/talkie/Documents/Stage/DebateGames/docs/final_report/petit_jeu_contre.png", true)
-  export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/game_1_test.tex")
+  export_tex(game, "/home/talkie/Documents/Stage/DebateGames/tests/02_09_15_35_round_robin_1/1_players/1_vertices/game_1_t.tex")
 
 end

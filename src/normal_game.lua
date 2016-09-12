@@ -56,8 +56,6 @@ function gridEnumeration(list)
       pointers[i] = pointers[i] + 1
     end
   end
-
-
   return grid
 end
 

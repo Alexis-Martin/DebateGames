@@ -24,7 +24,9 @@ function mind_changed:start()
 
   while self.temp.nb_nil ~= #self.game:getPlayers() do
     -- take the current player
-    self.temp.current_vote.player = self.temp.fun_p.dynamique(self)
+    local player = self.temp.fun_p.dynamique(self)
+    self:reset{"current_vote"}
+    self.temp.current_vote.player = player
 
     -- write logs if it asks
     if self:getParameter("log_file")             and
@@ -37,15 +39,28 @@ function mind_changed:start()
       io.flush()
     end
 
-    self:reset{"current_vote"}
-
     -- search the vote to do
     local move = self.temp.fun_p.typeVote(self)
     self:computeSAA(self.game:getGraph("general"))
     if move then
-      self.temp.current_vote:applyVote()
+      self:applyVote()
     else
       self.temp.nb_nil = self.temp.nb_nil + 1
+    end
+    if self:getParameter("log_file") then
+      if self:getParameter("log_details") == "all" then
+        io.write("decision :\n vote = " .. tostring(self.temp.current_vote.arg) .. " bool = " .. tostring(self.temp.current_vote.vote) .. "new lm = " .. (self.temp.current_vote.lm or self:getLastLM("general").value) .. "\n")
+        io.write("==============================\n")
+      elseif self:getParameter("log_details") == "strokes" then
+        io.write(self.temp.current_vote.player .. " :" ..
+        " vote = " .. tostring(self.temp.current_vote.arg) ..
+        " bool = " .. tostring(self.temp.current_vote.vote) ..
+        " lm joueur = " .. self:getLastLM(self.temp.current_vote.player).value ..
+        " lm avant = " .. self:getLastLM("general").value ..
+        " lm après " .. (self.temp.current_vote.lm or self:getLastLM("general").value) .. "\n")
+        io.write("============================== \n")
+        io.flush()
+      end
     end
     self:saveVote()
 
@@ -85,22 +100,6 @@ function mind_changed:start()
       if cycle then
         self.game.cycle = true
         return
-      end
-    end
-
-    if self:getParameter("log_file") then
-      if self:getParameter("log_details") == "all" then
-        io.write("decision :\n vote = " .. tostring(self.temp.current_vote.arg) .. " bool = " .. tostring(self.temp.current_vote.vote) .. "new lm = " .. (self.temp.current_vote.lm or self:getLastLM("general").value) .. "\n")
-        io.write("==============================\n")
-      elseif self:getParameter("log_details") == "strokes" then
-        io.write(self.temp.current_vote.player .. " :" ..
-        " vote = " .. tostring(self.temp.current_vote.arg) ..
-        " bool = " .. tostring(self.temp.current_vote.vote) ..
-        " lm joueur = " .. self:getLastLM(self.temp.current_vote.player).value ..
-        " lm avant = " .. self:getLastLM("general").value ..
-        " lm après " .. (self.temp.current_vote.lm or self:getLastLM("general").value) .. "\n")
-        io.write("============================== \n")
-        io.flush()
       end
     end
   end

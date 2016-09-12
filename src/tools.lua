@@ -12,6 +12,15 @@ type = function ( var )
   return rawtype(var);
  end
 
+rawnext = next
+function next(table, k)
+  assert(rawtype(table) == 'table')
+  if type(table.__next) == "function" then
+    return table.__next(table, k)
+  end
+  return rawnext(table, k)
+end
+
 function tools.randomseed()
   if not local_random_seed then
     math.randomseed(os.time())
@@ -20,9 +29,10 @@ function tools.randomseed()
 end
 
 function tools.deepcopy(orig)
-  if(type(orig) ~= rawtype(orig)) then
-    print(type(orig))
-  end
+  -- if(type(orig) ~= rawtype(orig)) then
+  --   print(type(orig))
+  -- end
+
   local orig_type = rawtype(orig)
   local copy
   if orig_type == 'table' then
@@ -30,7 +40,7 @@ function tools.deepcopy(orig)
     for orig_key, orig_value in pairs(orig) do
       copy[tools.deepcopy(orig_key)] = tools.deepcopy(orig_value)
     end
-    setmetatable(copy, tools.deepcopy(getmetatable(orig)))
+    setmetatable(copy,getmetatable(orig))
   else -- number, string, boolean, etc
     copy = orig
   end
@@ -84,19 +94,20 @@ end
 
 function tools.exportXmlTable(key, table)
   local function iter(k, t)
-    local xml = "\n<" .. tostring(k)
+    local xml = "<" .. tostring(k)
     local xml_table
     for k1, v in pairs(t) do
       if type(v) == "table" then
-        xml_table = (xml_table or "") .. iter(k1, v)
-      else
+        xml_table = (xml_table or "") .. iter(v.key or k1, v)
+      elseif k1 ~= "key" then
+
         xml = xml .. " " .. tostring(k1) .."=\"" .. tostring(v) .. "\""
       end
     end
     if xml_table then
-      xml = xml .. ">\n" .. xml_table .. "\n</" .. tostring(k) .. ">"
+      xml = xml .. ">\n" .. xml_table .. "</" .. tostring(k) .. ">\n"
     else
-      xml = xml .. "/>"
+      xml = xml .. "/>\n"
     end
     return xml
   end

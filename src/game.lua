@@ -27,6 +27,7 @@ function game.create(ps, graph, tags)
   end
 
   for player, _ in pairs(g.players) do
+
     g.graphs[player] = tools.deepcopy(graph)
     g.graphs[player]:setTag("view", player)
   end
@@ -412,79 +413,5 @@ function game:exportXml(output, with_tags)
   end
   return xml
 end
-
-  --
-  -- game.aggregationValue = function(fun, epsilon, val_question, precision)
-  --   local graph = deepcopy(game.graphs.general)
-  --   for _, v in pairs(graph.vertices) do
-  --     v.likes    = 0
-  --     v.dislikes = 0
-  --   end
-  --   for _, player in ipairs(game.players) do
-  --     for k,v in pairs(game.graphs[player].vertices) do
-  --       graph.vertices[k].likes    = graph.vertices[k].likes + (v.likes or 0)
-  --       graph.vertices[k].dislikes = graph.vertices[k].dislikes + (v.dislikes or 0)
-  --     end
-  --   end
-  --   game.aggregate_value = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
-  -- end
-
-  -- game.meanValue = function(fun, epsilon, val_question, precision)
-  --   game.mean_value = 0
-  --   for k, p in pairs(game.graphs) do
-  --     if k ~= "general" then
-  --       assert(type(p.LM) == "table")
-  --       game.mean_value = game.mean_value + p.LM[1].value
-  --     end
-  --   end
-  --
-  --   game.mean_value = game.mean_value / #game.players
-  --
-  -- end
-
-  -- game.strongest_move = function(fun, epsilon, val_question, precision)
-  --   local graph = deepcopy(game.graphs.general)
-  --   for _, v in pairs(graph.vertices) do
-  --     v.likes    = 0
-  --     v.dislikes = 0
-  --   end
-  --   local strongest_lm = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
-  --   local start_lm     = strongest_lm
-  --
-  --   for k, _ in pairs(graph.vertices.q.attackers) do
-  --     graph.vertices[k].dislikes = 1
-  --     local temp_lm = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
-  --     if temp_lm > strongest_lm then strongest_lm = temp_lm end
-  --     graph.vertices[k].dislikes = 0
-  --   end
-  --   game.strongest_shot = strongest_lm - start_lm
-  -- end
-  --
-  -- game.weakest_move = function(fun, epsilon, val_question, precision)
-  --   local graph = deepcopy(game.graphs.general)
-  --   for _, v in pairs(graph.vertices) do
-  --     v.likes    = 0
-  --     v.dislikes = 0
-  --   end
-  --   local weakest_lm = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
-  --   local start_lm   = weakest_lm
-  --
-  --   for k, _ in pairs(graph.vertices.q.attackers) do
-  --     graph.vertices[k].likes = 1
-  --     local temp_lm = saa.computeGraphSAA(#game.players, graph, fun, epsilon, val_question, precision)
-  --     if temp_lm < weakest_lm then weakest_lm = temp_lm end
-  --     graph.vertices[k].likes = 0
-  --   end
-  --   game.weakest_shot = weakest_lm - start_lm
-  -- end
-
-
--- do
---   local generate_graph = require "graph_generator"
---   local tree = generate_graph.generateTree(10)
---   local g = game.create({"p1"}, tree)
---   print(g:exportXml(nil, "all"))
---   g:exportTex("test_game.tex")
--- end
 
 return game

@@ -1,17 +1,17 @@
 local player = require "player"
 
-local players   = { __n = 0 }
+local players   = {}
 players.__index = players
 players.__type  = "players"
 
 function players.create()
-  local ps = {}
+  local ps = {__n = 0}
   setmetatable(ps, players)
   return ps
 end
 
-function players.__len(_)
-  return players.__n
+function players:__len()
+  return self.__n
 end
 
 function players:__next(k)
@@ -21,7 +21,11 @@ function players:__next(k)
     if i + 1 > #players.__order then return nil end
     return players.__order[i + 1], self[players.__order[i + 1]]
   end
-  return next(self, k)
+  local k1, v1 = rawnext(self, k)
+  if k1 == "__n" then
+    k1, v1 = rawnext(self, k1)
+  end
+  return k1, v1
 end
 
 function players:__pairs()
@@ -32,7 +36,7 @@ function players:newPlayer(name, tags)
   assert(name)
   if not self[name] then
     self[name]  = player.create(name, tags)
-    players.__n = players.__n + 1
+    self.__n    = self.__n + 1
     if players.__order then
       table.insert(players.__order, name)
       players.__reverse_order[name] = #players.__order
@@ -60,7 +64,7 @@ end
 function players:removePlayer(name)
   if self[name] then
     self[name] = nil
-    players.__n      = players.__n - 1
+    self.__n   = self.__n - 1
     if players.__order then
       table.remove(players.__order, players.__reverse_order[name])
       for i, v in ipairs(players.__order) do

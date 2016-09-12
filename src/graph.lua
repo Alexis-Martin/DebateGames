@@ -278,7 +278,7 @@ function graph:exportXml(with_tags, with_vertices, with_edges)
   if with_tags == "all" then
     for k, v in pairs(self.tags) do
       if type(v) == "table" then
-        xml_tags = (xml_tags or nil) .. tools.exportXmlTable(k, v)
+        xml_tags = (xml_tags or "") .. tools.exportXmlTable(k, v)
       else
         xml = xml .. " " .. tostring(k) .. "=\"" .. tostring(v) .. "\""
       end
@@ -292,7 +292,7 @@ function graph:exportXml(with_tags, with_vertices, with_edges)
       end
     end
   end
-  xml = xml .. ">\n" .. xml_tags
+  xml = xml .. ">\n" .. xml_tags .. "\n"
 
   if with_vertices then
     for _, v in pairs(self.vertices) do

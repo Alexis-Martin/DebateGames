@@ -284,7 +284,7 @@ end
 --
 --
 do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/02_09_15_35_round_robin_1/1_players/1_vertices/game_1.xml")
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/BUG_CYCLE_LM/4_vertices_1/cycle_LM.xml")
   -- game:print_game()
   -- game.aggregation_value("tau_1", 0.1, 1, 8)
 
@@ -295,8 +295,8 @@ do
   -- game:print_game()
   -- print(game.graphs.general.LM[1].value)
   -- saa.computeGraphSAA(1, game.graphs.general, "L_&_M", 0.1, 1, 8)
-  export_game(game,"/home/talkie/Documents/Stage/DebateGames/tests/02_09_15_35_round_robin_1/1_players/1_vertices/game_1_t.xml")
+  -- export_game(game,"/home/talkie/Documents/Stage/DebateGames/tests/02_09_15_35_round_robin_1/1_players/1_vertices/game_1_t.xml")
   -- game.plot("//home/talkie/Documents/Stage/DebateGames/docs/final_report/petit_jeu_contre.png", true)
-  export_tex(game, "/home/talkie/Documents/Stage/DebateGames/tests/02_09_15_35_round_robin_1/1_players/1_vertices/game_1_t.tex")
-
+  -- export_tex(game, "/home/talkie/Documents/Stage/DebateGames/tests/02_09_15_35_round_robin_1/1_players/1_vertices/game_1_t.tex")
+  game.graphs.general:print_graph()
 end

@@ -119,7 +119,7 @@ function rules.computeSAA(graph)
 
     -- initialize I, a sequence which converge to LM
     for k, _ in pairs(graph.vertices) do
-      I[k] = 0
+      I[k] = 0.05
     end
 
     -- compute the value of tau for each arg

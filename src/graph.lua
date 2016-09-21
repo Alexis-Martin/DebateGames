@@ -182,6 +182,14 @@ function graph:addEdge(source_name, target_name, create_news, edge_tags)
   return false
 end
 
+--- Return the edge (source_name, target_name)
+-- @param source_name The source name of the edge
+-- @param target_name The target name of the edge
+-- @return The edge if exist, nil otherwise
+function graph:getEdge(source_name, target_name)
+  return self.edges[source_name .. "," .. target_name]
+end
+
 --- Remove an edge.
 -- @param source_name The source name of the edge
 -- @param target_name The target name of the edge

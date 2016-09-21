@@ -102,11 +102,11 @@ end
 function generate_graph.generateGraph(p)
   p = initializeP(p)
 
-  local graph = create_graph("graph")
-  graph.addVertex("q", {tag = "question"})
+  local g = graph.create("graph")
+  g:addVertex("q", {tag = "question"})
 
   for i=1, p.n_vertices do
-    graph.addVertex("a" .. i)
+    g:addVertex("a" .. i)
   end
 
   while p.n_edges > 0 do
@@ -117,13 +117,11 @@ function generate_graph.generateGraph(p)
 
     if input ~= output then
       if output == 0 then
-        if not graph.vertices["a" .. input].attack["q"] then
-          graph.addEdge("a" .. input, "q")
+        if g:addEdge("a" .. input, "q") then
           b = true
         end
       else
-        if not graph.vertices["a" .. input].attack["a" .. output] then
-          graph.addEdge("a" .. input, "a" .. output)
+        if g:addEdge("a" .. input, "a" .. output) then
           b = true
         end
       end
@@ -132,26 +130,22 @@ function generate_graph.generateGraph(p)
     if b then p.n_edges = p.n_edges - 1 end
   end
 
-  local is_connex, non_connex = graph.isConnex()
+  local is_connex, non_connex = g:isConnex()
   while not is_connex do
     for k, _ in pairs(non_connex) do
       local output = math.random(0, p.n_vertices)
 
       if k ~= output then
         if output == 0 then
-          if not graph.vertices[k].attack["q"] then
-            graph.addEdge(k, "q")
-          end
+            g:addEdge(k, "q")
         else
-          if not graph.vertices[k].attack["a" .. output] then
-            graph.addEdge(k, "a" .. output)
-          end
+            g:addEdge(k, "a" .. output)
         end
       end
     end
-    is_connex, non_connex = graph.isConnex()
+    is_connex, non_connex = g:isConnex()
   end
-  return graph
+  return g
 end
 
 -- generate tree with n_vertices nodes.
@@ -204,7 +198,7 @@ function initializeP(p)
   end
   return p
 end
--- 
+--
 -- do
 --   local tree = generate_graph.generateTree(10)
 --   print(tree:exportXml({"tag"}, true, true))

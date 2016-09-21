@@ -99,33 +99,37 @@ end
 -- do
 --   test_random_games(1)
 -- end
-
-do
-  local nb_vertices = 3
-  local players     = 2
-  local graphGen    = graph_generator.generateTree
-
-  local b = true
-  local graph
-  local game
-  local dump
-  while b do
-    graph       = graphGen(nb_vertices)
-    game        = game_generator(players, graph)
-    local rules = mind_changed.create(game)
-    b, dump     = rules:equilibriumExistence()
-  end
-
-  local date = os.date("%d_%m_%H_%M")
-  local dest_xml   = "game_" .. date .. ".xml"
-  local dest_tex   = "game_" .. date .. ".tex"
-  local dest_log   = "game_" .. date .. "_log.log"
-  game:exportXml(dest_xml, "all")
-  game:exportTex(dest_tex)
-  local fic = io.open(dest_log, "w")
-  io.output(fic)
-  io.write(dump)
-end
+--
+-- do
+--   local nb_vertices = 4
+--   local players     = 2
+--   local graphGen    = graph_generator.generateGraph
+--
+--   local b = true
+--   local graph
+--   local game
+--   local dump
+--   local count = 0
+--
+--   while b do
+--     print (count)
+--     count = count + 1
+--     graph       = graphGen({n_vertices = nb_vertices})
+--     game        = game_generator(players, graph)
+--     local rules = mind_changed.create(game)
+--     b, dump     = rules:equilibriumExistence()
+--   end
+--
+--   local date = os.date("%d_%m_%H_%M")
+--   local dest_xml   = "game_" .. date .. ".xml"
+--   local dest_tex   = "game_" .. date .. ".tex"
+--   local dest_log   = "game_" .. date .. "_log.log"
+--   game:exportXml(dest_xml, "all")
+--   game:exportTex(dest_tex)
+--   local fic = io.open(dest_log, "w")
+--   io.output(fic)
+--   io.write(dump)
+-- end
 
 -- do
 -- local c = 0
@@ -255,21 +259,21 @@ end
 
 
 
---
--- do
---   local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/BUG_CYCLE_LM/4_vertices_1/cycle_LM.xml")
---   -- game:print_game()
---   -- game.aggregation_value("tau_1", 0.1, 1, 8)
---   local rules = mind_changed.create(game)
---   rules:setGame(game)
---   -- rules.setParameters {compute_agg = false, compute_mean = true, }
---   rules:computeSAA()
---   -- rules.apply()
---   -- game:print_game()
---   -- print(game.graphs.general.LM[1].value)
---   -- saa.computeGraphSAA(1, game.graphs.general, "L_&_M", 0.1, 1, 8)
---   -- export_game(game,"/home/talkie/Documents/Stage/DebateGames/src/game_1_test.xml")
---   -- game.plot("//home/talkie/Documents/Stage/DebateGames/docs/final_report/petit_jeu_contre.png", true)
---   -- export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/game_1_test.tex")
---   game.graphs.general:dump()
--- end
+
+do
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/BUG_CYCLE_LM/4_vertices_1/cycle_LM.xml")
+  -- game:print_game()
+  -- game.aggregation_value("tau_1", 0.1, 1, 8)
+  local rules = mind_changed.create(game)
+  rules:setGame(game)
+  -- rules.setParameters {compute_agg = false, compute_mean = true, }
+  rules:computeSAA()
+  -- rules.apply()
+  -- game:print_game()
+  -- print(game.graphs.general.LM[1].value)
+  -- saa.computeGraphSAA(1, game.graphs.general, "L_&_M", 0.1, 1, 8)
+  -- export_game(game,"/home/talkie/Documents/Stage/DebateGames/src/game_1_test.xml")
+  -- game.plot("//home/talkie/Documents/Stage/DebateGames/docs/final_report/petit_jeu_contre.png", true)
+  -- export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/game_1_test.tex")
+  game.graphs.general:dump()
+end

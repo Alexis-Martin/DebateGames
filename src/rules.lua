@@ -18,6 +18,7 @@ function rules.create()
     p = {}
   }
   setmetatable(r, rules)
+  r:setParameters()
   return r
 end
 
@@ -40,7 +41,9 @@ rules.parameters = {
 -- Add new parameters and change them if the key already exists
 -- @param parameters table (key, values) of parameters, if nil, back to default.
 function rules:setParameters(parameters)
-  if not self.p then self.p = {} end
+  if not self.p then
+    self.p = tools.deepcopy(rules.parameters)
+  end
   if type(parameters) == "table" then
     for k, v in pairs(parameters) do
       self.p[k] = v
@@ -148,6 +151,8 @@ function rules:computeSAA(graph)
     end
 
     -- compute the value of tau for each arg
+    local n_vertex = 0
+
     local eps = -nb_players / math.log(0.04)
     for k, v in pairs(graph:getVertices()) do
       v:setTag("likes",    (v:getTag("likes")    or 0))
@@ -170,6 +175,8 @@ function rules:computeSAA(graph)
       elseif self.p.fun == "L_&_M" then
         tho[k] = likes / (likes + dislikes + self.p.epsilon)
       end
+
+      n_vertex = n_vertex + 1
     end
 
     -- compute the sequence

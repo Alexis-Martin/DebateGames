@@ -266,6 +266,7 @@ do
   local rules = mind_changed.create(game)
   rules:setParameters {fun = "L_&_M", epsilon = 3.4, }
   rules:computeSAA()
-
-  print(game:getGraph("general"):dump())
+  rules:saveParameters()
+  -- print(game:getGraph("general"):dump())
+  game:exportXml("../tests/just_test_export_param.xml", "all")
 end

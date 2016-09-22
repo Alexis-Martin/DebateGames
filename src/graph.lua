@@ -70,6 +70,17 @@ function graph:removeTag(key)
   self.tags[key] = nil
 end
 
+--- Get the number of vertices.
+-- @return The number of vertices
+function graph:getNVertices()
+  -- To optimize with a proxy and a variable n_vertices to count them
+  local n_vertices = 0
+  for _, _ in pairs(self:getVertices()) do
+    n_vertices = n_vertices + 1
+  end
+  return n_vertices
+end
+
 --- Add a vertex if the vertex exist and tags is not nil the tags won't be modified
 -- @param name The name of the vertex, this name can't be modified later
 -- @param tags A set of tags for this vertex.
@@ -153,6 +164,23 @@ end
 function graph:removeVertexTag(name, key)
   assert(self.vertices[name])
   self.vertices[name]:removeTag(key)
+end
+
+--- Get the number of edges.
+-- @return The number of edges
+function graph:getNEdges()
+  -- To optimize with a proxy and a variable n_edges to count them
+  local n_edges = 0
+  for _, _ in pairs(self:getEdges()) do
+    n_edges = n_edges + 1
+  end
+  return n_edges
+end
+
+--- Get the table edges
+-- @return set of edges
+function graph:getEdges()
+  return self.edges
 end
 
 --- Add an edge if the edge exist and tags is not nil the tags won't be modified

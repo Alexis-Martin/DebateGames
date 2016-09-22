@@ -240,6 +240,11 @@ function rules:getParameter(param)
   return self.p[param]
 end
 
+function rules:saveParameters()
+  local parameters = tools.deepcopy(self.p)
+  self.game:setTag("parameters", parameters)
+end
+
 function rules:getLastLM(graph)
 
   local lm = self.game:getGraph(graph):getTag("LM")
@@ -596,9 +601,6 @@ function rules:normalForm()
 
   return normal_form
 end
-
--- TODO construire la liste des votes de tous les joueurs grace à gridEnumeration dans equilibrumExistence
--- TODO regarder pour toutes les combinaisons pour toutes les situations si au moins un joueurs peut améliorer sa valeur. Negation de ça.
 
 function rules:equilibriumExistence()
   local normal_form      = self:normalForm()

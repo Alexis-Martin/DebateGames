@@ -119,8 +119,10 @@ function rules.computeSAA(graph)
 
     -- initialize I, a sequence which converge to LM
     for k, _ in pairs(graph.vertices) do
-      I[k] = 0.365
+      I[k] = 0
     end
+
+    local n_vertex = -1
 
     -- compute the value of tau for each arg
     for k, v in pairs(graph.vertices) do
@@ -143,6 +145,20 @@ function rules.computeSAA(graph)
       elseif p.fun == "L_&_M" then
         tho[k] = v.likes / (v.likes + v.dislikes + p.epsilon)
       end
+
+
+      -- local n_vertex = 0
+      -- for _,_ in pairs(v.attackers) do
+        n_vertex = n_vertex + 1
+      -- end
+      -- if n_vertex > 0 then
+      --   tho[k] = tho[k] / n_vertex
+      -- end
+
+    end
+
+    for k, _ in pairs(tho) do
+      tho[k] = tho[k] / n_vertex
     end
 
     -- compute the sequence

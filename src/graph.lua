@@ -160,14 +160,20 @@ end
 -- @param target_name The name of the target.
 -- @param create_news If it true and source or target doesn't exist then they will be created else if source or target doesn't exist then the edge is not create.
 -- @param edge_tags A set of tags for this edge.
--- @return true if the edge is create false otherwise
+-- @return true and the edge if the edge is create false and the edge (or nil) otherwise
 function graph:addEdge(source_name, target_name, create_news, edge_tags)
   local source = self:getVertex(source_name)
   local target = self:getVertex(target_name)
 
   if create_news == true then
-    source = source or self:addVertex(source_name)
-    target = target or self:addVertex(target_name)
+    if not source then
+      local _
+      _, source = self:addVertex(source_name)
+    end
+    if not target then
+      local _
+      _, target = self:addVertex(target_name)
+    end
   end
 
   if (not source) or (not target) then
@@ -177,9 +183,9 @@ function graph:addEdge(source_name, target_name, create_news, edge_tags)
     self.edges[source_name .. "," .. target_name] = edge.create(source, target, edge_tags)
     source:addAttack(target_name)
     target:addAttacker(source_name)
-    return true
+    return true, self.edges[source_name .. "," .. target_name]
   end
-  return false
+  return false, self.edges[source_name .. "," .. target_name]
 end
 
 --- Return the edge (source_name, target_name)

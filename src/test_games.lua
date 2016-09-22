@@ -3,6 +3,7 @@ local graph_generator = require "graph_generator"
 local lfs             = require "lfs"
 local mind_changed    = require "rules_mind_changed"
 local yaml            = require "yaml"
+local import_game     = require "import_xml"
 
 
 local function test_random_games(val_question)
@@ -262,18 +263,9 @@ end
 
 do
   local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/BUG_CYCLE_LM/4_vertices_1/cycle_LM.xml")
-  -- game:print_game()
-  -- game.aggregation_value("tau_1", 0.1, 1, 8)
   local rules = mind_changed.create(game)
-  rules:setGame(game)
-  -- rules.setParameters {compute_agg = false, compute_mean = true, }
+  rules:setParameters {fun = "L_&_M", epsilon = 3.4, }
   rules:computeSAA()
-  -- rules.apply()
-  -- game:print_game()
-  -- print(game.graphs.general.LM[1].value)
-  -- saa.computeGraphSAA(1, game.graphs.general, "L_&_M", 0.1, 1, 8)
-  -- export_game(game,"/home/talkie/Documents/Stage/DebateGames/src/game_1_test.xml")
-  -- game.plot("//home/talkie/Documents/Stage/DebateGames/docs/final_report/petit_jeu_contre.png", true)
-  -- export_tex(game, "/home/talkie/Documents/Stage/DebateGames/src/game_1_test.tex")
-  game.graphs.general:dump()
+
+  print(game:getGraph("general"):dump())
 end

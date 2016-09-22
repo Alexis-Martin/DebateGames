@@ -1,5 +1,5 @@
 local xml          = require "xml"
-local create_graph = require "graph"
+local graph = require "graph"
 local create_game  = require "game"
 local rules        = require "rules"
 local saa          = require "saa"
@@ -10,43 +10,67 @@ local function import_game(fic, play)
 
   -- Construct table of players
   local players = {}
-  for _,v in pairs(data) do
-    if type(v) == "table" and v.view ~= "general" then
-      players[#players + 1] = v.view
-    end
-  end
-
-  -- Construct general graph
   local class
-  for _,g in pairs(data) do
-    if type(g) == "table" and g.view == "general" then
-      class = g.xml
+  for _,v in pairs(data) do
+    if type(v) == "table" and
+       v.xml   == "graph" and
+       v.view  ~= "general"
+    then
+      table.insert(players, v.view)
+    elseif type(v) == "table" and
+           v.xml   == "graph" and
+           v.view  == "general"
+    then
+      class = v.class or "graph"
     end
   end
-  local graph = create_graph(class, { view = "general" })
+
+  local gen_g = graph.create(class, { view = "general" })
 
   for _,g in pairs(data) do
-    if type(g) == "table" and g.view == "general" then
+    if type(g) == "table" and
+       g.xml   == "graph" and
+       g.view  == "general"
+    then
       for _, v in pairs(g) do
-        if type(v) == 'table' and v.xml == 'vertex' then
-          if not graph.addVertex(v.name, { content = v[1], tag = v.tag }) then
-            graph.setVertexParameters(v.name, { content = v[1], tag = v.tag })
+        if type(v) == 'table' and
+           v.xml   == 'vertex'
+        then
+          local tags = {}
+          for k, t in pairs(v) do
+            if k ~= "xml" and k ~= "name" then
+              tags[k] = t
+            end
           end
-        elseif type(v) == 'table' and v.xml == 'edge' then
-          graph.addEdge(v.source, v.target, true)
+          local _, vertex = gen_g:addVertex(v.name)
+          vertex:setTags(tags)
+        elseif type(v) == 'table' and
+               v.xml   == 'edge'
+        then
+          local tags = {}
+          for k, t in pairs(v) do
+            if k ~= "xml"    and
+               k ~= "source" and
+               k ~= "target"
+            then
+              tags[k] = t
+            end
+          end
+          local _, edge = gen_g:addEdge(v.source, v.target, true)
+          edge:setTags(tags)
         end
       end
     end
   end
 
   --construct game
-  local game = create_game(players, graph)
-  for _,g in pairs(data) do
-    if type(g) == "table" then --and g.view ~= "general" then
+  local game = create_game.create(players, gen_g)
+  for _, g in pairs(data) do
+    if type(g) == "table" and g.xml == "graph" then
       for _, v in pairs(g) do
         if type(v) == 'table' and v.xml == 'vertex' then
-          game.setDislikes(g.view, v.name, tonumber(v.dislikes))
-          game.setLikes(g.view, v.name, tonumber(v.likes))
+          game:setDislikes(g.view, v.name, tonumber(v.dislikes or 0))
+          game:setLikes(g.view, v.name, tonumber(v.likes or 0))
         end
       end
     end

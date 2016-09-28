@@ -67,6 +67,15 @@ function game:setTag(key, value)
   self.tags[key] = value
 end
 
+--- get a tag
+-- @param key the key of the tag
+-- @return the value of the tag
+function game:getTag(key)
+  assert(key ~= nil)
+  return self.tags[key]
+end
+
+
 --- Delete a tag
 -- @param key the key of the tag
 function game:removeTag(key)
@@ -175,6 +184,7 @@ function game:getPlayers()
 end
 
 function game:getLM(graph)
+  if not graph then return self.graphs.general:getTag("LM") end
   return self.graphs[graph]:getTag("LM")
 end
 

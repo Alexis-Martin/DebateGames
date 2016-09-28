@@ -30,6 +30,12 @@ function graph.create(class, tags)
   return g
 end
 
+--- Get the class
+-- @return The class of the graph
+function graph:getClass()
+  return self.class
+end
+
 --- Add or modify a set of tags
 -- @param t a table
 function graph:setTags(t)

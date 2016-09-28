@@ -7,11 +7,10 @@ mind_changed.__index = mind_changed
 
 function mind_changed.create(game)
   local mc = {}
-  if type(game) == "game" then
-    mc.game = game
-  end
-
   setmetatable(mc, mind_changed)
+  if type(game) == "game" then
+    mc:setGame(game)
+  end
   return mc
 end
 

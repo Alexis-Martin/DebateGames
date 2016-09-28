@@ -105,36 +105,36 @@ end
 function rules:aggregationValue()
   assert(self.game)
   local graph = tools.deepcopy(self.game:getGraph("general"))
-  for _, v in pairs(graph.vertices) do
-    v:setTag("likes"   , 0)
-    v:setTag("dislikes", 0)
+  for k, _ in pairs(graph:getVertices()) do
+    graph:setVertexTag(k, "likes"   , 0)
+    graph:setVertexTag(k, "dislikes", 0)
   end
 
   for player, _ in pairs(self.game:getPlayers()) do
     for k, v in pairs(self.game:getGraph(player):getVertices()) do
-      local like = graph:getVertexTag(k, "like")
-      graph:setVertexTag(k, "like", like + (v:getTag("likes") or 0))
-      local dislike = graph:getVertexTag(k, "dislike")
-      graph:setVertexTag(k, "dislike", dislike + (v:getTag("dislikes") or 0))
+      local like = graph:getVertexTag(k, "likes")
+      graph:setVertexTag(k, "likes", like + (v:getTag("likes") or 0))
+      local dislike = graph:getVertexTag(k, "dislikes")
+      graph:setVertexTag(k, "dislikes", dislike + (v:getTag("dislikes") or 0))
     end
   end
-  local result = rules.computeSAA(graph)
+  local result = self:computeSAA(graph)
   self.game:setTag("aggregate_value", result)
   return result
 end
 
 -- Compute the mean players value
-function rules.meanValue()
-  assert(rules.game)
+function rules:meanValue()
+  assert(self.game)
   local mean = 0
-    for k, _ in pairs(rules.game:getGraphs()) do
+    for k, _ in pairs(self.game:getGraphs()) do
       if k ~= "general" then
-        assert(type(rules.game.getLM(k)) == "table")
-        mean = mean + rules.game.getLM(k)[1].value
+        assert(type(self.game:getLM(k)) == "table")
+        mean = mean + self.game:getLM(k)[1].value
       end
     end
-    mean = mean / #rules.game:getPlayers()
-    rules.game:setTag("mean", mean)
+    mean = mean / #self.game:getPlayers()
+    self.game:setTag("mean", mean)
     return mean
 end
 

@@ -189,6 +189,7 @@ function gnuplot.do_plot(g, cmd, path, open)
     local name = write_temp_file( code )
     local opt = ""
     if persist[g._type] then opt = '--persist' end
+    os.execute(string.format("cat %s", name))
     os.execute( string.format("%s %s %s",  gnuplot.bin, opt, name) )
     if open then
       os.execute(string.format('atom %s', path))

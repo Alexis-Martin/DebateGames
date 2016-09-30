@@ -1,4 +1,4 @@
-<game players="2">
+<game players="1">
   <tree view="general">
     <vertex tag="question" name="q">q</vertex>
     <vertex name="a1">a1</vertex>

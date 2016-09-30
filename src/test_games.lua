@@ -284,7 +284,7 @@ end
 --
 --
 do
-  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/BUG_CYCLE_LM/4_vertices_1/cycle_LM.xml")
+  local game = import_game("/home/talkie/Documents/Stage/DebateGames/tests/test_SAFs/cycle3.xml")
   -- game:print_game()
   -- game.aggregation_value("tau_1", 0.1, 1, 8)
 

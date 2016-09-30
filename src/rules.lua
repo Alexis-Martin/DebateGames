@@ -149,14 +149,14 @@ function rules.computeSAA(graph)
 
       -- local n_vertex = 0
       -- for _,_ in pairs(v.attackers) do
-        n_vertex = n_vertex + 1
+        -- n_vertex = 9
       -- end
       -- if n_vertex > 0 then
       --   tho[k] = tho[k] / n_vertex
       -- end
 
     end
-
+    n_vertex = 1000
     for k, _ in pairs(tho) do
       tho[k] = tho[k] / n_vertex
     end
@@ -173,6 +173,9 @@ function rules.computeSAA(graph)
         I[k] = tho[k]
         if type(v.attackers) == "table" then
           for k1, _ in pairs(v.attackers) do
+            if k1 == k then
+              I[k] = I[k] * (1- old)
+            end
             I[k] = I[k] * (1 - I[k1])
           end
         end
@@ -180,6 +183,10 @@ function rules.computeSAA(graph)
           loop = true
         end
       end
+    end
+
+    for k,v in pairs(I) do
+      I[k] = I[k] * n_vertex
     end
 
     -- save the values

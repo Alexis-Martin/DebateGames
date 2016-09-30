@@ -6,6 +6,7 @@ local function boxplot(t, output)
     t = {
       x_label     = "bla",
       y_label     = "blo",
+      title       = "bliblablo",
       color{ other = "RRGGBB" },
       [1]         = {
         x     = ...,
@@ -27,6 +28,8 @@ local function boxplot(t, output)
   io.write("\\documentclass{article}")
   io.write("\n\n")
   io.write("\\usepackage{tikz}")
+  io.write("\n")
+  io.write("\\usepackage[utf8x]{luainputenc}")
   io.write("\n")
   io.write("\\usepackage{xcolor}")
   io.write("\n")
@@ -158,9 +161,18 @@ local function boxplot(t, output)
     io.write("\\node [anchor=west, text=" .. k .. "] at (1.2, " .. i .. ") {" .. text .. "};\n")
     i = i - 0.5
   end
-
+  if t.title then
+    io.write("\\large\n")
+    io.write("\\node at (6," .. i - 1 .. ") {\\textbf{" .. t.title .. "}};\n")
+    io.write("\\normalsize\n")
+  end
   io.write("\\end{tikzpicture} ")
   io.write("\n")
+  if t.success then
+    for k, v in pairs(t.success) do
+      io.write("\nLe pourcentage de success (distance égale à 0) pour " .. k .. " est " .. v .. "\\%\n")
+    end
+  end
   io.write("\\end{document}")
 
   io.flush()

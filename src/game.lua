@@ -112,6 +112,22 @@ function game:setDislikes(player, arg, nb)
   self.graphs[player]:setVertexTag(arg, "dislikes", nb)
 end
 
+function game:getLikes(player, arg)
+  if not player then
+    player = "general"
+  end
+  assert(self.graphs[player])
+  return self.graphs[player]:getVertexTag(arg, "likes")
+end
+
+function game:getDislikes(player, arg)
+  if not player then
+    player = "general"
+  end
+  assert(self.graphs[player])
+  return self.graphs[player]:getVertexTag(arg, "dislikes")
+end
+
 function game:setLikes(player, arg, nb)
   if not player then
     player = "general"
@@ -186,6 +202,14 @@ end
 function game:getLM(graph)
   if not graph then return self.graphs.general:getTag("LM") end
   return self.graphs[graph]:getTag("LM")
+end
+
+function game:getLastLM(player)
+  if not player then
+    player = "general"
+  end
+  local lm = self:getGraph(player):getTag("LM")
+  return lm[#lm]
 end
 
 function game:setLM(graph, t)

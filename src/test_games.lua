@@ -8,17 +8,18 @@ local tools           = require "tools"
 local boxplot         = require "boxplot"
 
 local function test_random_games(val_question)
-  local max_players  = 2
-  local max_games    = 1
+  local max_players  = 3
+  local max_games    = 5
   local max_vertices = 15
   local precision    = 8
   local dynamique    = "round_robin"
   local type_vote    = "best"
-  local compute_agg  = false
-  local compute_mean = false
-  local log_details  = "strokes"
-  local check_cycle  = true
+  local compute_agg  = true
+  local compute_mean = true
+  local log_details  = "all"
+  local check_cycle  = false
   local graphGen     = graph_generator.generateTree
+  local start        = "aggregation"
 
   local nb_tests     = max_vertices * max_games * (max_players)
   local options      = {
@@ -39,7 +40,8 @@ local function test_random_games(val_question)
     compute_agg  = compute_agg,
     compute_mean = compute_mean,
     rule         = "mindChanged",
-    check_cycle  = check_cycle
+    check_cycle  = check_cycle,
+    start        = start
   }
 
   for players = 2, max_players do
@@ -71,7 +73,6 @@ local function test_random_games(val_question)
         dest_j         = dest_v .. "best_" .. j .. "_tau_1.xml"
         dest_tex       = dest_v .. "best_" .. j .. "_tau_1.tex"
         local dest_png = dest_v .. "best_" .. j .. "_tau_1.png"
-        local normal_f = dest_v .. "normal_form_" .. j .. "_tau_1.yaml"
         options.title  = players     .. " players "
                       .. nb_vertices .. " vertices "
                       .. "best "     .. j
@@ -84,24 +85,24 @@ local function test_random_games(val_question)
 
         game:exportXml(dest_j, "all")
         game:exportTex(dest_tex)
-        rules:equilibriumExistence()
-        --
-        -- local fic = io.open(normal_f, "w")
-        -- io.output(fic)
-        -- io.write(yaml.dump())
-
-        if game.cycle then
-          return
-        end
       end
     end
   end
 end
---
--- do
---   test_random_games(1)
--- end
---
+-- --
+do
+  test_random_games(1)
+end
+
+
+
+
+
+
+
+
+
+
 -- do
 --   local nb_vertices = 4
 --   local players     = 2
@@ -259,178 +260,190 @@ end
 -- end
 
 
+
+
+
+
+
+
+
+
+
+
+
 -- STATS MOYENNE AND AGGREGATION
-do
-  local function stats(nb_tests, nb_players, nb_vertices, graph_fun, param)
-    local values       = {}
-    local means        = {}
-    local aggregations = {}
-    local lms          = {}
+-- do
+--   local function stats(nb_tests, nb_players, nb_vertices, graph_fun, param)
+--     local values_mean  = {}
+--     local values_agg   = {}
+--     local lms          = {}
+--     local lms_mean     = {}
+--     local lms_agg      = {}
+--     local nb_same_mean = 0
+--     local nb_same_agg  = 0
+--     local total_test   = nb_tests
+--
+--     while nb_tests > 0 do
+--       nb_tests       = nb_tests - 1
+--       if nb_tests % 100 == 0 then
+--         print("intern test : " .. nb_tests)
+--       end
+--       local graph    = graph_fun(nb_vertices)
+--       local game     = game_generator(nb_players, graph)
+--       local rule     = mind_changed.create(game)
+--       if param then rule:setParameters(param) end
+--       rule:apply()
+--
+--       -- save results
+--       local dist_LM_m = math.abs(game:getLM()[#game:getLM()].value - game:getTag("mean"))
+--
+--       if dist_LM_m == 0 then nb_same_mean = nb_same_mean + 1 end
+--
+--       if not values_mean.min then
+--         values_mean.min = tools.round(dist_LM_m, 2)
+--       elseif values_mean.min > dist_LM_m then
+--         values_mean.min = tools.round(dist_LM_m, 2)
+--       end
+--
+--       if not values_mean.max then
+--         values_mean.max = tools.round(dist_LM_m, 2)
+--       elseif values_mean.max < dist_LM_m then
+--         values_mean.max = tools.round(dist_LM_m, 2)
+--       end
+--       table.insert(lms_mean, dist_LM_m)
+--
+--       local dist_LM_a = math.abs(game:getLM()[#game:getLM()].value - game:getTag("aggregate_value"))
+--
+--       if dist_LM_a == 0 then nb_same_agg = nb_same_agg + 1 end
+--
+--       if not values_agg.min then
+--         values_agg.min = tools.round(dist_LM_a, 2)
+--       elseif values_agg.min > dist_LM_a then
+--         values_agg.min = tools.round(dist_LM_a, 2)
+--       end
+--
+--       if not values_agg.max then
+--         values_agg.max = tools.round(dist_LM_a, 2)
+--       elseif values_agg.max < dist_LM_a then
+--         values_agg.max = tools.round(dist_LM_a, 2)
+--       end
+--       table.insert(lms, game:getLM()[#game:getLM()].value)
+--       table.insert(lms_agg     , dist_LM_a)
+--     end
+--
+--     values_mean.moyenne_valeur_jeu = 0
+--     for _, v in ipairs(lms) do
+--       values_mean.moyenne_valeur_jeu = values_mean.moyenne_valeur_jeu + v
+--     end
+--     values_mean.moyenne_valeur_jeu = tools.round(values_mean.moyenne_valeur_jeu / #lms, 2)
+--
+--     values_mean.mean = 0
+--     for _, v in ipairs(lms_mean) do
+--       values_mean.mean = values_mean.mean + v
+--     end
+--     values_mean.mean = tools.round(values_mean.mean / #lms_mean, 2)
+--
+--     table.sort(lms_mean)
+--     if #lms_mean % 4 == 0 then
+--       values_mean.q1   = tools.round(lms_mean[#lms_mean/4], 2)
+--       values_mean.q3   = tools.round(lms_mean[(#lms_mean/4) * 3], 2)
+--       values_mean.med  = tools.round(lms_mean[#lms_mean/2], 2)
+--     else
+--       local f = math.floor(#lms_mean/4)
+--       values_mean.q1   = tools.round((lms_mean[f] + lms_mean[f+1]) / 2, 2)
+--       values_mean.q3   = tools.round((lms_mean[f * 3] + lms_mean[f * 3+1]) / 2, 2)
+--       values_mean.med  = tools.round((lms_mean[math.floor(#lms_mean/2)] + lms_mean[math.ceil(#lms_mean/2)]) / 2, 2)
+--     end
+--
+--     values_agg.moyenne_valeur_jeu = values_mean.moyenne_valeur_jeu
+--     values_agg.mean = 0
+--     for _, v in ipairs(lms_agg) do
+--       values_agg.mean = values_agg.mean + v
+--     end
+--     values_agg.mean = tools.round(values_agg.mean / #lms_agg, 2)
+--
+--     table.sort(lms_agg)
+--     if #lms_agg % 4 == 0 then
+--       values_agg.q1   = tools.round(lms_agg[#lms_agg/4], 2)
+--       values_agg.q3   = tools.round(lms_agg[(#lms_agg/4) * 3], 2)
+--       values_agg.med  = tools.round(lms_agg[#lms_agg/2], 2)
+--     else
+--       local f = math.floor(#lms_agg/4)
+--       values_agg.q1   = tools.round((lms_agg[f] + lms_agg[f]) / 2, 2)
+--       values_agg.q3   = tools.round((lms_agg[f * 3] + lms_agg[f * 3 + 1]) / 2, 2)
+--       values_agg.med  = tools.round((lms_agg[math.floor(#lms_agg/2)] + lms_agg[math.ceil(#lms_agg/2)]) / 2, 2)
+--     end
+--
+--     nb_same_mean = (nb_same_mean / total_test) * 100
+--     nb_same_agg  = (nb_same_agg  / total_test) * 100
+--
+--     return values_mean, values_agg, nb_same_mean, nb_same_agg
+--   end
+--
+--
+--   local max_players  = 8
+--   local nb_vertices  = 15
+--   local graphGen     = graph_generator.generateTree
+--   local nb_tests     = 5000
+--   local x_label      = "nombres de joueurs"
+--   local y_label      = "valeur du jeu"
+--   local title_mean   = "Distance à la moyenne, Arbre, " .. nb_vertices .. " arguments (" .. nb_tests .. " tests)"
+--   local title_agg    = "Distance à l'aggregation, Arbre, " .. nb_vertices .. " arguments (" .. nb_tests .. " tests)"
+--   local output_mean  = "../tests/stats/" .. nb_vertices .. "_" .. nb_tests .. "_mean.tex"
+--   local output_agg  = "../tests/stats/" .. nb_vertices .. "_" .. nb_tests .. "_agg.tex"
+--   local color_mean   = {
+--     moyenne_valeur_jeu = "0066ff",
+--     mean         = "cc0000"
+--   }
+--   local color_agg    = {
+--     moyenne_valeur_jeu  = "0066ff",
+--     mean                = "cc0000"
+--   }
+--
+--
+--   -- rules parameters
+--   local param = {
+--     compute_agg  = true,
+--     compute_mean = true,
+--     start        = "aggregation"
+--   }
+--
+--   local save_values_m = {}
+--   local save_values_a = {}
+--   local success_m     = {}
+--   local success_a     = {}
+--
+--   for i = 2, max_players do
+--     local values_m, values_a, percent_m, percent_a = stats(nb_tests, i, nb_vertices, graphGen, param)
+--     values_m.x = i
+--     values_a.x = i
+--     table.insert(save_values_a, values_a)
+--     table.insert(save_values_m, values_m)
+--     success_a[i] = percent_a
+--     success_m[i] = percent_m
+--   end
+--   save_values_m.color   = color_mean
+--   save_values_m.x_label = x_label
+--   save_values_m.y_label = y_label
+--   save_values_m.title   = title_mean
+--   save_values_m.success = success_m
+--   boxplot(save_values_m, output_mean)
+--
+--   save_values_a.color   = color_agg
+--   save_values_a.x_label = x_label
+--   save_values_a.y_label = y_label
+--   save_values_a.title   = title_agg
+--   save_values_a.success = success_a
+--   boxplot(save_values_a, output_agg)
+-- end
 
-    while nb_tests > 0 do
-      nb_tests       = nb_tests - 1
-      if nb_tests % 100 == 0 then
-        print("intern test : " .. nb_tests)
-      end
-      local graph    = graph_fun(nb_vertices)
-      local game     = game_generator(nb_players, graph)
-      local rule     = mind_changed.create(game)
-      if param then rule:setParameters(param) end
-      rule:apply()
-
-      -- save results
-      local LM = game:getLM()[#game:getLM()].value
-      if not values.min then
-        values.min = tools.round(LM, 2)
-      elseif values.min > LM then
-        values.min = tools.round(LM, 2)
-      end
-
-      if not values.max then
-        values.max = tools.round(LM, 2)
-      elseif values.max < LM then
-        values.max = tools.round(LM, 2)
-      end
-      table.insert(means       , game:getTag("mean"))
-      table.insert(aggregations, game:getTag("aggregate_value"))
-      table.insert(lms         , LM)
-    end
-    values.mean_players = 0
-    for _, v in ipairs(means) do
-      values.mean_players = values.mean_players + v
-    end
-    values.mean_players = tools.round(values.mean_players / #means, 2)
-
-    values.aggregation = 0
-    for _, v in ipairs(aggregations) do
-      values.aggregation = values.aggregation + v
-    end
-    values.aggregation = tools.round(values.aggregation / #aggregations, 2)
-
-    values.mean = 0
-    for _, v in ipairs(lms) do
-      values.mean = values.mean + v
-    end
-    values.mean = tools.round(values.mean / #lms, 2)
-
-    table.sort(lms)
-    if #lms % 4 == 0 then
-      values.q1   = tools.round(lms[#lms/4], 2)
-      values.q3   = tools.round(lms[(#lms/4) * 3], 2)
-      values.med  = tools.round(lms[#lms/2], 2)
-    else
-      local f = math.floor(#lms/4)
-      local c = math.ceil(#lms/4)
-      values.q1   = tools.round((lms[f] + lms[c]) / 2, 2)
-      values.q3   = tools.round((lms[f * 3] + lms[c * 3]) / 2, 2)
-      values.med  = tools.round((lms[math.floor(#lms/2)] + lms[math.ceil(#lms/2)]) / 2, 2)
-    end
-    return values
-  end
 
 
-  local max_players  = 8
-  local nb_vertices  = 10
-  local graphGen     = graph_generator.generateTree
-  local nb_tests     = 5000
-  local x_label      = "nombres de joueurs"
-  local y_label      = "valeur du jeu"
-  local output       = "../tests/stats_test.tex"
-  local color        = {
-    mean_players = "0066ff",
-    aggregation  = "00cc66",
-    mean         = "cc0000"
-  }
 
 
-  -- rules parameters
-  local param = {
-    compute_agg  = true,
-    compute_mean = true,
-  }
 
-  local save_values = {}
-  for i = 2, max_players do
-    local values = stats(nb_tests, i, nb_vertices, graphGen, param)
-    values.x = i
-    table.insert(save_values, values)
-  end
-  save_values.color   = color
-  save_values.x_label = x_label
-  save_values.y_label = y_label
-  boxplot(save_values, output)
 
-  -- while nb_tests > 0 do
-  --   nb_tests       = nb_tests - 1
-  --   print(nb_tests)
-  --   local vertices = math.random(2, max_vertices)
-  --   local graph    = graphGen(vertices)
-  --   local players  = math.random(2, max_players)
-  --   local game     = game_generator(players, graph)
-  --   local rule     = mind_changed.create(game)
-  --   rule:setParameters(param)
-  --   rule:apply()
-  --
-  --   local values = {
-  --     start       = "no vote",
-  --     normalise   = "without normalisation",
-  --     graph       = game:getGraph():getClass(),
-  --     dynamique   = rule:getParameter("dynamique"),
-  --     type_vote   = rule:getParameter("type_vote"),
-  --     fun         = rule:getParameter("fun"),
-  --     test        = nb_tests,
-  --     players     = players,
-  --     vertices    = vertices,
-  --     mean        = game:getTag("mean"),
-  --     aggregation = game:getTag("aggregate_value"),
-  --     gen_init    = game:getLM()[1].value,
-  --     gen_final   = game:getLM()[#game:getLM()].value
-  --   }
-  --   for k, _ in pairs(game:getPlayers()) do
-  --     values[k] = game:getLM(k)[1].value
-  --   end
-  --
-  --   table.insert(save_values, values)
-  -- end
-  --
-  -- local fic = "../tests/" .. os.date("%d_%m_%H_%M_") .."_stat_moy_agg.yaml"
-  -- local file = io.open(fic, "w")
-  -- io.output(file)
-  -- io.write(yaml.dump(save_values))
-  -- io.flush()
-  --
-  -- local g = {
-  --   max_mean = math.abs(save_values[1].gen_final - save_values[1].mean),
-  --   min_mean = math.abs(save_values[1].gen_final - save_values[1].mean),
-  --   max_agg  = math.abs(save_values[1].gen_final - save_values[1].aggregation),
-  --   min_agg  = math.abs(save_values[1].gen_final - save_values[1].aggregation),
-  --   moy_mean = 0,
-  --   moy_agg  = 0
-  -- }
-  --
-  -- for _, v in ipairs(save_values) do
-  --   if math.abs(v.gen_final - v.mean) > g.max_mean then
-  --     g.max_mean = math.abs(v.gen_final - v.mean)
-  --   end
-  --   if math.abs(v.gen_final - v.mean) < g.min_mean then
-  --     g.min_mean = math.abs(v.gen_final - v.mean)
-  --   end
-  --   if math.abs(v.gen_final - v.aggregation) > g.max_agg then
-  --     g.max_agg = math.abs(v.gen_final - v.aggregation)
-  --   end
-  --   if math.abs(v.gen_final - v.aggregation) < g.min_agg then
-  --     g.min_agg = math.abs(v.gen_final - v.aggregation)
-  --   end
-  --   g.moy_agg  = g.moy_agg  + math.abs(v.gen_final - v.aggregation)
-  --   g.moy_mean = g.moy_mean + math.abs(v.gen_final - v.mean)
-  -- end
-  -- g.moy_agg  = g.moy_agg  / #save_values
-  -- g.moy_mean = g.moy_mean / #save_values
-  --
-  -- for k,v in pairs(g) do
-  --   print(k, v)
-  -- end
-end
+
 
 
 -- IMPORT GAME AND PLAY WITH IT

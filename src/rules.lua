@@ -23,6 +23,7 @@ function rules.create()
 end
 
 rules.parameters = {
+  start        = "zeros",
   rule         = "mindChanged",
   type_vote    = "best",
   dynamique    = "round_robin",
@@ -256,16 +257,6 @@ function rules:init()
     self.temp.players_votes[k] = {}
   end
 
-  self:computeSAA()
-
-  if self:getParameter("compute_agg") == true then
-    self:aggregationValue()
-  end
-
-  if self:getParameter("compute_mean") == true then
-    self:meanValue()
-  end
-
   if self:getParameter("log_file") then
     local l_file = io.open(self:getParameter("log_file"), "w")
     io.output(l_file)
@@ -281,6 +272,35 @@ function rules:init()
   elseif self:getParameter("dynamique") == "random" then
     self:initRandom()
     self.temp.fun_p.dynamique = self.random
+  end
+
+  if self:getParameter("start") == "aggregation" then
+    for ip, _ in pairs(self.game:getPlayers()) do
+      local g = self.game:getGraph(ip)
+      for iv, _ in pairs(g:getVertices()) do
+        local likes = self.game:getLikes(ip, iv)
+        if likes and likes > 0 then
+          self.temp.players_votes[ip][iv] = likes
+          self.game:setLikes("general", iv, likes)
+        end
+
+        local dislikes = self.game:getDislikes(ip, iv)
+        if dislikes and dislikes > 0 then
+          self.temp.players_votes[ip][iv] = -dislikes
+          self.game:setDislikes("general", iv, dislikes)
+        end
+      end
+    end
+  end
+
+  self:computeSAA()
+
+  if self:getParameter("compute_agg") == true then
+    self:aggregationValue()
+  end
+
+  if self:getParameter("compute_mean") == true then
+    self:meanValue()
   end
 end
 
@@ -452,8 +472,8 @@ function rules:testMove(arg, vote)
   if self:getParameter("log_file") and
      self:getParameter("log_details") == "all" then
     print_log.arg      = arg
-    print_log.likes    = self.game:getlikes(arg)
-    print_log.dislikes = self.game:getDislikes(arg)
+    print_log.likes    = self.game:getLikes(nil, arg)
+    print_log.dislikes = self.game:getDislikes(nil, arg)
     print_log.new_lm   = lm
     io.write(vote_type .. "\n")
     for k, v in pairs(print_log) do

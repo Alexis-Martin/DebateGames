@@ -1,0 +1,64 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing,graphs}
+\usegdlibrary{layered}
+%Becareful if you use package fontenc, it might be raise an error. If it does, you have to remove it and use \usepackage[utf8x]{luainputenc} in place of \usepackage[utf8]{inputenc}
+
+\begin{document}
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a3\\ (0,1)" -> "a2\\ (1,0)";
+"a1\\ (1,0)" -> "a2\\ (1,0)";
+"a4\\ (0,0)" -> "a3\\ (0,1)";
+"a4\\ (0,0)" -> "a1\\ (1,0)";
+"a2\\ (1,0)" -> "a1\\ (1,0)";
+"a3\\ (0,1)" -> "a4\\ (0,0)";
+"a2\\ (1,0)" -> "a3\\ (0,1)";
+"a1\\ (1,0)" -> "a4\\ (0,0)";
+"a1\\ (1,0)" -> "q\\ (0,0)";
+};
+\end{tikzpicture}
+\caption{joueur 1}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a3\\ (0,1)" -> "a2\\ (1,0)";
+"a1\\ (0,1)" -> "a2\\ (1,0)";
+"a4\\ (0,0)" -> "a3\\ (0,1)";
+"a4\\ (0,0)" -> "a1\\ (0,1)";
+"a2\\ (1,0)" -> "a1\\ (0,1)";
+"a3\\ (0,1)" -> "a4\\ (0,0)";
+"a2\\ (1,0)" -> "a3\\ (0,1)";
+"a1\\ (0,1)" -> "a4\\ (0,0)";
+"a1\\ (0,1)" -> "q\\ (0,0)";
+};
+\end{tikzpicture}
+\caption{joueur 2}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a3\\ (1,0)" -> "a2\\ (1,0)";
+"a1\\ (1,0)" -> "a2\\ (1,0)";
+"a4\\ (1,0)" -> "a3\\ (1,0)";
+"a4\\ (1,0)" -> "a1\\ (1,0)";
+"a2\\ (1,0)" -> "a1\\ (1,0)";
+"a3\\ (1,0)" -> "a4\\ (1,0)";
+"a2\\ (1,0)" -> "a3\\ (1,0)";
+"a1\\ (1,0)" -> "a4\\ (1,0)";
+"a1\\ (1,0)" -> "q\\ (0,0)";
+};
+\end{tikzpicture}
+\caption{general}
+\end{figure}
+
+\end{document}

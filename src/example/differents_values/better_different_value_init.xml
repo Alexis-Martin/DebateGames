@@ -1,0 +1,53 @@
+<game players="2" >
+	<tree view="general">
+		<vertex name="q" dislikes="0" likes="0" tag="question" />
+		<vertex name="a1" dislikes="0" likes="0" />
+		<vertex name="a2" dislikes="0" likes="0" />
+		<vertex name="a4" dislikes="0" likes="0" />
+		<vertex name="a3" dislikes="0" likes="0" />
+		<vertex name="a6" dislikes="0" likes="0" />
+		<vertex name="a5" dislikes="0" likes="0" />
+		<vertex name="a10" dislikes="0" likes="0" />
+		<vertex name="a9" dislikes="0" likes="0" />
+		<vertex name="a8" dislikes="0" likes="0" />
+		<vertex name="a7" dislikes="0" likes="0" />
+		<edge source="a1" target="q" />
+		<edge source="a2" target="a1" />
+		<edge source="a3" target="a2" />
+		<edge source="a4" target="a2" />
+		<edge source="a5" target="q" />
+		<edge source="a6" target="a1" />
+		<edge source="a7" target="a6" />
+		<edge source="a8" target="a5" />
+		<edge source="a9" target="a6" />
+		<edge source="a10" target="q" />
+	</tree>
+
+	<tree view="joueur 1">
+		<vertex name="q" dislikes="0" likes="0" tag="question" />
+		<vertex name="a1" dislikes="0" likes="1" />
+		<vertex name="a10" likes="0" dislikes="1" />
+		<vertex name="a4" likes="0" dislikes="1" />
+		<vertex name="a3" dislikes="0" likes="0" />
+		<vertex name="a6" likes="0" dislikes="1" />
+		<vertex name="a5" dislikes="0" likes="1" />
+		<vertex name="a7" likes="0" dislikes="1" />
+		<vertex name="a8" dislikes="0" likes="0" />
+		<vertex name="a9" dislikes="0" likes="1" />
+		<vertex name="a2" dislikes="0" likes="0" />
+	</tree>
+
+	<tree view="joueur 2">
+		<vertex name="q" dislikes="0" likes="0" tag="question" />
+		<vertex name="a1" likes="0" dislikes="1" />
+		<vertex name="a10" dislikes="0" likes="0" />
+		<vertex name="a4" dislikes="0" likes="0" />
+		<vertex name="a3" dislikes="0" likes="1" />
+		<vertex name="a6" dislikes="0" likes="1" />
+		<vertex name="a5" dislikes="0" likes="1" />
+		<vertex name="a7" likes="0" dislikes="1" />
+		<vertex name="a8" dislikes="0" likes="0" />
+		<vertex name="a9" dislikes="0" likes="0" />
+		<vertex name="a2" dislikes="0" likes="0" />
+	</tree>
+</game>

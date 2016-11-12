@@ -1,0 +1,137 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing,graphs}
+\usegdlibrary{layered}
+%Becareful if you use package fontenc, it might be raise an error. If it does, you have to remove it and use \usepackage[utf8x]{luainputenc} in place of \usepackage[utf8]{inputenc}
+
+\begin{document}
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (0,1)\\ (0,1)" -> "q\\ (0,0)\\lm = 0.09995309";
+"a2\\ (1,0)\\ (1,0)" -> "a1\\ (0,1)\\ (0,1)";
+"a3\\ (0,1)\\ (0,1)" -> "a2\\ (1,0)\\ (1,0)";
+"a4\\ (0,1)\\ (0,1)" -> "a2\\ (1,0)\\ (1,0)";
+"a5\\ (0,1)\\ (0,1)" -> "q\\ (0,0)\\lm = 0.09995309";
+"a6\\ (1,0)\\ (1,0)" -> "a1\\ (0,1)\\ (0,1)";
+"a7\\ (0,1)\\ (0,1)" -> "a6\\ (1,0)\\ (1,0)";
+"a8\\ (1,0)\\ (1,0)" -> "a5\\ (0,1)\\ (0,1)";
+"a9\\ (0,1)\\ (0,1)" -> "a6\\ (1,0)\\ (1,0)";
+"a10\\ (1,0)\\ (0,0)" -> "q\\ (0,0)\\lm = 0.09995309";
+};
+\end{tikzpicture}
+\caption{general}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (1,0)" -> "q\\ (0,0)\\lm = 0.13014294";
+"a2\\ (0,0)" -> "a1\\ (1,0)";
+"a3\\ (0,0)" -> "a2\\ (0,0)";
+"a4\\ (0,1)" -> "a2\\ (0,0)";
+"a5\\ (1,0)" -> "q\\ (0,0)\\lm = 0.13014294";
+"a6\\ (0,1)" -> "a1\\ (1,0)";
+"a7\\ (0,1)" -> "a6\\ (0,1)";
+"a8\\ (0,0)" -> "a5\\ (1,0)";
+"a9\\ (1,0)" -> "a6\\ (0,1)";
+"a10\\ (0,1)" -> "q\\ (0,0)\\lm = 0.13014294";
+};
+\end{tikzpicture}
+\caption{joueur 1}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"a1\\ (0,1)" -> "q\\ (0,0)\\lm = 0.25236227";
+"a2\\ (0,0)" -> "a1\\ (0,1)";
+"a3\\ (1,0)" -> "a2\\ (0,0)";
+"a4\\ (0,0)" -> "a2\\ (0,0)";
+"a5\\ (1,0)" -> "q\\ (0,0)\\lm = 0.25236227";
+"a6\\ (1,0)" -> "a1\\ (0,1)";
+"a7\\ (0,1)" -> "a6\\ (1,0)";
+"a8\\ (0,0)" -> "a5\\ (1,0)";
+"a9\\ (0,0)" -> "a6\\ (1,0)";
+"a10\\ (0,0)" -> "q\\ (0,0)\\lm = 0.25236227";
+};
+\end{tikzpicture}
+\caption{joueur 2}
+\end{figure}
+\begin{tabular}{|c|c|c|c|}
+\hline
+& joueur 1 & joueur 2 & general \\
+\hline
+tour 1 & \_ & \_ & 0.23144531 \\
+\hline
+tour 2 & a6 dislike & \_ & 0.21503906 \\
+\hline
+tour 3 & \_ & a8 like & 0.27238281 \\
+\hline
+tour 4 & a1 like & \_ & 0.11028906 \\
+\hline
+tour 5 & \_ & a3 dislike & 0.15197031 \\
+\hline
+tour 6 & a9 like & \_ & 0.14534406 \\
+\hline
+tour 7 & \_ & a2 like & 0.22190931 \\
+\hline
+tour 8 & a10 like & \_ & 0.04438186 \\
+\hline
+tour 9 & \_ & a5 dislike & 0.04625057 \\
+\hline
+tour 10 & a9 dislike & \_ & 0.04837115 \\
+\hline
+tour 11 & \_ & a6 like & 0.05791376 \\
+\hline
+tour 12 & a3 dislike & \_ & 0.06039965 \\
+\hline
+tour 13 & \_ & a4 dislike & 0.08476137 \\
+\hline
+tour 14 & a2 like & \_ & 0.08963372 \\
+\hline
+tour 15 & \_ & a9 dislike & 0.08987543 \\
+\hline
+tour 16 & a6 annule & \_ & 0.09224419 \\
+\hline
+tour 17 & \_ & a1 dislike & 0.09524677 \\
+\hline
+tour 18 & a1 annule & \_ & 0.09824935 \\
+\hline
+tour 19 & \_ & a7 dislike & 0.09872311 \\
+\hline
+tour 20 & a4 dislike & \_ & 0.09887995 \\
+\hline
+tour 21 & \_ & pass & 0.09887995 \\
+\hline
+tour 22 & a5 dislike & \_ & 0.09967898 \\
+\hline
+tour 23 & \_ & pass & 0.09967898 \\
+\hline
+tour 24 & a8 like & \_ & 0.09983879 \\
+\hline
+tour 25 & \_ & pass & 0.09983879 \\
+\hline
+tour 26 & a7 dislike & \_ & 0.09988026 \\
+\hline
+tour 27 & \_ & pass & 0.09988026 \\
+\hline
+tour 28 & a6 like & \_ & 0.09992543 \\
+\hline
+tour 29 & \_ & pass & 0.09992543 \\
+\hline
+tour 30 & a1 dislike & \_ & 0.09995309 \\
+\hline
+tour 31 & \_ & pass & 0.09995309 \\
+\hline
+tour 32 & pass & \_ & 0.09995309 \\
+\hline
+tour 33 & \_ & pass & 0.09995309 \\
+\hline
+\end{tabular}
+\end{document}

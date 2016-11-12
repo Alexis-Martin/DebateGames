@@ -1,0 +1,6 @@
+\beamer@endinputifotherversion {3.36pt}
+\select@language {french}
+\beamer@sectionintoc {1}{Les graphes d'argumentation}{3}{0}{1}
+\beamer@sectionintoc {2}{SAF}{6}{0}{2}
+\beamer@sectionintoc {3}{Notre jeu}{12}{0}{3}
+\beamer@sectionintoc {4}{Recherche et contribution}{20}{0}{4}

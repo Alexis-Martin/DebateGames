@@ -1,0 +1,28 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing,graphs}
+\usegdlibrary{layered}
+%Becareful if you use package fontenc, it might be raise an error. If it does, you have to remove it and use \usepackage[utf8x]{luainputenc} in place of \usepackage[utf8]{inputenc}
+
+\begin{document}
+\begin{figure}
+\centering
+\begin{tikzpicture}[>=stealth]
+\graph [ layered layout, nodes = {scale=0.75, align=center} ] {
+"$a2$" -> "$a1$";
+"$a10$" -> "$a7$";
+"$a5$" -> "$a1$";
+"$a6$" -> "$a5$";
+"$a7$" -> "$a4$";
+"$a9$" -> "$a7$";
+"$a4$" -> "$q$";
+"$a3$" -> "$q$";
+"$a8$" -> "$q$";
+"$a1$" -> "$q$";
+};
+\end{tikzpicture}
+\caption{graphe}
+\end{figure}
+\end{document}

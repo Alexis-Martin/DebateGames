@@ -1,0 +1,22 @@
+<game players="2">
+	<tree view="joueur 1">
+		<vertex name="a3" likes="1" />
+		<vertex name="a2" likes="0" />
+    <vertex name="a1" dislikes="1"/>
+	</tree>
+
+	<tree view="joueur 2">
+		<vertex name="a2" likes="0" />
+		<vertex name="a1" likes="1"/>
+	</tree>
+
+	<tree view="general">
+    <vertex name="a1" />
+    <vertex name="a2" />
+		<vertex name="a3" />
+		<vertex name="q" tag="question" />
+		<edge source="a1" target="q" />
+		<edge source="a2" target="a1" />
+		<edge source="a3" target="q" />
+	</tree>
+</game>

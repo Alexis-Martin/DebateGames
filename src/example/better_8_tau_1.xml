@@ -1,0 +1,90 @@
+<game players="2" changed="5" rounds="26" weakest_shot="-0.06796875" strongest_shot="0.06796875" mean="0.09350371" aggregate_value="0.10054969" pass="4">
+	<tree view="joueur 1">
+		<vertex name="a8" LM="0.5" dislikes="0" likes="0" />
+		<vertex name="a9" LM="0.02" likes="0" dislikes="1" />
+		<vertex name="q" tag="question" dislikes="0" LM="0.12372598" likes="0" />
+		<vertex name="a7" LM="0.5" dislikes="0" likes="0" />
+		<vertex name="a1" LM="0.49" dislikes="0" likes="0" />
+		<vertex name="a6" LM="0.02" likes="0" dislikes="1" />
+		<vertex name="a10" LM="0.02" likes="0" dislikes="1" />
+		<vertex name="a3" LM="0.00979608" likes="0" dislikes="1" />
+		<vertex name="a2" LM="0.02" likes="0" dislikes="1" />
+		<vertex name="a5" LM="0.49" dislikes="0" likes="1" />
+		<vertex name="a4" LM="0.5" dislikes="0" likes="0" />
+		<LM>
+			<LM run="1" >0.12372598</LM>
+		</LM>
+	</tree>
+
+	<tree view="general">
+		<vertex name="a8" LM="0.1" dislikes="1" likes="0" />
+		<vertex name="a9" LM="0.5" dislikes="1" likes="1" />
+		<vertex name="q" dislikes="0" LM="0.06973594" likes="0" tag="question" />
+		<vertex name="a7" LM="0.5" dislikes="1" likes="1" />
+		<vertex name="a10" LM="0.5" dislikes="1" likes="1" />
+		<vertex name="a6" LM="0.5" dislikes="1" likes="1" />
+		<vertex name="a4" LM="0.1" dislikes="1" likes="0" />
+		<vertex name="a3" LM="0.09375" dislikes="1" likes="1" />
+		<vertex name="a2" LM="0.9" dislikes="0" likes="1" />
+		<vertex name="a5" LM="0.25" dislikes="1" likes="1" />
+		<vertex name="a1" LM="0.05" dislikes="1" likes="0" />
+		<edge source="a1" target="q" />
+		<edge source="a2" target="q" />
+		<edge source="a3" target="q" />
+		<edge source="a4" target="q" />
+		<edge source="a5" target="a3" />
+		<edge source="a6" target="a3" />
+		<edge source="a7" target="a5" />
+		<edge source="a8" target="q" />
+		<edge source="a9" target="a1" />
+		<edge source="a10" target="a3" />
+		<LM>
+			<LM run="1" >0.08496094</LM>
+			<LM player="joueur 1" arg_vote="a4" vote="-1" run="2" >0.15292969</LM>
+			<LM player="joueur 2" arg_vote="a2" vote="1" run="3" >0.03058594</LM>
+			<LM player="joueur 1" arg_vote="a6" vote="1" run="4" >0.03311719</LM>
+			<LM player="joueur 2" arg_vote="a3" vote="-1" run="5" >0.03362344</LM>
+			<LM player="joueur 1" arg_vote="a5" vote="1" run="6" >0.03365719</LM>
+			<LM player="joueur 2" arg_vote="a9" vote="1" run="7" >0.04263244</LM>
+			<LM player="joueur 1" arg_vote="a9" vote="1" run="8" >0.04442749</LM>
+			<LM player="joueur 2" arg_vote="a4" vote="-1" run="9" >0.0483766</LM>
+			<LM player="joueur 1" arg_vote="a8" vote="-1" run="10" >0.08707788</LM>
+			<LM player="joueur 2" arg_vote="a6" vote="-1" run="11" >0.08611738</LM>
+			<LM player="joueur 1" arg_vote="a1" vote="-1" run="12" >0.08681328</LM>
+			<LM player="joueur 2" arg_vote="a10" vote="-1" run="13" >0.08584502</LM>
+			<LM player="joueur 1" arg_vote="a10" vote="1" run="14" >0.08681328</LM>
+			<LM player="joueur 2" arg_vote="a9" vote="0" run="15" >0.08611738</LM>
+			<LM player="joueur 1" arg_vote="a3" vote="-1" run="16" >0.08707788</LM>
+			<LM player="joueur 2" arg_vote="a9" vote="-1" run="17" >0.08355958</LM>
+			<LM player="joueur 1" arg_vote="a7" vote="-1" run="18" >0.0837104</LM>
+			<LM player="joueur 2" arg_vote="a4" vote="0" run="19" >0.0768769</LM>
+			<LM player="joueur 1" arg_vote="none" vote="0" run="20" >0.0768769</LM>
+			<LM player="joueur 2" arg_vote="a7" vote="1" run="21" >0.07673839</LM>
+			<LM player="joueur 1" arg_vote="none" vote="0" run="22" >0.07673839</LM>
+			<LM player="joueur 2" arg_vote="a5" vote="-1" run="23" >0.07666144</LM>
+			<LM player="joueur 1" arg_vote="none" vote="0" run="24" >0.07666144</LM>
+			<LM player="joueur 2" arg_vote="a3" vote="0" run="25" >0.07550719</LM>
+			<LM player="joueur 1" arg_vote="none" vote="0" run="26" >0.07550719</LM>
+			<LM player="joueur 2" arg_vote="a3" vote="1" run="27" >0.06973594</LM>
+			<LM player="joueur 1" arg_vote="none" vote="0" run="28" >0.06973594</LM>
+			<LM player="joueur 2" arg_vote="none" vote="0" run="29" >0.06973594</LM>
+		</LM>
+	</tree>
+
+	<tree view="joueur 2">
+		<vertex name="a8" LM="0.5" dislikes="0" likes="0" />
+		<vertex name="a9" LM="0.02" likes="0" dislikes="1" />
+		<vertex name="q" tag="question" dislikes="0" LM="0.06328144" likes="0" />
+		<vertex name="a7" LM="0.5" dislikes="0" likes="0" />
+		<vertex name="a1" LM="0.49" dislikes="0" likes="0" />
+		<vertex name="a6" LM="0.5" dislikes="0" likes="0" />
+		<vertex name="a10" LM="0.98" dislikes="0" likes="1" />
+		<vertex name="a3" LM="0.00735" dislikes="0" likes="1" />
+		<vertex name="a2" LM="0.5" dislikes="0" likes="0" />
+		<vertex name="a5" LM="0.25" dislikes="0" likes="0" />
+		<vertex name="a4" LM="0.5" dislikes="0" likes="0" />
+		<LM>
+			<LM run="1" >0.06328144</LM>
+		</LM>
+	</tree>
+<game_parameters rule="mindChanged" val_question="1" fun="tau_1" type_vote="better" dynamique="round_robin" precision="8" epsilon="0.1" /></game>

@@ -1,0 +1,40 @@
+<game players="2" aggregate_value="0.075" mean_value="0.1374">
+	<tree view="joueur 1">
+		<vertex name="a3" LM="0.98" likes="1" dislikes="0" />
+		<vertex name="a1" LM="0.01" dislikes="1" likes="0" />
+		<vertex name="a2" LM="0.5" likes="0" dislikes="0" />
+		<vertex name="q" tag="question" LM="0.0198" likes="0" dislikes="0" />
+		<LM>
+			<LM run="1" >0.0198</LM>
+		</LM>
+	</tree>
+
+	<tree view="joueur 2">
+		<vertex name="a3" LM="0.5" likes="0" dislikes="0" />
+		<vertex name="a1" LM="0.49" likes="1" dislikes="0" />
+		<vertex name="a2" LM="0.5" likes="0" dislikes="0" />
+		<vertex name="q" tag="question" LM="0.255" likes="0" dislikes="0" />
+		<LM>
+			<LM run="1" >0.255</LM>
+		</LM>
+	</tree>
+
+	<tree view="general">
+		<vertex name="a3" LM="0.5" likes="1" dislikes="1" />
+		<vertex name="a1" LM="0.49" likes="2" dislikes="0" />
+		<vertex name="a2" LM="0.5" likes="1" dislikes="1" />
+		<vertex name="q" tag="question" LM="0.255" likes="0" dislikes="0" />
+		<edge source="a1" target="q" />
+		<edge source="a2" target="a1" />
+		<edge source="a3" target="q" />
+		<LM>
+			<LM run="1" >0.375</LM>
+			<LM arg_vote="a3" run="2" vote="1" player="joueur 1" >0.075</LM>
+			<LM arg_vote="a3" run="3" vote="-1" player="joueur 2" >0.375</LM>
+			<LM arg_vote="a1" run="4" vote="1" player="joueur 1" >0.275</LM>
+			<LM arg_vote="a1" run="5" vote="1" player="joueur 2" >0.255</LM>
+			<LM arg_vote="a2" run="6" vote="-1" player="joueur 1" >0.059</LM>
+			<LM arg_vote="a2" run="7" vote="1" player="joueur 2" >0.255</LM>
+		</LM>
+	</tree>
+</game>

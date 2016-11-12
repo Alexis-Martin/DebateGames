@@ -1,0 +1,43 @@
+<game players="2">
+	<tree view="general">
+		<vertex name="q" tag="question" />
+		<vertex name="a10" />
+		<vertex name="a9" />
+		<vertex name="a7" />
+		<vertex name="a8" />
+		<vertex name="a6" />
+		<vertex name="a5" />
+		<vertex name="a4" />
+		<vertex name="a3" />
+		<vertex name="a1" />
+		<vertex name="a2" />
+		<edge source="a1" target="q" />
+		<edge source="a2" target="q" />
+		<edge source="a3" target="a2" />
+		<edge source="a4" target="a3" />
+		<edge source="a5" target="a4" />
+		<edge source="a6" target="a5" />
+		<edge source="a7" target="q" />
+		<edge source="a8" target="a4" />
+		<edge source="a9" target="a6" />
+		<edge source="a10" target="a9" />
+	</tree>
+
+	<tree view="joueur 2">
+		<vertex name="a10" likes="1" />
+		<vertex name="a9" dislikes="1" />
+		<vertex name="a8" likes="1" />
+		<vertex name="a2" likes="1" />
+		<vertex name="a1" dislikes="1" />
+		<vertex name="a6" likes="1" />
+	</tree>
+
+	<tree view="joueur 1">
+		<vertex name="a10" likes="1" />
+		<vertex name="a8" likes="1" />
+		<vertex name="a4" dislikes="1" />
+		<vertex name="a3" dislikes="1" />
+		<vertex name="a6" likes="1" />
+		<vertex name="a5" dislikes="1" />
+	</tree>
+</game>

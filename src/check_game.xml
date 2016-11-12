@@ -1,0 +1,144 @@
+<game players="5">
+	<tree view="joueur 2">
+		<vertex name="a5" likes="1" dislikes="0" />
+		<vertex name="a4" likes="1" dislikes="0" />
+		<vertex name="a14" likes="0" dislikes="0" />
+		<vertex name="a3" likes="0" dislikes="1" />
+		<vertex name="a10" likes="1" dislikes="0" />
+		<vertex name="a7" likes="1" dislikes="0" />
+		<vertex name="q" likes="0" tag="question" dislikes="0" />
+		<vertex name="a11" likes="0" dislikes="1" />
+		<vertex name="a17" likes="0" dislikes="0" />
+		<vertex name="a1" likes="0" dislikes="0" />
+		<vertex name="a8" likes="0" dislikes="1" />
+		<vertex name="a12" likes="0" dislikes="1" />
+		<vertex name="a9" likes="0" dislikes="0" />
+		<vertex name="a15" likes="0" dislikes="1" />
+		<vertex name="a2" likes="0" dislikes="1" />
+		<vertex name="a6" likes="1" dislikes="0" />
+		<vertex name="a16" likes="0" dislikes="0" />
+		<vertex name="a13" likes="0" dislikes="0" />
+	</tree>
+
+	<tree view="joueur 4">
+		<vertex name="a5" likes="0" dislikes="0" />
+		<vertex name="a4" likes="0" dislikes="1" />
+		<vertex name="a14" likes="0" dislikes="1" />
+		<vertex name="a3" likes="0" dislikes="0" />
+		<vertex name="a10" likes="0" dislikes="1" />
+		<vertex name="a7" likes="0" dislikes="1" />
+		<vertex name="q" likes="0" tag="question" dislikes="0" />
+		<vertex name="a11" likes="0" dislikes="1" />
+		<vertex name="a17" likes="0" dislikes="0" />
+		<vertex name="a1" likes="1" dislikes="0" />
+		<vertex name="a8" likes="0" dislikes="1" />
+		<vertex name="a12" likes="0" dislikes="0" />
+		<vertex name="a9" likes="1" dislikes="0" />
+		<vertex name="a15" likes="1" dislikes="0" />
+		<vertex name="a2" likes="1" dislikes="0" />
+		<vertex name="a6" likes="0" dislikes="0" />
+		<vertex name="a16" likes="0" dislikes="1" />
+		<vertex name="a13" likes="0" dislikes="0" />
+	</tree>
+
+	<tree view="joueur 1">
+		<vertex name="a5" likes="0" dislikes="1" />
+		<vertex name="a4" likes="1" dislikes="0" />
+		<vertex name="a14" likes="1" dislikes="0" />
+		<vertex name="a3" likes="0" dislikes="0" />
+		<vertex name="a10" likes="0" dislikes="0" />
+		<vertex name="a7" likes="0" dislikes="0" />
+		<vertex name="q" likes="0" tag="question" dislikes="0" />
+		<vertex name="a11" likes="1" dislikes="0" />
+		<vertex name="a17" likes="1" dislikes="0" />
+		<vertex name="a1" likes="0" dislikes="1" />
+		<vertex name="a8" likes="1" dislikes="0" />
+		<vertex name="a12" likes="0" dislikes="0" />
+		<vertex name="a9" likes="0" dislikes="0" />
+		<vertex name="a15" likes="1" dislikes="0" />
+		<vertex name="a2" likes="0" dislikes="0" />
+		<vertex name="a6" likes="0" dislikes="0" />
+		<vertex name="a16" likes="0" dislikes="1" />
+		<vertex name="a13" likes="1" dislikes="0" />
+	</tree>
+
+	<tree view="general">
+		<vertex name="a13" likes="1" dislikes="3" />
+		<vertex name="a4" likes="3" dislikes="2" />
+		<vertex name="a14" likes="0" dislikes="5" />
+		<vertex name="a3" likes="2" dislikes="3" />
+		<vertex name="a10" likes="3" dislikes="1" />
+		<vertex name="a7" likes="4" dislikes="1" />
+		<vertex name="q" likes="0" dislikes="0" tag="question" />
+		<vertex name="a11" likes="3" dislikes="1" />
+		<vertex name="a6" likes="4" dislikes="1" />
+		<vertex name="a1" likes="2" dislikes="3" />
+		<vertex name="a8" likes="1" dislikes="3" />
+		<vertex name="a17" likes="4" dislikes="1" />
+		<vertex name="a16" likes="3" dislikes="2" />
+		<vertex name="a15" likes="4" dislikes="1" />
+		<vertex name="a2" likes="3" dislikes="1" />
+		<vertex name="a5" likes="1" dislikes="4" />
+		<vertex name="a9" likes="3" dislikes="2" />
+		<vertex name="a12" likes="1" dislikes="4" />
+		<edge source="a1" target="q" />
+		<edge source="a2" target="a1" />
+		<edge source="a3" target="a2" />
+		<edge source="a4" target="a3" />
+		<edge source="a5" target="a2" />
+		<edge source="a6" target="a5" />
+		<edge source="a7" target="a5" />
+		<edge source="a8" target="a2" />
+		<edge source="a9" target="q" />
+		<edge source="a10" target="a5" />
+		<edge source="a11" target="a1" />
+		<edge source="a12" target="a7" />
+		<edge source="a13" target="a11" />
+		<edge source="a14" target="a10" />
+		<edge source="a15" target="a5" />
+		<edge source="a16" target="a12" />
+		<edge source="a17" target="a5" />
+	</tree>
+
+	<tree view="joueur 5">
+		<vertex name="a5" likes="0" dislikes="0" />
+		<vertex name="a4" likes="0" dislikes="0" />
+		<vertex name="a14" likes="0" dislikes="0" />
+		<vertex name="a3" likes="1" dislikes="0" />
+		<vertex name="a10" likes="0" dislikes="0" />
+		<vertex name="a7" likes="0" dislikes="1" />
+		<vertex name="q" likes="0" tag="question" dislikes="0" />
+		<vertex name="a11" likes="0" dislikes="0" />
+		<vertex name="a17" likes="0" dislikes="1" />
+		<vertex name="a1" likes="0" dislikes="0" />
+		<vertex name="a8" likes="0" dislikes="0" />
+		<vertex name="a12" likes="0" dislikes="0" />
+		<vertex name="a9" likes="0" dislikes="0" />
+		<vertex name="a15" likes="1" dislikes="0" />
+		<vertex name="a2" likes="0" dislikes="1" />
+		<vertex name="a6" likes="1" dislikes="0" />
+		<vertex name="a16" likes="0" dislikes="1" />
+		<vertex name="a13" likes="0" dislikes="0" />
+	</tree>
+
+	<tree view="joueur 3">
+		<vertex name="a5" likes="0" dislikes="1" />
+		<vertex name="a4" likes="0" dislikes="1" />
+		<vertex name="a14" likes="0" dislikes="0" />
+		<vertex name="a3" likes="0" dislikes="1" />
+		<vertex name="a10" likes="0" dislikes="0" />
+		<vertex name="a7" likes="0" dislikes="0" />
+		<vertex name="q" likes="0" tag="question" dislikes="0" />
+		<vertex name="a11" likes="0" dislikes="1" />
+		<vertex name="a17" likes="0" dislikes="0" />
+		<vertex name="a1" likes="0" dislikes="1" />
+		<vertex name="a8" likes="0" dislikes="0" />
+		<vertex name="a12" likes="0" dislikes="0" />
+		<vertex name="a9" likes="0" dislikes="1" />
+		<vertex name="a15" likes="1" dislikes="0" />
+		<vertex name="a2" likes="0" dislikes="1" />
+		<vertex name="a6" likes="1" dislikes="0" />
+		<vertex name="a16" likes="0" dislikes="1" />
+		<vertex name="a13" likes="0" dislikes="0" />
+	</tree>
+</game>

@@ -1,0 +1,30 @@
+<game players="2">
+	<graph view="joueur 2">
+		<vertex name="a3" dislikes="1" />
+		<vertex name="a1" dislikes="1" />
+		<vertex name="a2" likes="1" />
+	</graph>
+
+	<graph view="joueur 1">
+		<vertex name="a3" dislikes="1" />
+		<vertex name="a1" likes="1" />
+		<vertex name="a2" likes="1" />
+	</graph>
+
+	<graph view="general">
+		<vertex name="a3" />
+		<vertex name="a4" />
+		<vertex name="a1" />
+		<vertex name="a2" />
+		<vertex name="q" tag="question" />
+		<edge source="a3" target="a2" />
+		<edge source="a1" target="a2" />
+		<edge source="a4" target="a3" />
+		<edge source="a4" target="a1" />
+		<edge source="a2" target="a1" />
+		<edge source="a3" target="a4" />
+		<edge source="a2" target="a3" />
+		<edge source="a1" target="a4" />
+		<edge source="a1" target="q" />
+	</graph>
+</game>

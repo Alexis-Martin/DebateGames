@@ -1,0 +1,18 @@
+<game players="0">
+	<tree view="general">
+		<vertex name="a" dislikes="70" likes="70" LM="0.16147757">a</vertex>
+		<vertex name="b" dislikes="70" likes="70" LM="0.06552993">b</vertex>
+		<vertex name="e" dislikes="1" likes="19" LM="0.63082952">e</vertex>
+		<vertex name="c" dislikes="66" likes="54" LM="0.06384051">c</vertex>
+		<vertex name="d" dislikes="61" likes="130" LM="0.84370142">d</vertex>
+		<edge source="a" target="b" />
+		<edge source="b" target="a" />
+		<edge source="c" target="a" />
+		<edge source="e" target="a" />
+		<edge source="d" target="c" />
+		<edge source="d" target="b" />
+		<LM>
+			<LM run="1" >err</LM>
+		</LM>
+	</tree>
+</game>
